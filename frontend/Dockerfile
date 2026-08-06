@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+# Ensure the public directory exists even if no static assets are committed yet.
+RUN mkdir -p public
 RUN npm run build
 
 FROM node:20-alpine
