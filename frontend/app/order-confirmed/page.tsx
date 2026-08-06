@@ -1,10 +1,11 @@
-"use client";
+type OrderConfirmedPageProps = {
+  searchParams?: {
+    bookingId?: string;
+  };
+};
 
-import { useSearchParams } from "next/navigation";
-
-export default function OrderConfirmedPage() {
-  const searchParams = useSearchParams();
-  const bookingId = searchParams.get("bookingId");
+export default function OrderConfirmedPage({ searchParams }: OrderConfirmedPageProps) {
+  const bookingId = searchParams?.bookingId;
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-14">
