@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #141414;
+  --warm: #faf7f2;
+  --brass: #b8863b;
+  --ember: #d8432e;
+  --deepgreen: #3d7a57;
+  --textmain: #1e1e1c;
+  --textmuted: #6e6a63;
+  --borderline: #e6e0d4;
+}
+
+body {
+  background: radial-gradient(circle at top right, #f5ead6 0%, var(--warm) 45%), var(--warm);
+  color: var(--textmain);
+  font-family: "Tajawal", sans-serif;
+}
+
+.snap-x-list {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-x-list > * {
+  scroll-snap-align: start;
+}
+
+.cta-pulse {
+  animation: pulse 1.9s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(216, 67, 46, 0.35); }
+  70% { box-shadow: 0 0 0 10px rgba(216, 67, 46, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(216, 67, 46, 0); }
+}
