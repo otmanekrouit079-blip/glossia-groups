@@ -1694,23 +1694,44 @@ function renderTaskList() {
   }
 
   state.tasks.forEach(function (task, index) {
-    const row = document.createElement("label");
-    row.className = "task-item";
-    row.classList.toggle("is-done", Boolean(task.done));
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = task.done;
-    checkbox.dataset.taskIndex = String(index);
+    const row = document.createElement("div");
+    row.className = "task-item task-status-item";
+    row.classList.toggle("is-done", task.status === "done");
 
     const text = document.createElement("span");
     text.textContent = task.text;
-    text.className = task.done ? "task-done" : "";
+    text.className = task.status === "done" ? "task-done" : "";
 
-    row.appendChild(checkbox);
+    const actions = document.createElement("div");
+    actions.className = "task-status-actions";
+    actions.appendChild(createTaskStatusButton(index, "done", "Fait", task.status));
+    actions.appendChild(createTaskStatusButton(index, "notdone", "Pas fait", task.status));
+    actions.appendChild(createTaskStatusButton(index, "excuse", "Excusé", task.status));
+
     row.appendChild(text);
+    row.appendChild(actions);
     taskList.appendChild(row);
+
+    if (task.status === "excuse") {
+      const reason = document.createElement("p");
+      reason.className = "task-excuse-reason";
+      reason.textContent = task.excuseReason
+        ? "Justification de l'employé: " + task.excuseReason
+        : "En attente de justification de l'employé.";
+      taskList.appendChild(reason);
+    }
   });
+}
+
+function createTaskStatusButton(index, status, label, currentStatus) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "task-status-btn task-status-" + status;
+  button.classList.toggle("active", currentStatus === status);
+  button.dataset.taskIndex = String(index);
+  button.dataset.status = status;
+  button.textContent = label;
+  return button;
 }
 
 function renderTodaySchedule() {
@@ -2013,26 +2034,27 @@ salesHistoryList.addEventListener("click", function (event) {
   }
 });
 
-taskList.addEventListener("change", function (event) {
-  const target = event.target;
-
-  if (target.tagName !== "INPUT" || target.type !== "checkbox") {
+taskList.addEventListener("click", function (event) {
+  const button = event.target.closest(".task-status-btn");
+  if (!button) {
     return;
   }
 
-  const taskIndex = Number(target.dataset.taskIndex);
-  if (Number.isNaN(taskIndex)) {
-    return;
-  }
-
+  const taskIndex = Number(button.dataset.taskIndex);
   const state = ensureEmployeeData(selectedEmployeeId);
   const task = state.tasks[taskIndex];
   if (!task) {
     return;
   }
 
-  task.done = target.checked;
-  task.completedAtISO = target.checked ? new Date().toISOString() : null;
+  const status = button.dataset.status;
+  task.status = status;
+  task.done = status === "done";
+  task.completedAtISO = status === "done" ? new Date().toISOString() : null;
+  if (status !== "excuse") {
+    task.excuseReason = "";
+  }
+
   saveSharedData();
   renderTaskList();
   renderManagerSectionDetails();

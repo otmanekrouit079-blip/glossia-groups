@@ -2500,8 +2500,25 @@ function fillOwnerTaskChecklist(tasks) {
 
       item.appendChild(checkbox);
       item.appendChild(text);
+
+      if (task.status === "excuse") {
+        const badge = document.createElement("span");
+        badge.className = "task-status-badge task-status-excuse";
+        badge.textContent = "Excusé";
+        item.appendChild(badge);
+      }
+
       item.appendChild(removeButton);
       ownerModalTaskList.appendChild(item);
+
+      if (task.status === "excuse") {
+        const reason = document.createElement("p");
+        reason.className = "task-excuse-reason";
+        reason.textContent = task.excuseReason
+          ? "Justification: " + task.excuseReason
+          : "En attente de justification de l'employé.";
+        ownerModalTaskList.appendChild(reason);
+      }
     });
   }
 }

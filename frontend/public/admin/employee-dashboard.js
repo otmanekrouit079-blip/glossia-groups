@@ -396,22 +396,73 @@ function renderTasks() {
   }
 
   tasks.forEach(function (task) {
-    const row = document.createElement("label");
+    const row = document.createElement("div");
     row.className = "task-item employee-readonly-task";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = task.done;
-    checkbox.disabled = true;
+    row.classList.toggle("is-done", task.status === "done");
 
     const text = document.createElement("span");
     text.textContent = task.text;
-    text.className = task.done ? "task-done" : "";
+    text.className = task.status === "done" ? "task-done" : "";
 
-    row.appendChild(checkbox);
+    const badge = document.createElement("span");
+    const status = task.status || "pending";
+    badge.className = "task-status-badge task-status-" + status;
+    badge.textContent =
+      status === "done" ? "Fait" :
+      status === "notdone" ? "Pas fait" :
+      status === "excuse" ? "Excusé" : "En attente";
+
     row.appendChild(text);
+    row.appendChild(badge);
     taskList.appendChild(row);
+
+    if (task.status === "excuse") {
+      taskList.appendChild(createTaskExcuseBox(task));
+    }
   });
+}
+
+function createTaskExcuseBox(task) {
+  const box = document.createElement("div");
+  box.className = "task-excuse-box";
+
+  if (task.excuseReason) {
+    const savedReason = document.createElement("p");
+    savedReason.className = "task-excuse-reason";
+    savedReason.textContent = "Votre justification: " + task.excuseReason;
+    box.appendChild(savedReason);
+    return box;
+  }
+
+  const label = document.createElement("p");
+  label.className = "task-excuse-label";
+  label.textContent = "Justifiez pourquoi cette tâche n'a pas été faite:";
+
+  const input = document.createElement("textarea");
+  input.className = "task-excuse-input";
+  input.placeholder = "Expliquez votre excuse...";
+
+  const saveButton = document.createElement("button");
+  saveButton.type = "button";
+  saveButton.className = "manager-btn";
+  saveButton.textContent = "Envoyer la justification";
+  saveButton.addEventListener("click", function () {
+    const reasonText = input.value.trim();
+    if (!reasonText) {
+      return;
+    }
+
+    task.excuseReason = reasonText;
+    if (window.SalonStorage) {
+      window.SalonStorage.saveData(sharedData);
+    }
+    renderTasks();
+  });
+
+  box.appendChild(label);
+  box.appendChild(input);
+  box.appendChild(saveButton);
+  return box;
 }
 
 periodButtons.forEach(function (button) {
