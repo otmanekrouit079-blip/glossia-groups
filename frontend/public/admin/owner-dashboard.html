@@ -504,6 +504,33 @@
           <button id="owner-target-modal-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
         </div>
       </form>
+
+      <div class="owner-tax-config">
+        <h4 class="modal-block-title">Taxes sur le chiffre d'affaires (par palier)</h4>
+        <p class="modal-subtitle">S'applique à tous les employés selon leur propre chiffre d'affaires. Ex: à partir de 100 DH, -5 DH ; à partir de 200 DH, -10 DH.</p>
+
+        <div class="owner-tax-columns">
+          <div class="owner-tax-column">
+            <h5>Taxe services</h5>
+            <div id="owner-tax-service-list" class="owner-cost-list"></div>
+            <div class="owner-tax-add-row">
+              <input id="owner-tax-service-threshold" type="number" min="0" step="0.01" placeholder="Seuil CA (DH)" />
+              <input id="owner-tax-service-amount" type="number" min="0" step="0.01" placeholder="Taxe (DH)" />
+              <button id="owner-tax-service-add" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+            </div>
+          </div>
+
+          <div class="owner-tax-column">
+            <h5>Taxe produits</h5>
+            <div id="owner-tax-product-list" class="owner-cost-list"></div>
+            <div class="owner-tax-add-row">
+              <input id="owner-tax-product-threshold" type="number" min="0" step="0.01" placeholder="Seuil CA (DH)" />
+              <input id="owner-tax-product-amount" type="number" min="0" step="0.01" placeholder="Taxe (DH)" />
+              <button id="owner-tax-product-add" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

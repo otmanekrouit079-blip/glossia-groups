@@ -452,6 +452,14 @@ manager-insight-grid,
   padding: 14px 16px;
 }
 
+.owner-cost-list > *,
+.employee-simple-list > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .owner-top-kpi-card,
 .employee-metric-card {
   background: var(--surface);
@@ -1313,6 +1321,41 @@ input.is-error, select.is-error { border-color: var(--danger); }
   color: #15803d;
   font-weight: 700;
 }
+
+/* Employee net benefit hero + toggle */
+.employee-net-benefit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255,71,71,0.08), rgba(255,122,61,0.04));
+  border: 1px solid var(--borderline-strong);
+  margin-bottom: var(--gap-md);
+}
+.employee-net-benefit-card span { color: var(--textmuted); font-size: 0.8rem; font-weight: 600; }
+.employee-net-benefit-card strong {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+  color: var(--brass-dark);
+}
+.employee-net-benefit-card small { color: var(--textmuted); font-size: 0.78rem; }
+
+.employee-benefit-toggle { display: flex; gap: 8px; margin-bottom: var(--gap-sm); }
+.benefit-type-btn.active { background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark)); border-color: transparent; color: #fff; }
+
+/* Owner tax bracket editor */
+.owner-tax-config { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--borderline); }
+.owner-tax-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap-md);
+}
+.owner-tax-column h5 { margin: 0 0 8px; font-size: 0.85rem; font-weight: 800; color: var(--ink); }
+.owner-tax-add-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.owner-tax-add-row input { flex: 1; min-width: 90px; }
 
 /* ===== Responsive ===== */
 @media (max-width: 720px) {

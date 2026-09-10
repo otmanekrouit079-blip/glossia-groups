@@ -72,21 +72,22 @@
         <div class="employee-section-heading">
           <div>
             <p class="eyebrow">Mes résultats</p>
-            <h2 id="sales-heading">Historique des ventes</h2>
+            <h2 id="sales-heading">Mon bénéfice</h2>
           </div>
         </div>
 
-        <div class="sales-total-grid">
-          <div class="employee-metric-card">
-            <span>Cette semaine</span>
-            <strong id="employee-week-sales">0,00 DH</strong>
-          </div>
-          <div class="employee-metric-card">
-            <span>Ce mois</span>
-            <strong id="employee-month-sales">0,00 DH</strong>
-          </div>
+        <div class="employee-net-benefit-card">
+          <span>Bénéfice net (après taxe)</span>
+          <strong id="employee-net-benefit">0,00 DH</strong>
+          <small id="employee-net-benefit-detail"></small>
         </div>
-        <ul id="employee-sales-list" class="employee-simple-list"></ul>
+
+        <div id="employee-benefit-toggle" class="employee-benefit-toggle">
+          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn active" data-type="service">Services</button>
+          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn" data-type="product">Produits</button>
+        </div>
+
+        <ul id="employee-benefit-list" class="employee-simple-list"></ul>
       </section>
 
       <section class="employee-dashboard-section" aria-labelledby="tasks-heading">

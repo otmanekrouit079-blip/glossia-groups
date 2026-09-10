@@ -5,9 +5,11 @@ const welcomeHeading = document.getElementById("employee-welcome");
 const employeePostLabel = document.getElementById("employee-post-label");
 const hoursSummary = document.getElementById("employee-hours-summary");
 const historyBody = document.getElementById("employee-history-body");
-const weekSalesElement = document.getElementById("employee-week-sales");
-const monthSalesElement = document.getElementById("employee-month-sales");
-const salesList = document.getElementById("employee-sales-list");
+const netBenefitElement = document.getElementById("employee-net-benefit");
+const netBenefitDetailElement = document.getElementById("employee-net-benefit-detail");
+const benefitToggle = document.getElementById("employee-benefit-toggle");
+const benefitList = document.getElementById("employee-benefit-list");
+let activeBenefitType = "service";
 const taskList = document.getElementById("employee-task-list");
 const logoutButton = document.getElementById("employee-logout");
 
@@ -339,47 +341,159 @@ function renderDailyHistory() {
   });
 }
 
-function renderSales() {
-  const sales = (employeeState.salesHistory || []).slice().sort(function (first, second) {
-    return new Date(second.dateISO) - new Date(first.dateISO);
+function findOwnerProductForSale(sale) {
+  const ownerProducts = Array.isArray(sharedData.ownerProducts) ? sharedData.ownerProducts : [];
+
+  if (sale.productId != null) {
+    const byId = ownerProducts.find(function (product) {
+      return Number(product.id) === Number(sale.productId);
+    });
+    if (byId) {
+      return byId;
+    }
+  }
+
+  const label = String(sale.label || "").trim().toLowerCase();
+  if (!label) {
+    return null;
+  }
+
+  return ownerProducts.find(function (product) {
+    return String(product?.name || "").trim().toLowerCase() === label;
+  }) || null;
+}
+
+function getServiceBenefitEntries() {
+  return (employeeState.salesHistory || []).map(function (sale) {
+    return {
+      dateISO: sale.dateISO,
+      benefit: Number(sale.amount || 0) * 0.5,
+      label: sale.serviceName || "Service"
+    };
+  });
+}
+
+function getProductBenefitEntries() {
+  const productSales = (sharedData.productSales || []).filter(function (sale) {
+    return Number(sale.employeeId) === Number(employee.id);
   });
 
-  const weekTotal = sales.reduce(function (total, sale) {
-    return isDateInCurrentWeek(new Date(sale.dateISO)) ? total + sale.amount : total;
-  }, 0);
-  const monthTotal = sales.reduce(function (total, sale) {
-    return isDateInCurrentMonth(new Date(sale.dateISO)) ? total + sale.amount : total;
-  }, 0);
+  return productSales.map(function (sale) {
+    const ownerProduct = findOwnerProductForSale(sale);
+    const quantity = Number(sale.quantity || 1);
+    const benefit = ownerProduct
+      ? Number(ownerProduct.employeeProfit || 0) * quantity
+      : Number(sale.amount || 0);
 
-  weekSalesElement.textContent = formatAmount(weekTotal);
-  monthSalesElement.textContent = formatAmount(monthTotal);
-  salesList.innerHTML = "";
+    return {
+      dateISO: sale.dateISO,
+      benefit: benefit,
+      label: sale.label || "Produit"
+    };
+  });
+}
 
-  if (sales.length === 0) {
+function getTaxForRevenue(brackets, revenue) {
+  const applicable = (brackets || [])
+    .filter(function (bracket) { return revenue >= Number(bracket.threshold || 0); })
+    .sort(function (a, b) { return b.threshold - a.threshold; });
+
+  return applicable.length > 0 ? Number(applicable[0].amount || 0) : 0;
+}
+
+function renderBenefitSummary() {
+  const serviceEntries = getServiceBenefitEntries();
+  const productEntries = getProductBenefitEntries();
+
+  const serviceBenefitTotal = serviceEntries.reduce(function (total, entry) {
+    return total + entry.benefit;
+  }, 0);
+  const productBenefitTotal = productEntries.reduce(function (total, entry) {
+    return total + entry.benefit;
+  }, 0);
+  const grossBenefit = serviceBenefitTotal + productBenefitTotal;
+
+  const serviceRevenue = (employeeState.salesHistory || []).reduce(function (total, sale) {
+    return total + Number(sale.amount || 0);
+  }, 0);
+  const productRevenue = (sharedData.productSales || [])
+    .filter(function (sale) { return Number(sale.employeeId) === Number(employee.id); })
+    .reduce(function (total, sale) { return total + Number(sale.amount || 0); }, 0);
+
+  const taxBrackets = sharedData.taxBrackets || {};
+  const serviceTax = getTaxForRevenue(taxBrackets.service, serviceRevenue);
+  const productTax = getTaxForRevenue(taxBrackets.product, productRevenue);
+  const totalTax = serviceTax + productTax;
+  const netBenefit = grossBenefit - totalTax;
+
+  netBenefitElement.textContent = formatAmount(netBenefit);
+
+  const detailParts = ["Brut: " + formatAmount(grossBenefit)];
+  if (serviceTax > 0) {
+    detailParts.push("Taxe services: -" + formatAmount(serviceTax));
+  }
+  if (productTax > 0) {
+    detailParts.push("Taxe produits: -" + formatAmount(productTax));
+  }
+  netBenefitDetailElement.textContent = detailParts.join(" · ");
+}
+
+function renderBenefitList() {
+  const entries = (activeBenefitType === "service" ? getServiceBenefitEntries() : getProductBenefitEntries())
+    .slice()
+    .sort(function (first, second) {
+      return new Date(second.dateISO) - new Date(first.dateISO);
+    });
+
+  benefitList.innerHTML = "";
+
+  if (entries.length === 0) {
     const emptyItem = document.createElement("li");
     emptyItem.className = "employee-list-empty";
-    emptyItem.textContent = "Aucune vente enregistrée.";
-    salesList.appendChild(emptyItem);
+    emptyItem.textContent = activeBenefitType === "service"
+      ? "Aucun service enregistré."
+      : "Aucun produit enregistré.";
+    benefitList.appendChild(emptyItem);
     return;
   }
 
-  sales.forEach(function (sale) {
+  entries.forEach(function (entry) {
     const item = document.createElement("li");
     const date = document.createElement("span");
     const amount = document.createElement("strong");
 
-    date.textContent = new Date(sale.dateISO).toLocaleString("fr-FR", {
+    date.textContent = new Date(entry.dateISO).toLocaleString("fr-FR", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit"
     });
-    amount.textContent = formatAmount(sale.amount);
+    amount.textContent = formatAmount(entry.benefit);
 
     item.appendChild(date);
     item.appendChild(amount);
-    salesList.appendChild(item);
+    benefitList.appendChild(item);
+  });
+}
+
+function renderBenefits() {
+  renderBenefitSummary();
+  renderBenefitList();
+}
+
+if (benefitToggle) {
+  benefitToggle.addEventListener("click", function (event) {
+    const button = event.target.closest(".benefit-type-btn");
+    if (!button) {
+      return;
+    }
+
+    activeBenefitType = button.dataset.type;
+    benefitToggle.querySelectorAll(".benefit-type-btn").forEach(function (btn) {
+      btn.classList.toggle("active", btn === button);
+    });
+    renderBenefitList();
   });
 }
 
@@ -487,5 +601,5 @@ welcomeHeading.textContent = "Bienvenue " + employee.name;
 employeePostLabel.textContent = employee.post;
 renderPeriodSummary("day");
 renderDailyHistory();
-renderSales();
+renderBenefits();
 renderTasks();

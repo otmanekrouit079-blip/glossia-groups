@@ -51,6 +51,15 @@ const ownerTargetModalCloseButton = document.getElementById("owner-target-modal-
 const ownerTargetModalCloseIconButton = document.getElementById("owner-target-modal-close-icon");
 const ownerTargetForm = document.getElementById("owner-target-form");
 
+const ownerTaxServiceList = document.getElementById("owner-tax-service-list");
+const ownerTaxServiceThreshold = document.getElementById("owner-tax-service-threshold");
+const ownerTaxServiceAmount = document.getElementById("owner-tax-service-amount");
+const ownerTaxServiceAddButton = document.getElementById("owner-tax-service-add");
+const ownerTaxProductList = document.getElementById("owner-tax-product-list");
+const ownerTaxProductThreshold = document.getElementById("owner-tax-product-threshold");
+const ownerTaxProductAmount = document.getElementById("owner-tax-product-amount");
+const ownerTaxProductAddButton = document.getElementById("owner-tax-product-add");
+
 const ownerBriefingModal = document.getElementById("owner-briefing-modal");
 const ownerBriefingSubtitle = document.getElementById("owner-briefing-subtitle");
 const ownerBriefingBody = document.getElementById("owner-briefing-body");
@@ -2770,6 +2779,7 @@ function openOwnerTargetModal() {
   ownerTargetFeedback.textContent = "";
   ownerTargetFeedback.classList.remove("is-error");
   renderOwnerTargetForm();
+  renderOwnerTaxBrackets();
 
   if (ownerTargetModalTitle) {
     ownerTargetModalTitle.textContent = "Objectifs personnel et global";
@@ -3518,6 +3528,100 @@ if (ownerBriefingModal) {
     if (event.target === ownerBriefingModal) {
       closeOwnerBriefingModal();
     }
+  });
+}
+
+function ensureOwnerTaxBrackets() {
+  if (!ownerSharedData.taxBrackets || typeof ownerSharedData.taxBrackets !== "object") {
+    ownerSharedData.taxBrackets = { service: [], product: [] };
+  }
+  if (!Array.isArray(ownerSharedData.taxBrackets.service)) {
+    ownerSharedData.taxBrackets.service = [];
+  }
+  if (!Array.isArray(ownerSharedData.taxBrackets.product)) {
+    ownerSharedData.taxBrackets.product = [];
+  }
+  return ownerSharedData.taxBrackets;
+}
+
+function renderOwnerTaxBracketList(listElement, brackets, category) {
+  listElement.innerHTML = "";
+
+  if (brackets.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "Aucun palier défini.";
+    listElement.appendChild(empty);
+    return;
+  }
+
+  brackets
+    .slice()
+    .sort(function (a, b) { return a.threshold - b.threshold; })
+    .forEach(function (bracket) {
+      const row = document.createElement("div");
+      row.className = "owner-cost-row";
+
+      const label = document.createElement("span");
+      label.textContent = "À partir de " + formatOwnerAmount(bracket.threshold) + " → -" + formatOwnerAmount(bracket.amount);
+
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "owner-task-remove";
+      removeButton.textContent = "✕";
+      removeButton.setAttribute("aria-label", "Supprimer ce palier");
+      removeButton.addEventListener("click", function () {
+        const brackets = ensureOwnerTaxBrackets()[category];
+        const index = brackets.findIndex(function (item) {
+          return item.threshold === bracket.threshold && item.amount === bracket.amount;
+        });
+        if (index !== -1) {
+          brackets.splice(index, 1);
+        }
+        saveOwnerProductsData();
+        renderOwnerTaxBrackets();
+      });
+
+      row.appendChild(label);
+      row.appendChild(removeButton);
+      listElement.appendChild(row);
+    });
+}
+
+function renderOwnerTaxBrackets() {
+  const brackets = ensureOwnerTaxBrackets();
+  if (ownerTaxServiceList) {
+    renderOwnerTaxBracketList(ownerTaxServiceList, brackets.service, "service");
+  }
+  if (ownerTaxProductList) {
+    renderOwnerTaxBracketList(ownerTaxProductList, brackets.product, "product");
+  }
+}
+
+function addOwnerTaxBracket(category, thresholdInput, amountInput) {
+  const threshold = Number(thresholdInput.value);
+  const amount = Number(amountInput.value);
+
+  if (!Number.isFinite(threshold) || threshold < 0 || !Number.isFinite(amount) || amount < 0) {
+    return;
+  }
+
+  ensureOwnerTaxBrackets()[category].push({ threshold: threshold, amount: amount });
+  saveOwnerProductsData();
+  thresholdInput.value = "";
+  amountInput.value = "";
+  renderOwnerTaxBrackets();
+}
+
+if (ownerTaxServiceAddButton) {
+  ownerTaxServiceAddButton.addEventListener("click", function () {
+    addOwnerTaxBracket("service", ownerTaxServiceThreshold, ownerTaxServiceAmount);
+  });
+}
+
+if (ownerTaxProductAddButton) {
+  ownerTaxProductAddButton.addEventListener("click", function () {
+    addOwnerTaxBracket("product", ownerTaxProductThreshold, ownerTaxProductAmount);
   });
 }
 
