@@ -1060,6 +1060,26 @@ input.is-error, select.is-error { border-color: var(--danger); }
 /* Status text helpers used standalone on rows/badges */
 .pending { color: var(--warning); }
 
+/* Preset price picker (sales entry) */
+.price-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.price-preset-btn {
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--borderline);
+  background: var(--surface);
+  color: var(--textmain);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-align: center;
+}
+.price-preset-btn:hover { border-color: var(--brass); }
+.price-preset-btn.active { background: var(--brass); border-color: var(--brass); color: #fff; }
+
 /* ===== Responsive ===== */
 @media (max-width: 720px) {
   .manager-header { flex-direction: column; }

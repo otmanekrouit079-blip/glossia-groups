@@ -2198,3 +2198,47 @@ window.addEventListener("storage", function (event) {
 setActiveSection(activeSection);
 renderEmployees();
 renderManagerSectionDetails();
+
+function setupPricePresetGrids() {
+  document.querySelectorAll(".price-preset-grid").forEach(function (grid) {
+    const input = document.getElementById(grid.getAttribute("data-preset-for"));
+    if (!input) {
+      return;
+    }
+
+    for (let amount = 5; amount <= 100; amount += 5) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "price-preset-btn";
+      btn.textContent = amount + " DH";
+      btn.dataset.amount = String(amount);
+      btn.addEventListener("click", function () {
+        input.value = amount;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      grid.appendChild(btn);
+    }
+  });
+}
+
+function syncPricePresetActiveStates() {
+  document.querySelectorAll(".price-preset-grid").forEach(function (grid) {
+    const input = document.getElementById(grid.getAttribute("data-preset-for"));
+    if (!input) {
+      return;
+    }
+
+    const current = String(Number(input.value || 0));
+    grid.querySelectorAll(".price-preset-btn").forEach(function (btn) {
+      btn.classList.toggle("active", input.value !== "" && btn.dataset.amount === current);
+    });
+  });
+}
+
+setupPricePresetGrids();
+
+const baseUpdateSalesTotalAmount = updateSalesTotalAmount;
+updateSalesTotalAmount = function () {
+  baseUpdateSalesTotalAmount.apply(this, arguments);
+  syncPricePresetActiveStates();
+};

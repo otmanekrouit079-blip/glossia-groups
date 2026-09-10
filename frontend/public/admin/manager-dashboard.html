@@ -141,12 +141,14 @@
         <form id="sales-form" class="sales-entry-form" novalidate>
           <div id="sales-service-row" class="form-row">
             <label for="sales-service-amount">Prix de vente service (DH)</label>
-            <input id="sales-service-amount" type="number" min="0" step="0.01" placeholder="Ex: 300" />
+            <div class="price-preset-grid" data-preset-for="sales-service-amount"></div>
+            <input id="sales-service-amount" type="number" min="0" step="0.01" placeholder="Autre montant (+100 DH)" />
           </div>
 
           <div id="sales-product-row" class="form-row">
             <label for="sales-product-unit-amount">Prix de vente produit (DH)</label>
-            <input id="sales-product-unit-amount" type="number" min="0" step="0.01" placeholder="Ex: 120" />
+            <div class="price-preset-grid" data-preset-for="sales-product-unit-amount"></div>
+            <input id="sales-product-unit-amount" type="number" min="0" step="0.01" placeholder="Autre montant (+100 DH)" />
           </div>
 
           <label for="sales-total-amount">Montant total (DH)</label>
