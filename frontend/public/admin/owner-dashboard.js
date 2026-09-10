@@ -50,6 +50,12 @@ const ownerTargetModalSubtitle = document.getElementById("owner-target-modal-sub
 const ownerTargetModalCloseButton = document.getElementById("owner-target-modal-close");
 const ownerTargetModalCloseIconButton = document.getElementById("owner-target-modal-close-icon");
 const ownerTargetForm = document.getElementById("owner-target-form");
+
+const ownerBriefingModal = document.getElementById("owner-briefing-modal");
+const ownerBriefingSubtitle = document.getElementById("owner-briefing-subtitle");
+const ownerBriefingBody = document.getElementById("owner-briefing-body");
+const ownerBriefingCloseButton = document.getElementById("owner-briefing-close");
+const ownerBriefingCloseIconButton = document.getElementById("owner-briefing-close-icon");
 const ownerTargetFeedback = document.getElementById("owner-target-feedback");
 const ownerTargetStartDateInput = document.getElementById("owner-target-start-date");
 const ownerTargetEndDateInput = document.getElementById("owner-target-end-date");
@@ -3410,6 +3416,111 @@ window.addEventListener("pageshow", function () {
   }, 80);
 });
 
+function createOwnerBriefingSection(title, items) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  const section = document.createElement("section");
+  section.className = "owner-briefing-section";
+
+  const heading = document.createElement("h4");
+  heading.className = "modal-block-title";
+  heading.textContent = title + " (" + items.length + ")";
+  section.appendChild(heading);
+
+  const list = document.createElement("ul");
+  list.className = "owner-briefing-list";
+  items.forEach(function (itemText) {
+    const li = document.createElement("li");
+    li.textContent = itemText;
+    list.appendChild(li);
+  });
+  section.appendChild(list);
+  return section;
+}
+
+function openOwnerBriefingModal() {
+  if (!ownerBriefingModal) {
+    return;
+  }
+
+  const employeeHealth = getSortedOwnerEmployeeHealth();
+
+  const missingHoursItems = employeeHealth
+    .filter(function (health) { return !health.meetsHours; })
+    .map(function (health) {
+      return health.employee.name + ": " + formatOwnerMinutes(health.missingMinutes) + " manquantes aujourd'hui";
+    });
+
+  const notDoneItems = [];
+  const excuseItems = [];
+  employeeHealth.forEach(function (health) {
+    (health.state.tasks || []).forEach(function (task) {
+      if (task.status === "notdone") {
+        notDoneItems.push(health.employee.name + ": " + task.text);
+      } else if (task.status === "excuse") {
+        excuseItems.push(
+          health.employee.name + ": " + task.text +
+          (task.excuseReason ? " — " + task.excuseReason : " (en attente de justification)")
+        );
+      }
+    });
+  });
+
+  const stockItems = (ownerSharedData.stockRequests || []).map(function (request) {
+    const typeLabel = request.type === "vente" ? "Produit vente" : "Produit salle";
+    return (request.name || "Produit sans nom") + " — Qté: " + request.quantity + " (" + typeLabel + ")";
+  });
+
+  ownerBriefingBody.innerHTML = "";
+  const sections = [
+    createOwnerBriefingSection("Heures incomplètes", missingHoursItems),
+    createOwnerBriefingSection("Tâches non terminées", notDoneItems),
+    createOwnerBriefingSection("Tâches excusées", excuseItems),
+    createOwnerBriefingSection("Besoins de réapprovisionnement", stockItems)
+  ].filter(Boolean);
+
+  const totalIssues = missingHoursItems.length + notDoneItems.length + excuseItems.length + stockItems.length;
+
+  if (sections.length === 0) {
+    ownerBriefingSubtitle.textContent = "Tout est en ordre aujourd'hui.";
+    const okMessage = document.createElement("p");
+    okMessage.className = "owner-briefing-ok";
+    okMessage.textContent = "Aucun problème détecté : heures, tâches et stock sont à jour.";
+    ownerBriefingBody.appendChild(okMessage);
+  } else {
+    ownerBriefingSubtitle.textContent = totalIssues + " point(s) à vérifier aujourd'hui.";
+    sections.forEach(function (section) {
+      ownerBriefingBody.appendChild(section);
+    });
+  }
+
+  ownerBriefingModal.classList.remove("hidden");
+}
+
+function closeOwnerBriefingModal() {
+  if (ownerBriefingModal) {
+    ownerBriefingModal.classList.add("hidden");
+  }
+}
+
+if (ownerBriefingCloseButton) {
+  ownerBriefingCloseButton.addEventListener("click", closeOwnerBriefingModal);
+}
+
+if (ownerBriefingCloseIconButton) {
+  ownerBriefingCloseIconButton.addEventListener("click", closeOwnerBriefingModal);
+}
+
+if (ownerBriefingModal) {
+  ownerBriefingModal.addEventListener("click", function (event) {
+    if (event.target === ownerBriefingModal) {
+      closeOwnerBriefingModal();
+    }
+  });
+}
+
 renderOwnerDashboard("day");
 mountOwnerSectionsInPopup();
 setOwnerCompactView("overview", { openPopup: false });
@@ -3417,3 +3528,4 @@ closeOwnerSectionsModal();
 syncOwnerReferenceDateInput();
 renderOwnerLastSavedIndicator();
 window.scrollTo(0, 0);
+openOwnerBriefingModal();

@@ -507,6 +507,21 @@
     </div>
   </div>
 
+  <div id="owner-briefing-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-briefing-title">
+    <div class="modal-content owner-detail-modal-content owner-briefing-content">
+      <button id="owner-briefing-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
+      <p class="eyebrow">Résumé du jour</p>
+      <h3 id="owner-briefing-title">Points à vérifier</h3>
+      <p id="owner-briefing-subtitle" class="modal-subtitle"></p>
+
+      <div id="owner-briefing-body"></div>
+
+      <div class="modal-actions">
+        <button id="owner-briefing-close" class="manager-btn" type="button">J'ai vérifié, fermer</button>
+      </div>
+    </div>
+  </div>
+
   <script src="config.js"></script>
   <script src="app-storage.js"></script>
   <script src="sync-ui.js"></script>

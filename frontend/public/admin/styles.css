@@ -1236,6 +1236,26 @@ input.is-error, select.is-error { border-color: var(--danger); }
 }
 .task-excuse-box .manager-btn { align-self: flex-start; }
 
+/* Owner daily briefing modal */
+.owner-briefing-content { max-width: 640px; }
+.owner-briefing-section { margin-bottom: 16px; }
+.owner-briefing-list { display: flex; flex-direction: column; gap: 6px; }
+.owner-briefing-list li {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline);
+  font-size: 0.85rem;
+}
+.owner-briefing-ok {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: #e9f4ee;
+  border: 1px solid var(--success);
+  color: var(--success);
+  font-weight: 700;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 720px) {
   .manager-header { flex-direction: column; }
