@@ -753,8 +753,28 @@ input.is-error, select.is-error { border-color: var(--danger); }
   color: var(--textmain);
 }
 
-.stamp-label { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.8rem; color: var(--textmuted); }
+.stamp-label { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.8rem; color: var(--textmuted); }
+.stamp-label .app-icon { width: 22px; height: 22px; stroke-width: 2; flex-shrink: 0; }
+.stamp-btn[data-stamp-key="arrival"] .app-icon { color: var(--success); }
+.stamp-btn[data-stamp-key="lunch"] .app-icon { color: var(--warning); }
+.stamp-btn[data-stamp-key="returnTime"] .app-icon { color: var(--brass); }
+.stamp-btn[data-stamp-key="departure"] .app-icon { color: var(--danger); }
 .stamp-time { font-weight: 800; font-size: 0.95rem; color: var(--ink); }
+
+.schedule-nav-toolbar .app-icon { color: var(--brass-dark); width: 16px; height: 16px; }
+
+.schedule-point-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--borderline);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
 
 .schedule-nav-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: var(--gap-sm); }
 .schedule-panel-intro { margin-bottom: 10px; }
