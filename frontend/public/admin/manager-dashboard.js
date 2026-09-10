@@ -97,8 +97,6 @@ const salesHistoryList = document.getElementById("sales-history-list");
 const managerObjectiveOverview = document.getElementById("manager-objective-overview");
 
 const taskList = document.getElementById("task-list");
-const addTaskForm = document.getElementById("add-task-form");
-const newTaskInput = document.getElementById("new-task-input");
 
 const scheduleStampContainer = document.getElementById("schedule-stamp-buttons");
 const scheduleStampButtons = document.querySelectorAll(".stamp-btn");
@@ -2010,29 +2008,6 @@ taskList.addEventListener("change", function (event) {
   saveSharedData();
   renderTaskList();
   renderManagerSectionDetails();
-});
-
-addTaskForm.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const taskText = newTaskInput.value.trim();
-  if (!taskText) {
-    showModalFeedback("Veuillez entrer une tâche.", true);
-    return;
-  }
-
-  const state = ensureEmployeeData(selectedEmployeeId);
-  state.tasks.push({
-    text: taskText,
-    done: false,
-    completedAtISO: null
-  });
-
-  saveSharedData();
-  newTaskInput.value = "";
-  renderTaskList();
-  renderManagerSectionDetails();
-  showModalFeedback("Nouvelle tâche ajoutée.", false);
 });
 
 scheduleStampContainer.addEventListener("click", function (event) {

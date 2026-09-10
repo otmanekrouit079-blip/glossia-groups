@@ -717,6 +717,38 @@ input.is-error, select.is-error { border-color: var(--danger); }
 }
 
 /* ===== Task list & schedule/stamp UI ===== */
+.owner-task-count { color: var(--textmuted); font-size: 0.82rem; margin-bottom: 8px; }
+
+.owner-modal-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.owner-modal-task-list .task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--borderline);
+  background: var(--surface-alt);
+}
+
+.owner-modal-task-list .task-item span { flex: 1; font-size: 0.88rem; }
+.owner-modal-task-list .task-item.is-done span { color: var(--textmuted); text-decoration: line-through; }
+
+.owner-task-remove {
+  border: none;
+  background: transparent;
+  color: var(--textmuted);
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+.owner-task-remove:hover { background: #fbeae7; color: var(--danger); }
+
 .task-list, .employee-readonly-tasks {
   display: flex;
   flex-direction: column;

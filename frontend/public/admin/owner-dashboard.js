@@ -26,6 +26,9 @@ const ownerModalSalesGrid = document.getElementById("owner-modal-sales-grid");
 const ownerModalTargetGrid = document.getElementById("owner-modal-target-grid");
 const ownerModalTaskCount = document.getElementById("owner-modal-task-count");
 const ownerModalTaskList = document.getElementById("owner-modal-task-list");
+const ownerAddTaskForm = document.getElementById("owner-add-task-form");
+const ownerNewTaskInput = document.getElementById("owner-new-task-input");
+let ownerDetailEmployeeId = null;
 const ownerModalCloseButton = document.getElementById("owner-modal-close");
 const ownerModalCloseIconButton = document.getElementById("owner-modal-close-icon");
 const ownerOpenProductsPopupButton = document.getElementById("owner-open-products-popup");
@@ -2476,19 +2479,100 @@ function fillOwnerTaskChecklist(tasks) {
     item.textContent = "Aucune tâche assignée.";
     ownerModalTaskList.appendChild(item);
   } else {
-    tasks.forEach(function (task) {
+    tasks.forEach(function (task, index) {
       const item = document.createElement("li");
-      const icon = document.createElement("span");
-      const text = document.createElement("span");
+      item.className = "task-item" + (task.done ? " is-done" : "");
 
-      item.className = task.done ? "done" : "pending";
-      icon.textContent = task.done ? "OK" : "A faire";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = Boolean(task.done);
+      checkbox.dataset.taskIndex = String(index);
+
+      const text = document.createElement("span");
       text.textContent = task.text;
-      item.appendChild(icon);
+
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "owner-task-remove";
+      removeButton.dataset.taskIndex = String(index);
+      removeButton.setAttribute("aria-label", "Supprimer la tâche");
+      removeButton.textContent = "✕";
+
+      item.appendChild(checkbox);
       item.appendChild(text);
+      item.appendChild(removeButton);
       ownerModalTaskList.appendChild(item);
     });
   }
+}
+
+function refreshOwnerDetailTasks() {
+  if (ownerDetailEmployeeId == null) {
+    return;
+  }
+
+  const state = getOwnerEmployeeState(ownerDetailEmployeeId);
+  fillOwnerTaskChecklist(state.tasks || []);
+  saveOwnerProductsData();
+  renderOwnerDashboard(ownerActivePeriod);
+}
+
+if (ownerModalTaskList) {
+  ownerModalTaskList.addEventListener("change", function (event) {
+    const target = event.target;
+    if (target.tagName !== "INPUT" || target.type !== "checkbox") {
+      return;
+    }
+
+    const taskIndex = Number(target.dataset.taskIndex);
+    const state = getOwnerEmployeeState(ownerDetailEmployeeId);
+    const task = state.tasks?.[taskIndex];
+    if (!task) {
+      return;
+    }
+
+    task.done = target.checked;
+    task.completedAtISO = target.checked ? new Date().toISOString() : null;
+    refreshOwnerDetailTasks();
+  });
+
+  ownerModalTaskList.addEventListener("click", function (event) {
+    const button = event.target.closest(".owner-task-remove");
+    if (!button) {
+      return;
+    }
+
+    const taskIndex = Number(button.dataset.taskIndex);
+    const state = getOwnerEmployeeState(ownerDetailEmployeeId);
+    if (!Number.isInteger(taskIndex) || !state.tasks?.[taskIndex]) {
+      return;
+    }
+
+    state.tasks.splice(taskIndex, 1);
+    refreshOwnerDetailTasks();
+  });
+}
+
+if (ownerAddTaskForm) {
+  ownerAddTaskForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const taskText = ownerNewTaskInput.value.trim();
+    if (!taskText) {
+      return;
+    }
+
+    const state = getOwnerEmployeeState(ownerDetailEmployeeId);
+    state.tasks = state.tasks || [];
+    state.tasks.push({
+      text: taskText,
+      done: false,
+      completedAtISO: null
+    });
+
+    ownerNewTaskInput.value = "";
+    refreshOwnerDetailTasks();
+  });
 }
 
 function renderOwnerTargetIndicators(items) {
@@ -2725,6 +2809,7 @@ function saveOwnerTargetsFromForm() {
 function openOwnerDetailModal(employeeHealth, period) {
   const employee = employeeHealth.employee;
   const state = employeeHealth.state;
+  ownerDetailEmployeeId = employee.id;
   const today = employeeHealth.today;
   const todayStatus = getOwnerDetailedStatus(today.calculation);
   const periodMetrics = getOwnerEmployeePeriodMetrics(employee, period);
