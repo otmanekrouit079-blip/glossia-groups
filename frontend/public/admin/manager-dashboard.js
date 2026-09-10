@@ -102,9 +102,6 @@ const scheduleStampContainer = document.getElementById("schedule-stamp-buttons")
 const scheduleStampButtons = document.querySelectorAll(".stamp-btn");
 const workHoursSummary = document.getElementById("work-hours-summary");
 const todayScheduleDisplay = document.getElementById("today-schedule-display");
-const scheduleDatePicker = document.getElementById("schedule-date-picker");
-const schedulePrevDayButton = document.getElementById("schedule-prev-day");
-const scheduleNextDayButton = document.getElementById("schedule-next-day");
 const scheduleToggleRestButton = document.getElementById("schedule-toggle-rest");
 const scheduleDayTitle = document.getElementById("schedule-day-title");
 
@@ -1724,10 +1721,6 @@ function renderTodaySchedule() {
 
   calculateDailyWork(todaySchedule);
 
-  if (scheduleDatePicker) {
-    scheduleDatePicker.value = dateKey;
-  }
-
   if (scheduleDayTitle) {
     scheduleDayTitle.textContent = "Horaires · " + formatDateKeyForHeading(dateKey);
   }
@@ -1754,11 +1747,6 @@ function renderTodaySchedule() {
   renderScheduleDisplay(todaySchedule);
 
   renderWorkHoursSummary(todaySchedule);
-}
-
-function setActiveScheduleDate(dateKey) {
-  activeScheduleDateKey = dateKey;
-  renderTodaySchedule();
 }
 
 function openEmployeeModal(employee) {
@@ -2092,32 +2080,6 @@ scheduleStampContainer.addEventListener("click", function (event) {
   renderManagerSectionDetails();
   showModalFeedback(scheduleFieldLabels[stampKey] + " enregistré le " + stamp.dateTime + ".", false);
 });
-
-if (scheduleDatePicker) {
-  scheduleDatePicker.addEventListener("change", function () {
-    if (!scheduleDatePicker.value) {
-      return;
-    }
-
-    setActiveScheduleDate(scheduleDatePicker.value);
-  });
-}
-
-if (schedulePrevDayButton) {
-  schedulePrevDayButton.addEventListener("click", function () {
-    const baseDate = dateFromDateKey(activeScheduleDateKey || getCurrentDateKey());
-    baseDate.setDate(baseDate.getDate() - 1);
-    setActiveScheduleDate(dateKeyFromDate(baseDate));
-  });
-}
-
-if (scheduleNextDayButton) {
-  scheduleNextDayButton.addEventListener("click", function () {
-    const baseDate = dateFromDateKey(activeScheduleDateKey || getCurrentDateKey());
-    baseDate.setDate(baseDate.getDate() + 1);
-    setActiveScheduleDate(dateKeyFromDate(baseDate));
-  });
-}
 
 if (scheduleToggleRestButton) {
   scheduleToggleRestButton.addEventListener("click", function () {
