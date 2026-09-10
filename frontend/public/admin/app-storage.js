@@ -83,8 +83,8 @@
         },
         {
           role: "owner",
-          username: "owner1",
-          password: "1234"
+          username: "osmane Barber",
+          password: "otmankrouit199811"
         }
       ],
       employeeData: {},
@@ -210,8 +210,8 @@
     if (!hasOwnerAccount) {
       normalized.authUsers.push({
         role: "owner",
-        username: "owner1",
-        password: "1234"
+        username: "osmane Barber",
+        password: "otmankrouit199811"
       });
     }
 
