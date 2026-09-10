@@ -125,6 +125,17 @@ const accountsDetailCloseIcon = document.getElementById("accounts-detail-close-i
 let accountsDetailEmployeeId = null;
 const managerProductsTable = document.getElementById("manager-products-table");
 const managerConsumedTable = document.getElementById("manager-consumed-table");
+
+const stockRequestForm = document.getElementById("stock-request-form");
+const stockRequestPhotoInput = document.getElementById("stock-request-photo");
+const stockRequestPreview = document.getElementById("stock-request-preview");
+const stockRequestPreviewImg = document.getElementById("stock-request-preview-img");
+const stockRequestTypeToggle = document.getElementById("stock-request-type-toggle");
+const stockRequestNameInput = document.getElementById("stock-request-name");
+const stockRequestQuantityInput = document.getElementById("stock-request-quantity");
+const stockRequestFeedback = document.getElementById("stock-request-feedback");
+let stockRequestPhotoDataUrl = null;
+let stockRequestType = "salle";
 const managerRuptureTable = document.getElementById("manager-rupture-table");
 const managerTasksTable = document.getElementById("manager-tasks-table");
 const managerTimeTable = document.getElementById("manager-time-table");
@@ -854,7 +865,8 @@ function readLiveSharedData() {
     employeeData: parsed?.employeeData && typeof parsed.employeeData === "object" ? parsed.employeeData : employeeData,
     productSales: Array.isArray(parsed?.productSales) ? parsed.productSales : [],
     inventoryProducts: Array.isArray(parsed?.inventoryProducts) ? parsed.inventoryProducts : [],
-    ownerProducts: Array.isArray(parsed?.ownerProducts) ? parsed.ownerProducts : []
+    ownerProducts: Array.isArray(parsed?.ownerProducts) ? parsed.ownerProducts : [],
+    stockRequests: Array.isArray(parsed?.stockRequests) ? parsed.stockRequests : (sharedSalonData.stockRequests || [])
   };
 }
 
@@ -1259,25 +1271,37 @@ function renderConsumedDetail(liveData) {
     return;
   }
 
-  const products = liveData.inventoryProducts || [];
-  if (products.length === 0) {
-    managerConsumedTable.innerHTML = '<p class="placeholder-text">Aucun stock produit configuré.</p>';
+  const requests = (liveData.stockRequests || []).slice().sort(function (a, b) {
+    return new Date(b.dateISO) - new Date(a.dateISO);
+  });
+
+  if (requests.length === 0) {
+    managerConsumedTable.innerHTML = '<p class="placeholder-text">Aucun besoin de réapprovisionnement signalé.</p>';
     return;
   }
 
-  const rows = products.map(function (product) {
-    return "<tr>" +
-      "<td>" + product.name + "</td>" +
-      "<td>" + Number(product.consumedToday || 0) + "</td>" +
-      "<td>" + Number(product.stock || 0) + "</td>" +
-      "<td>" + Number(product.threshold || 0) + "</td>" +
-      "</tr>";
+  const cards = requests.map(function (request) {
+    const photo = request.photo
+      ? '<div class="stock-request-card-photo"><img src="' + request.photo + '" alt="' + (request.name || "Produit") + '" /></div>'
+      : '<div class="stock-request-card-photo no-photo">Pas de photo</div>';
+
+    const typeLabel = request.type === "vente" ? "Produit vente" : "Produit salle";
+
+    return '<div class="stock-request-card" data-request-id="' + request.id + '">' +
+      photo +
+      '<div class="stock-request-card-body">' +
+      '<span class="stock-request-badge ' + request.type + '">' + typeLabel + "</span>" +
+      '<span class="stock-request-card-name">' + (request.name || "Produit sans nom") + "</span>" +
+      '<div class="stock-request-card-meta">' +
+      '<span class="stock-request-card-qty">Qté: ' + Number(request.quantity || 0) + "</span>" +
+      '<span class="stock-request-card-date">' + formatDateTime(request.dateISO) + "</span>" +
+      "</div>" +
+      '<button type="button" class="manager-btn manager-btn-muted stock-request-remove" data-request-id="' + request.id + '">Reçu / Supprimer</button>' +
+      "</div>" +
+      "</div>";
   }).join("");
 
-  managerConsumedTable.innerHTML =
-    '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Produit</th><th>Consommé (jour)</th><th>Stock</th><th>Seuil</th></tr></thead>" +
-    "<tbody>" + rows + "</tbody></table></div>";
+  managerConsumedTable.innerHTML = '<div class="stock-request-list">' + cards + "</div>";
 }
 
 function renderRuptureDetail(liveData) {
@@ -2366,5 +2390,109 @@ if (accountsDetailModal) {
     if (event.target === accountsDetailModal) {
       closeAccountsDetailModal();
     }
+  });
+}
+
+function resizeImageFileToDataUrl(file, maxSize, callback) {
+  const reader = new FileReader();
+  reader.onload = function () {
+    const image = new Image();
+    image.onload = function () {
+      const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(image.width * scale);
+      canvas.height = Math.round(image.height * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      callback(canvas.toDataURL("image/jpeg", 0.6));
+    };
+    image.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+if (stockRequestPhotoInput) {
+  stockRequestPhotoInput.addEventListener("change", function () {
+    const file = stockRequestPhotoInput.files && stockRequestPhotoInput.files[0];
+    if (!file) {
+      return;
+    }
+
+    resizeImageFileToDataUrl(file, 480, function (dataUrl) {
+      stockRequestPhotoDataUrl = dataUrl;
+      stockRequestPreviewImg.src = dataUrl;
+      stockRequestPreview.classList.remove("hidden");
+    });
+  });
+}
+
+if (stockRequestTypeToggle) {
+  stockRequestTypeToggle.addEventListener("click", function (event) {
+    const button = event.target.closest(".stock-type-btn");
+    if (!button) {
+      return;
+    }
+
+    stockRequestType = button.dataset.type;
+    stockRequestTypeToggle.querySelectorAll(".stock-type-btn").forEach(function (btn) {
+      btn.classList.toggle("active", btn === button);
+    });
+  });
+}
+
+if (stockRequestForm) {
+  stockRequestForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const quantity = Number(stockRequestQuantityInput.value);
+    if (!Number.isFinite(quantity) || quantity <= 0) {
+      stockRequestFeedback.textContent = "Veuillez saisir une quantité valide.";
+      stockRequestFeedback.classList.add("is-error");
+      return;
+    }
+
+    if (!Array.isArray(sharedSalonData.stockRequests)) {
+      sharedSalonData.stockRequests = [];
+    }
+
+    sharedSalonData.stockRequests.push({
+      id: createSaleId("stock"),
+      name: stockRequestNameInput.value.trim(),
+      type: stockRequestType,
+      quantity: quantity,
+      photo: stockRequestPhotoDataUrl,
+      dateISO: new Date().toISOString()
+    });
+
+    saveSharedData();
+
+    stockRequestForm.reset();
+    stockRequestPhotoDataUrl = null;
+    stockRequestPreview.classList.add("hidden");
+    stockRequestType = "salle";
+    stockRequestTypeToggle.querySelectorAll(".stock-type-btn").forEach(function (btn) {
+      btn.classList.toggle("active", btn.dataset.type === "salle");
+    });
+    stockRequestFeedback.classList.remove("is-error");
+    stockRequestFeedback.textContent = "Besoin signalé avec succès.";
+
+    renderManagerSectionDetails();
+  });
+}
+
+if (managerConsumedTable) {
+  managerConsumedTable.addEventListener("click", function (event) {
+    const button = event.target.closest(".stock-request-remove");
+    if (!button) {
+      return;
+    }
+
+    const requestId = button.dataset.requestId;
+    sharedSalonData.stockRequests = (sharedSalonData.stockRequests || []).filter(function (request) {
+      return request.id !== requestId;
+    });
+
+    saveSharedData();
+    renderManagerSectionDetails();
   });
 }

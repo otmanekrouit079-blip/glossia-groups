@@ -105,6 +105,39 @@
 
     <section id="section-produits-consommes" class="manager-section content-section hidden" aria-hidden="true">
       <h2>Produits consommés</h2>
+      <p class="muted">Prenez une photo du produit, précisez son type et la quantité nécessaire pour le réapprovisionnement.</p>
+
+      <form id="stock-request-form" class="stock-request-form" novalidate>
+        <div class="form-row">
+          <label for="stock-request-photo">Photo du produit</label>
+          <input id="stock-request-photo" type="file" accept="image/*" capture="environment" />
+          <div id="stock-request-preview" class="stock-request-preview hidden">
+            <img id="stock-request-preview-img" alt="Aperçu du produit" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Type de produit</label>
+          <div id="stock-request-type-toggle" class="stock-request-type-toggle">
+            <button type="button" class="manager-btn manager-btn-muted stock-type-btn active" data-type="salle">Produit salle</button>
+            <button type="button" class="manager-btn manager-btn-muted stock-type-btn" data-type="vente">Produit vente</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="stock-request-name">Nom du produit</label>
+          <input id="stock-request-name" type="text" placeholder="Ex: Shampoing lissant" />
+        </div>
+
+        <div class="form-row">
+          <label for="stock-request-quantity">Quantité nécessaire</label>
+          <input id="stock-request-quantity" type="number" min="1" step="1" placeholder="Ex: 3" required />
+        </div>
+
+        <p id="stock-request-feedback" class="modal-feedback" aria-live="polite"></p>
+        <button class="manager-btn" type="submit">+ Signaler ce besoin</button>
+      </form>
+
       <div id="manager-consumed-table" class="manager-detail-table-wrap"></div>
     </section>
 
