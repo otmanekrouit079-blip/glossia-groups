@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import SessionLocal, engine
 from app.models import Base
-from app.routers import admin, availability, bookings, branches, products, services, webhooks
+from app.routers import admin, availability, bookings, branches, products, services, state, webhooks
 from app.services.seeder import seed_initial_data
 
 app = FastAPI(title="GLOSSIA GROUP API", version="0.1.0")
@@ -44,4 +44,5 @@ app.include_router(products.router, prefix="/api/products", tags=["products"])
 app.include_router(availability.router, prefix="/api/availability", tags=["availability"])
 app.include_router(bookings.router, prefix="/api/bookings", tags=["bookings"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
+app.include_router(state.router, prefix="/api", tags=["salon-state"])
 app.include_router(webhooks.router, prefix="/api/webhooks", tags=["webhooks"])

@@ -8,6 +8,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/admin",
+        destination: "/admin/login.html",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Employé</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="employee-dashboard-page">
+    <header class="manager-header">
+      <div>
+        <p class="eyebrow owner-brand-title">GLOSSIA GROUPS SYSTEM</p>
+        <h1 id="employee-welcome">Bienvenue</h1>
+        <p id="employee-post-label" class="employee-header-post"></p>
+      </div>
+      <div class="manager-header-actions">
+        <div class="sync-toolbar" data-sync-toolbar>
+          <span class="sync-status is-pending" data-sync-status>DB: Checking...</span>
+          <span class="sync-last" data-sync-last>Last sync: --</span>
+          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">Sync now</button>
+        </div>
+        <a id="employee-logout" href="login.html" class="logout-btn">Logout</a>
+      </div>
+    </header>
+
+    <section class="employee-dashboard-section" aria-labelledby="hours-heading">
+      <div class="employee-section-heading">
+        <div>
+          <p class="eyebrow">Temps de travail</p>
+          <h2 id="hours-heading">Mes heures</h2>
+        </div>
+
+        <div class="period-tabs" role="tablist" aria-label="Période du résumé">
+          <button type="button" class="period-tab active" data-period="day" aria-selected="true">Jour</button>
+          <button type="button" class="period-tab" data-period="week" aria-selected="false">Semaine</button>
+          <button type="button" class="period-tab" data-period="month" aria-selected="false">Mois</button>
+        </div>
+      </div>
+
+      <div id="employee-hours-summary" class="employee-summary-grid"></div>
+    </section>
+
+    <section class="employee-dashboard-section" aria-labelledby="history-heading">
+      <div class="employee-section-heading">
+        <div>
+          <p class="eyebrow">Pointages récents</p>
+          <h2 id="history-heading">Historique quotidien</h2>
+        </div>
+      </div>
+
+      <div class="employee-table-wrap">
+        <table class="employee-history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Arrivée</th>
+              <th>Pause</th>
+              <th>Retour</th>
+              <th>Départ</th>
+              <th>Travail</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="employee-history-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="employee-dashboard-columns">
+      <section class="employee-dashboard-section" aria-labelledby="sales-heading">
+        <div class="employee-section-heading">
+          <div>
+            <p class="eyebrow">Mes résultats</p>
+            <h2 id="sales-heading">Historique des ventes</h2>
+          </div>
+        </div>
+
+        <div class="sales-total-grid">
+          <div class="employee-metric-card">
+            <span>Cette semaine</span>
+            <strong id="employee-week-sales">0,00 DH</strong>
+          </div>
+          <div class="employee-metric-card">
+            <span>Ce mois</span>
+            <strong id="employee-month-sales">0,00 DH</strong>
+          </div>
+        </div>
+        <ul id="employee-sales-list" class="employee-simple-list"></ul>
+      </section>
+
+      <section class="employee-dashboard-section" aria-labelledby="tasks-heading">
+        <div class="employee-section-heading">
+          <div>
+            <p class="eyebrow">À consulter</p>
+            <h2 id="tasks-heading">Mes tâches</h2>
+          </div>
+          <span class="readonly-badge">Lecture seule</span>
+        </div>
+
+        <div id="employee-task-list" class="employee-readonly-tasks"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app-storage.js"></script>
+  <script src="sync-ui.js"></script>
+  <script src="employee-dashboard.js"></script>
+  <script src="premium-ui.js"></script>
+</body>
+</html>

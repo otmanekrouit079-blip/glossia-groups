@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salon Manager - Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="login-page">
+    <section class="login-card" aria-labelledby="login-title">
+      <p class="eyebrow owner-brand-title">GLOSSIA GROUPS SYSTEM</p>
+      <h1 id="login-title">Salon Manager</h1>
+      <p class="subtitle">Sign in to access your workspace.</p>
+
+      <form id="login-form" novalidate>
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="manager">Gerant</option>
+          <option value="employee">Employe</option>
+          <option value="owner">Proprietaire</option>
+        </select>
+
+        <label for="username">Username / ID</label>
+        <input id="username" name="username" type="text" autocomplete="username" required />
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+        <button type="submit">Log In</button>
+        <p id="login-error" class="error-message" role="alert" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app-storage.js"></script>
+  <script src="script.js"></script>
+  <script src="premium-ui.js"></script>
+</body>
+</html>
