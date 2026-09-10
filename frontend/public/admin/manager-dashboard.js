@@ -110,6 +110,19 @@ const scheduleDayTitle = document.getElementById("schedule-day-title");
 
 const managerServicesSummary = document.getElementById("manager-services-summary");
 const managerServicesTable = document.getElementById("manager-services-table");
+
+const accountsDetailModal = document.getElementById("accounts-detail-modal");
+const accountsDetailTitle = document.getElementById("accounts-detail-title");
+const accountsDetailSubtitle = document.getElementById("accounts-detail-subtitle");
+const accountsDetailSummary = document.getElementById("accounts-detail-summary");
+const accountsDetailStart = document.getElementById("accounts-detail-start");
+const accountsDetailEnd = document.getElementById("accounts-detail-end");
+const accountsDetailApply = document.getElementById("accounts-detail-apply");
+const accountsDetailRangeTotal = document.getElementById("accounts-detail-range-total");
+const accountsDetailList = document.getElementById("accounts-detail-list");
+const accountsDetailClose = document.getElementById("accounts-detail-close");
+const accountsDetailCloseIcon = document.getElementById("accounts-detail-close-icon");
+let accountsDetailEmployeeId = null;
 const managerProductsTable = document.getElementById("manager-products-table");
 const managerConsumedTable = document.getElementById("manager-consumed-table");
 const managerRuptureTable = document.getElementById("manager-rupture-table");
@@ -1002,9 +1015,11 @@ function renderServicesDetail(liveData) {
     }
   });
 
-  const rows = Object.values(grouped).sort(function (a, b) {
-    return b.total - a.total;
-  }).map(function (entry) {
+  const rows = Object.entries(grouped).sort(function (a, b) {
+    return b[1].total - a[1].total;
+  }).map(function (pair) {
+    const employeeId = pair[0];
+    const entry = pair[1];
     return "<tr>" +
       "<td>" + entry.name + "</td>" +
       "<td>" + formatEuroAmount(entry.services) + "</td>" +
@@ -1013,12 +1028,13 @@ function renderServicesDetail(liveData) {
       "<td>" + formatEuroAmount(entry.day) + "</td>" +
       "<td>" + formatEuroAmount(entry.week) + "</td>" +
       "<td>" + formatEuroAmount(entry.month) + "</td>" +
+      "<td><button type=\"button\" class=\"manager-btn manager-btn-muted accounts-detail-btn\" data-employee-id=\"" + employeeId + "\">Détail</button></td>" +
       "</tr>";
   }).join("");
 
   managerServicesTable.innerHTML =
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Employé</th><th>Services</th><th>Produits</th><th>Total</th><th>Jour</th><th>Semaine</th><th>Mois</th></tr></thead>" +
+    "<thead><tr><th>Employé</th><th>Services</th><th>Produits</th><th>Total</th><th>Jour</th><th>Semaine</th><th>Mois</th><th></th></tr></thead>" +
     "<tbody>" + rows + "</tbody></table></div>";
 }
 
@@ -2217,3 +2233,138 @@ updateSalesTotalAmount = function () {
   baseUpdateSalesTotalAmount.apply(this, arguments);
   syncPricePresetActiveStates();
 };
+
+function formatAccountsRecordType(record) {
+  return record.type === "product" ? "Produit" : "Service";
+}
+
+function renderAccountsDetailRange() {
+  if (accountsDetailEmployeeId == null) {
+    return;
+  }
+
+  const liveData = readLiveSharedData();
+  const records = getManagerAllSalesRecords(liveData).filter(function (record) {
+    return Number(record.employeeId) === Number(accountsDetailEmployeeId);
+  });
+
+  const startValue = accountsDetailStart.value;
+  const endValue = accountsDetailEnd.value;
+
+  const filtered = records.filter(function (record) {
+    const workDateKey = getWorkDateKeyFromISO(record.dateISO);
+    if (startValue && workDateKey < startValue) {
+      return false;
+    }
+    if (endValue && workDateKey > endValue) {
+      return false;
+    }
+    return true;
+  }).sort(function (a, b) {
+    return new Date(b.dateISO) - new Date(a.dateISO);
+  });
+
+  const rangeTotal = sumRecordAmounts(filtered);
+  accountsDetailRangeTotal.textContent =
+    filtered.length + " vente(s) · Total: " + formatEuroAmount(rangeTotal);
+
+  accountsDetailList.innerHTML = "";
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty";
+    empty.textContent = "Aucune vente sur cette période.";
+    accountsDetailList.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(function (record) {
+    const item = document.createElement("li");
+    item.className = "modal-list-item";
+
+    const line = document.createElement("div");
+    line.className = "history-entry-content";
+
+    const label = document.createElement("span");
+    label.textContent = formatDateTime(record.dateISO) + " · " + formatAccountsRecordType(record);
+
+    const amount = document.createElement("strong");
+    amount.textContent = formatEuroAmount(record.amount);
+
+    line.appendChild(label);
+    line.appendChild(amount);
+    item.appendChild(line);
+    accountsDetailList.appendChild(item);
+  });
+}
+
+function openAccountsDetailModal(employeeId) {
+  const liveData = readLiveSharedData();
+  const employee = (liveData.employees || []).find(function (item) {
+    return Number(item.id) === Number(employeeId);
+  });
+
+  if (!employee) {
+    return;
+  }
+
+  accountsDetailEmployeeId = employeeId;
+  accountsDetailTitle.textContent = "Compte · " + employee.name;
+  accountsDetailSubtitle.textContent = employee.post;
+
+  const records = getManagerAllSalesRecords(liveData).filter(function (record) {
+    return Number(record.employeeId) === Number(employeeId);
+  });
+
+  const dayTotal = sumRecordAmounts(getRecordsForPeriod(records, "day"));
+  const weekTotal = sumRecordAmounts(getRecordsForPeriod(records, "week"));
+  const monthTotal = sumRecordAmounts(getRecordsForPeriod(records, "month"));
+
+  accountsDetailSummary.innerHTML =
+    '<div class="employee-metric-card"><span>Aujourd\'hui</span><strong>' + formatEuroAmount(dayTotal) + "</strong></div>" +
+    '<div class="employee-metric-card"><span>Cette semaine</span><strong>' + formatEuroAmount(weekTotal) + "</strong></div>" +
+    '<div class="employee-metric-card"><span>Ce mois</span><strong>' + formatEuroAmount(monthTotal) + "</strong></div>";
+
+  const today = getCurrentDateKey();
+  accountsDetailStart.value = today;
+  accountsDetailEnd.value = today;
+  renderAccountsDetailRange();
+
+  accountsDetailModal.classList.remove("hidden");
+}
+
+function closeAccountsDetailModal() {
+  accountsDetailEmployeeId = null;
+  accountsDetailModal.classList.add("hidden");
+}
+
+if (managerServicesTable) {
+  managerServicesTable.addEventListener("click", function (event) {
+    const button = event.target.closest(".accounts-detail-btn");
+    if (!button) {
+      return;
+    }
+
+    openAccountsDetailModal(Number(button.dataset.employeeId));
+  });
+}
+
+if (accountsDetailApply) {
+  accountsDetailApply.addEventListener("click", renderAccountsDetailRange);
+}
+
+if (accountsDetailClose) {
+  accountsDetailClose.addEventListener("click", closeAccountsDetailModal);
+}
+
+if (accountsDetailCloseIcon) {
+  accountsDetailCloseIcon.addEventListener("click", closeAccountsDetailModal);
+}
+
+if (accountsDetailModal) {
+  accountsDetailModal.addEventListener("click", function (event) {
+    if (event.target === accountsDetailModal) {
+      closeAccountsDetailModal();
+    }
+  });
+}

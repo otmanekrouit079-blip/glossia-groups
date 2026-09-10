@@ -241,6 +241,30 @@
     </div>
   </div>
 
+  <div id="accounts-detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="accounts-detail-title">
+    <div class="modal-content owner-detail-modal-content">
+      <button id="accounts-detail-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
+      <h3 id="accounts-detail-title">Compte employé</h3>
+      <p id="accounts-detail-subtitle" class="modal-subtitle"></p>
+
+      <div id="accounts-detail-summary" class="sales-total-grid"></div>
+
+      <h4 class="modal-block-title">Historique par période</h4>
+      <div class="owner-bi-custom-range">
+        <input id="accounts-detail-start" type="date" class="owner-target-input" />
+        <input id="accounts-detail-end" type="date" class="owner-target-input" />
+        <button id="accounts-detail-apply" type="button" class="manager-btn">Appliquer</button>
+      </div>
+      <p id="accounts-detail-range-total" class="owner-task-count"></p>
+
+      <ul id="accounts-detail-list" class="modal-list"></ul>
+
+      <div class="modal-actions">
+        <button id="accounts-detail-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+      </div>
+    </div>
+  </div>
+
   <script src="config.js"></script>
   <script src="app-storage.js"></script>
   <script src="sync-ui.js"></script>
