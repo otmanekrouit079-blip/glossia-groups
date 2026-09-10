@@ -4,28 +4,28 @@
 :root {
   color-scheme: dark;
 
-  --ink: #f7f2e6;
-  --textmain: #e7e0d2;
-  --textmuted: #9c9284;
-  --borderline: rgba(255, 255, 255, 0.09);
-  --borderline-strong: rgba(227, 181, 100, 0.35);
+  --ink: #fffaf0;
+  --textmain: #f1ebdd;
+  --textmuted: #b6ab98;
+  --borderline: rgba(255, 255, 255, 0.13);
+  --borderline-strong: rgba(227, 181, 100, 0.45);
 
-  --brass: #e3b564;
-  --brass-soft: #f0cd8a;
-  --brass-dark: #b8863b;
-  --success: #4ade9e;
-  --danger: #ff6b5c;
-  --warning: #ffb648;
+  --brass: #eec078;
+  --brass-soft: #f5d8a0;
+  --brass-dark: #c8973f;
+  --success: #5fe6ac;
+  --danger: #ff8577;
+  --warning: #ffc266;
 
-  --success-tint: rgba(74, 222, 158, 0.12);
-  --danger-tint: rgba(255, 107, 92, 0.12);
-  --warning-tint: rgba(255, 182, 72, 0.12);
-  --brass-tint: rgba(227, 181, 100, 0.12);
+  --success-tint: rgba(95, 230, 172, 0.16);
+  --danger-tint: rgba(255, 133, 119, 0.16);
+  --warning-tint: rgba(255, 194, 102, 0.16);
+  --brass-tint: rgba(238, 192, 120, 0.16);
 
-  --surface: #18140f;
-  --surface-alt: #201a13;
-  --surface-raised: #2a2217;
-  --bg: #0a0806;
+  --surface: #2a2318;
+  --surface-alt: #342b1d;
+  --surface-raised: #3f3423;
+  --bg: #1c170f;
 
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -668,7 +668,7 @@ tbody tr:hover { background: var(--surface-alt); }
 
 .modal-content {
   position: relative;
-  background: linear-gradient(165deg, #1f1a12, #14100b);
+  background: linear-gradient(165deg, #352b1c, #241d13);
   border: 1px solid var(--borderline-strong);
   border-radius: var(--radius-lg);
   padding: 24px 26px;
