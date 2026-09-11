@@ -60,8 +60,8 @@
         updatedAt: null
       },
       employees: [
-        { id: 1, name: "Ahmed", post: "Post 1" },
-        { id: 2, name: "Youssef", post: "Post 2" }
+        { id: 1, name: "Ahmed", post: "منصب 1" },
+        { id: 2, name: "Youssef", post: "منصب 2" }
       ],
       authUsers: [
         {
@@ -90,7 +90,7 @@
       employeeData: {},
       ownerCampaignTarget: {},
       ownerDailyTaxDh: 0,
-      serviceCatalog: ["Coupe", "Gommage", "Rasage"],
+      serviceCatalog: ["قصة", "تقشير", "حلاقة اللحية"],
       productSales: [],
       ownerProducts: [],
       ownerTaxRates: {},
@@ -413,7 +413,7 @@
   function formatLastSavedAt() {
     const updatedAt = getLastSavedAt();
     if (!updatedAt) {
-      return "Jamais";
+      return "عمرو ما";
     }
 
     const date = new Date(updatedAt);

@@ -1,13 +1,13 @@
 // In-memory list of employees shown as room/post cards.
 const employees = [
-  { id: 1, name: "Ahmed", post: "Post 1" },
-  { id: 2, name: "Youssef", post: "Post 2" }
+  { id: 1, name: "Ahmed", post: "منصب 1" },
+  { id: 2, name: "Youssef", post: "منصب 2" }
 ];
 
 const defaultTasks = [
-  "Nettoyer le miroir",
-  "Nettoyer la chaise",
-  "Nettoyer les toilettes"
+  "نظف المرايا",
+  "نظف الكرسي",
+  "نظف المراحيض"
 ];
 
 // Per-employee in-memory storage for sales, tasks, and schedules.
@@ -140,10 +140,10 @@ const managerTimeTable = document.getElementById("manager-time-table");
 const requiredWorkMinutes = 12 * 60;
 
 const scheduleFieldLabels = {
-  arrival: "Arrivée",
-  lunch: "Pause déjeuner",
-  returnTime: "Retour",
-  departure: "Départ"
+  arrival: "الوصول",
+  lunch: "وقفة الغدا",
+  returnTime: "الرجوع",
+  departure: "المغادرة"
 };
 
 function createDefaultEmployeeState() {
@@ -205,7 +205,7 @@ function renderManagerAccessRows() {
   managerAccessBody.innerHTML = "";
 
   if (employees.length === 0) {
-    managerAccessBody.innerHTML = '<tr><td colspan="3" class="employee-empty-cell">Aucun employé disponible.</td></tr>';
+    managerAccessBody.innerHTML = '<tr><td colspan="3" class="employee-empty-cell">ماكاين حتى موظف متوفر.</td></tr>';
     return;
   }
 
@@ -272,7 +272,7 @@ function saveManagerEmployeePasswords() {
 
   if (hasEmptyField) {
     if (managerAccessFeedback) {
-      managerAccessFeedback.textContent = "Chaque employé doit avoir un mot de passe.";
+      managerAccessFeedback.textContent = "خاص كل موظف يكون عندو كلمة سر.";
     }
     return;
   }
@@ -295,7 +295,7 @@ function saveManagerEmployeePasswords() {
   renderManagerAccessRows();
 
   if (managerAccessFeedback) {
-    managerAccessFeedback.textContent = "Mots de passe employés mis à jour.";
+    managerAccessFeedback.textContent = "كلمات السر ديال الموظفين تبدلات.";
   }
 }
 
@@ -396,7 +396,7 @@ function calculateDailyWork(schedule) {
 
   if (!(arrivalTime <= lunchTime && lunchTime <= returnTime && returnTime <= departureTime)) {
     schedule.calculation = {
-      error: "Les pointages ne sont pas dans l'ordre chronologique.",
+      error: "التسجيلات ماشي فترتيب الوقت الصحيح.",
       calculatedAtISO: new Date().toISOString()
     };
     return;
@@ -424,41 +424,41 @@ function renderWorkHoursSummary(schedule) {
   if (schedule?.restDay || calculation?.restDay) {
     workHoursSummary.className = "work-hours-summary pending";
     workHoursSummary.innerHTML =
-      "<strong>Repos / Absent</strong>" +
-      "<span>Cette journee est marquee comme repos. Aucune alerte d'heures manquantes.</span>";
+      "<strong>راحة / غايب</strong>" +
+      "<span>هاد اليوم معلم كراحة. ماكاين حتى تنبيه ديال الساعات الناقصة.</span>";
     return;
   }
 
   if (!calculation) {
     workHoursSummary.className = "work-hours-summary pending";
     workHoursSummary.innerHTML =
-      "<strong>Horaire officiel: 11:00 - 00:00 · Objectif: 12h00</strong>" +
-      "<span>Complétez les 4 pointages pour calculer les heures travaillées.</span>";
+      "<strong>التوقيت الرسمي: 11:00 - 00:00 · الهدف: 12h00</strong>" +
+      "<span>كمل الـ4 تسجيلات باش تتحسب الساعات المشتغلة.</span>";
     return;
   }
 
   if (calculation.error) {
     workHoursSummary.className = "work-hours-summary warning";
-    workHoursSummary.innerHTML = "<strong>Calcul impossible</strong><span>" + calculation.error + "</span>";
+    workHoursSummary.innerHTML = "<strong>ماقدرش يتحسب</strong><span>" + calculation.error + "</span>";
     return;
   }
 
   const details =
-    "Présence: " + formatMinutes(calculation.totalMinutes) +
-    " · Pause: " + formatMinutes(calculation.breakMinutes) +
-    " · Travail réel: " + formatMinutes(calculation.workedMinutes);
+    "الحضور: " + formatMinutes(calculation.totalMinutes) +
+    " · الوقفة: " + formatMinutes(calculation.breakMinutes) +
+    " · الخدمة الحقيقية: " + formatMinutes(calculation.workedMinutes);
 
   if (calculation.meetsTarget) {
     workHoursSummary.className = "work-hours-summary success";
     workHoursSummary.innerHTML =
-      "<strong>" + formatMinutes(calculation.workedMinutes) + " effectuées</strong>" +
+      "<strong>" + formatMinutes(calculation.workedMinutes) + " كاملة</strong>" +
       "<span>" + details + "</span>";
     return;
   }
 
   workHoursSummary.className = "work-hours-summary warning";
   workHoursSummary.innerHTML =
-    "<strong>Manque " + formatMinutes(calculation.missingMinutes) + "</strong>" +
+    "<strong>باقي " + formatMinutes(calculation.missingMinutes) + "</strong>" +
     "<span>" + details + "</span>";
 }
 
@@ -466,24 +466,24 @@ function renderScheduleDisplay(schedule) {
   if (schedule?.restDay) {
     todayScheduleDisplay.innerHTML =
       '<div class="schedule-status-row rest">' +
-      '<strong>🌙 Repos / Absent</strong>' +
-      "<span>Les pointages sont desactives pour cette journee.</span>" +
+      '<strong>🌙 راحة / غايب</strong>' +
+      "<span>التسجيلات معطلة لهاد اليوم.</span>" +
       "</div>";
     return;
   }
 
   const points = [
-    { key: "arrival", icon: "🟢", label: "Arrivee" },
-    { key: "lunch", icon: "🍽️", label: "Pause dejeuner" },
-    { key: "returnTime", icon: "🔁", label: "Retour" },
-    { key: "departure", icon: "🌙", label: "Depart" }
+    { key: "arrival", icon: "🟢", label: "الوصول" },
+    { key: "lunch", icon: "🍽️", label: "وقفة الغدا" },
+    { key: "returnTime", icon: "🔁", label: "الرجوع" },
+    { key: "departure", icon: "🌙", label: "المغادرة" }
   ];
 
   const rows = points.map(function (point) {
     const stamp = schedule?.[point.key];
     const statusClass = stamp ? "done" : "pending";
     const value = stamp ? (stamp.time || stamp.dateTime) : "--:--";
-    const meta = stamp ? stamp.date : "Non enregistre";
+    const meta = stamp ? stamp.date : "ماتسجلتش";
 
     return '<div class="schedule-point-row ' + statusClass + '">' +
       '<span class="schedule-point-icon">' + point.icon + "</span>" +
@@ -497,8 +497,8 @@ function renderScheduleDisplay(schedule) {
 
   todayScheduleDisplay.innerHTML =
     '<div class="schedule-status-row">' +
-    "<strong>Recap du jour</strong>" +
-    "<span>4 etapes claires pour verifier rapidement.</span>" +
+    "<strong>ملخص اليوم</strong>" +
+    "<span>4 مراحل واضحة باش تتأكد بسرعة.</span>" +
     "</div>" +
     '<div class="schedule-point-list">' + rows + "</div>";
 }
@@ -596,7 +596,7 @@ function buildEmployeeSalesEntries() {
       type: "service",
       amount: Number(entry.amount || 0),
       dateISO: entry.dateISO,
-      label: String(entry.serviceName || entry.label || "Service"),
+      label: String(entry.serviceName || entry.label || "خدمة"),
       quantity: 1,
       source: entry
     };
@@ -616,7 +616,7 @@ function buildEmployeeSalesEntries() {
       type: "product",
       amount: Number(entry.amount || 0),
       dateISO: entry.dateISO,
-      label: entry.label || "Produit",
+      label: entry.label || "منتوج",
       quantity: Math.max(1, Number(entry.quantity || 1)),
       source: entry
     };
@@ -645,14 +645,14 @@ function renderSalesHistory() {
     if (todayEntries.length === 0) {
       const emptyToday = document.createElement("li");
       emptyToday.className = "modal-list-item muted";
-      emptyToday.textContent = "Aucune entrée enregistrée aujourd'hui.";
+      emptyToday.textContent = "ماكاين حتى إدخال مسجل اليوم.";
       salesTodayList.appendChild(emptyToday);
     } else {
       todayEntries.forEach(function (entry) {
         const item = document.createElement("li");
         item.className = "modal-list-item";
 
-        const iconTag = entry.type === "product" ? "📦 Produit" : "🛠️ Service";
+        const iconTag = entry.type === "product" ? "📦 منتوج" : "🛠️ خدمة";
         const detail = entry.type === "product"
           ? entry.label
           : entry.label;
@@ -674,7 +674,7 @@ function renderSalesHistory() {
   if (entries.length === 0) {
     const emptyItem = document.createElement("li");
     emptyItem.className = "modal-list-item muted";
-    emptyItem.textContent = "Aucune vente enregistrée pour cet employé.";
+    emptyItem.textContent = "ماكاين حتى بيعة مسجلة لهاد الموظف.";
     salesHistoryList.appendChild(emptyItem);
     return;
   }
@@ -718,7 +718,7 @@ function renderSalesHistory() {
     toggleButton.setAttribute("aria-expanded", String(isExpanded));
     toggleButton.innerHTML =
       "<span>" + dayLabel + "</span>" +
-      "<strong>" + dayEntries.length + " vente(s) · " + formatEuroAmount(dayTotal) + "</strong>";
+      "<strong>" + dayEntries.length + " بيعة · " + formatEuroAmount(dayTotal) + "</strong>";
 
     const dayDetails = document.createElement("div");
     dayDetails.className = "sales-day-details" + (isExpanded ? "" : " hidden");
@@ -740,7 +740,7 @@ function renderSalesHistory() {
       const label = document.createElement("span");
       const amount = document.createElement("strong");
 
-      const entryPrefix = entry.type === "product" ? "📦 Produit: " : "🛠️ Service: ";
+      const entryPrefix = entry.type === "product" ? "📦 منتوج: " : "🛠️ خدمة: ";
       label.textContent = dateText + " · " + entryPrefix + entry.label;
       amount.textContent = formatEuroAmount(entry.amount);
 
@@ -781,18 +781,18 @@ function handleEditSaleEntry(saleType, saleId) {
     : findServiceSaleById(state, saleId);
 
   if (!entry) {
-    showModalFeedback("Vente introuvable.", true);
+    showModalFeedback("البيعة ماتلقاتش.", true);
     return;
   }
 
-  const nextAmountRaw = window.prompt("Nouveau montant (DH)", String(Number(entry.amount || 0)));
+  const nextAmountRaw = window.prompt("المبلغ الجديد (DH)", String(Number(entry.amount || 0)));
   if (nextAmountRaw == null) {
     return;
   }
 
   const nextAmount = Number(nextAmountRaw);
   if (!Number.isFinite(nextAmount) || nextAmount < 0) {
-    showModalFeedback("Montant invalide.", true);
+    showModalFeedback("المبلغ ماشي صحيح.", true);
     return;
   }
 
@@ -802,7 +802,7 @@ function handleEditSaleEntry(saleType, saleId) {
   renderManagerObjectiveOverview();
   renderSalesHistory();
   renderManagerSectionDetails();
-  showModalFeedback("Vente mise a jour.", false);
+  showModalFeedback("البيعة تبدلات.", false);
 }
 
 function handleDeleteSaleEntry(saleType, saleId) {
@@ -811,7 +811,7 @@ function handleDeleteSaleEntry(saleType, saleId) {
     return;
   }
 
-  const confirmed = window.confirm("Supprimer cette vente ?");
+  const confirmed = window.confirm("تمسح هاد البيعة؟");
   if (!confirmed) {
     return;
   }
@@ -831,7 +831,7 @@ function handleDeleteSaleEntry(saleType, saleId) {
   renderManagerObjectiveOverview();
   renderSalesHistory();
   renderManagerSectionDetails();
-  showModalFeedback("Vente supprimee.", false);
+  showModalFeedback("البيعة تمسحات.", false);
 }
 
 function formatEuroAmount(amount) {
@@ -886,7 +886,7 @@ function getManagerAllSalesRecords(liveData) {
   Object.entries(liveData.employeeData || {}).forEach(function (entry) {
     const employeeId = Number(entry[0]);
     const state = entry[1] || {};
-    const employeeName = employeeMap.get(employeeId) || "Employé inconnu";
+    const employeeName = employeeMap.get(employeeId) || "موظف مجهول";
 
     (state.salesHistory || []).forEach(function (sale) {
       records.push({
@@ -894,7 +894,7 @@ function getManagerAllSalesRecords(liveData) {
         employeeName: employeeName,
         type: "service",
         amount: Number(sale.amount || 0),
-        label: sale.serviceName || "Service",
+        label: sale.serviceName || "خدمة",
         dateISO: sale.dateISO
       });
     });
@@ -903,10 +903,10 @@ function getManagerAllSalesRecords(liveData) {
   (liveData.productSales || []).forEach(function (sale) {
     records.push({
       employeeId: Number(sale.employeeId),
-      employeeName: employeeMap.get(Number(sale.employeeId)) || "Employé inconnu",
+      employeeName: employeeMap.get(Number(sale.employeeId)) || "موظف مجهول",
       type: "product",
       amount: Number(sale.amount || 0),
-      label: sale.label || "Produit",
+      label: sale.label || "منتوج",
       dateISO: sale.dateISO
     });
   });
@@ -963,9 +963,9 @@ function renderServicesDetail(liveData) {
   const weekTotal = sumRecordAmounts(getRecordsForPeriod(records, "week"));
   const monthTotal = sumRecordAmounts(getRecordsForPeriod(records, "month"));
   const settings = readCampaignTargetSettings();
-  let dayObjectiveText = "Aucun objectif";
-  let weekObjectiveText = "Aucun objectif";
-  let monthObjectiveText = "Aucun objectif";
+  let dayObjectiveText = "ماكاين حتى هدف";
+  let weekObjectiveText = "ماكاين حتى هدف";
+  let monthObjectiveText = "ماكاين حتى هدف";
 
   if (settings) {
     const campaignStartDate = new Date(settings.startDate + "T12:00:00");
@@ -981,15 +981,15 @@ function renderServicesDetail(liveData) {
   }
 
   managerServicesSummary.innerHTML =
-    '<article class="employee-metric-card"><span>Aujourd\'hui</span><strong>' + formatEuroAmount(dayTotal) + "</strong></article>" +
-    '<article class="employee-metric-card"><span>Cette semaine</span><strong>' + formatEuroAmount(weekTotal) + "</strong></article>" +
-    '<article class="employee-metric-card"><span>Ce mois</span><strong>' + formatEuroAmount(monthTotal) + "</strong></article>" +
-    '<article class="employee-metric-card"><span>Objectif jour Glossia</span><strong>' + dayObjectiveText + "</strong></article>" +
-    '<article class="employee-metric-card"><span>Objectif semaine Glossia</span><strong>' + weekObjectiveText + "</strong></article>" +
-    '<article class="employee-metric-card"><span>Objectif mois Glossia</span><strong>' + monthObjectiveText + "</strong></article>";
+    '<article class="employee-metric-card"><span>اليوم</span><strong>' + formatEuroAmount(dayTotal) + "</strong></article>" +
+    '<article class="employee-metric-card"><span>هاد السيمانة</span><strong>' + formatEuroAmount(weekTotal) + "</strong></article>" +
+    '<article class="employee-metric-card"><span>هاد الشهر</span><strong>' + formatEuroAmount(monthTotal) + "</strong></article>" +
+    '<article class="employee-metric-card"><span>هدف اليوم Glossia</span><strong>' + dayObjectiveText + "</strong></article>" +
+    '<article class="employee-metric-card"><span>هدف السيمانة Glossia</span><strong>' + weekObjectiveText + "</strong></article>" +
+    '<article class="employee-metric-card"><span>هدف الشهر Glossia</span><strong>' + monthObjectiveText + "</strong></article>";
 
   if (records.length === 0) {
-    managerServicesTable.innerHTML = '<p class="placeholder-text">Aucune vente globale enregistrée.</p>';
+    managerServicesTable.innerHTML = '<p class="placeholder-text">ماكاين حتى بيعة شاملة مسجلة.</p>';
     return;
   }
 
@@ -1037,13 +1037,13 @@ function renderServicesDetail(liveData) {
       "<td>" + formatEuroAmount(entry.day) + "</td>" +
       "<td>" + formatEuroAmount(entry.week) + "</td>" +
       "<td>" + formatEuroAmount(entry.month) + "</td>" +
-      "<td><button type=\"button\" class=\"manager-btn manager-btn-muted accounts-detail-btn\" data-employee-id=\"" + employeeId + "\">Détail</button></td>" +
+      "<td><button type=\"button\" class=\"manager-btn manager-btn-muted accounts-detail-btn\" data-employee-id=\"" + employeeId + "\">التفاصيل</button></td>" +
       "</tr>";
   }).join("");
 
   managerServicesTable.innerHTML =
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Employé</th><th>Services</th><th>Produits</th><th>Total</th><th>Jour</th><th>Semaine</th><th>Mois</th><th></th></tr></thead>" +
+    "<thead><tr><th>الموظف</th><th>الخدمات</th><th>المنتوجات</th><th>المجموع</th><th>اليوم</th><th>السيمانة</th><th>الشهر</th><th></th></tr></thead>" +
     "<tbody>" + rows + "</tbody></table></div>";
 }
 
@@ -1082,15 +1082,15 @@ function renderProductsDetail(liveData) {
   });
 
   if (allRecords.length === 0) {
-    managerProductsTable.innerHTML = '<p class="placeholder-text">Aucun produit vendu enregistré.</p>';
+    managerProductsTable.innerHTML = '<p class="placeholder-text">ماكاين حتى منتوج مبيع مسجل.</p>';
     return;
   }
 
   const periodOptions = [
-    { key: "all", label: "Tout" },
-    { key: "day", label: "Jour" },
-    { key: "week", label: "Semaine" },
-    { key: "month", label: "Mois" }
+    { key: "all", label: "الكل" },
+    { key: "day", label: "اليوم" },
+    { key: "week", label: "السيمانة" },
+    { key: "month", label: "الشهر" }
   ];
   const periodTabs = periodOptions.map(function (period) {
     const isActive = period.key === activeProductsPeriod;
@@ -1104,17 +1104,17 @@ function renderProductsDetail(liveData) {
     });
 
   const periodLabelMap = {
-    all: "toutes périodes",
-    day: "aujourd'hui",
-    week: "cette semaine",
-    month: "ce mois"
+    all: "جميع الفترات",
+    day: "اليوم",
+    week: "هاد السيمانة",
+    month: "هاد الشهر"
   };
   const periodLabel = periodLabelMap[activeProductsPeriod] || periodLabelMap.all;
 
   if (records.length === 0) {
     managerProductsTable.innerHTML =
-      '<div class="manager-products-period-bar"><div class="period-tabs manager-products-period-tabs" role="tablist" aria-label="Période produits vendus">' + periodTabs + "</div></div>" +
-      '<p class="placeholder-text">Aucune vente produit enregistrée pour ' + periodLabel + '.</p>';
+      '<div class="manager-products-period-bar"><div class="period-tabs manager-products-period-tabs" role="tablist" aria-label="فترة المنتوجات المبيعة">' + periodTabs + "</div></div>" +
+      '<p class="placeholder-text">ماكاين حتى بيعة منتوج مسجلة ل' + periodLabel + '.</p>';
     return;
   }
 
@@ -1126,7 +1126,7 @@ function renderProductsDetail(liveData) {
   let totalNetGlossia = 0;
 
   records.forEach(function (record) {
-    const seller = employeeMap.get(record.employeeId) || "Non assigné";
+    const seller = employeeMap.get(record.employeeId) || "ماشي معيّن";
     const qty = Math.max(1, Number(record.quantity || 1));
     const amount = Number(record.amount || 0);
     const ownerProduct = getOwnerProductForSale(record);
@@ -1203,7 +1203,7 @@ function renderProductsDetail(liveData) {
   }).join("");
 
   const rows = records.map(function (record) {
-    const seller = employeeMap.get(record.employeeId) || "Non assigné";
+    const seller = employeeMap.get(record.employeeId) || "ماشي معيّن";
     const qty = Math.max(1, Number(record.quantity || 1));
     const amount = Number(record.amount || 0);
     const ownerProduct = getOwnerProductForSale(record);
@@ -1218,7 +1218,7 @@ function renderProductsDetail(liveData) {
 
     return "<tr>" +
       "<td>" + formatDateTime(record.dateISO) + "</td>" +
-      "<td>" + (record.label || "Produit") + "</td>" +
+      "<td>" + (record.label || "منتوج") + "</td>" +
       "<td>" + qty + "</td>" +
       "<td>" + seller + "</td>" +
       "<td>" + formatEuroAmount(amount) + "</td>" +
@@ -1229,37 +1229,37 @@ function renderProductsDetail(liveData) {
   }).join("");
 
   managerProductsTable.innerHTML =
-    '<div class="manager-products-period-bar"><div class="period-tabs manager-products-period-tabs" role="tablist" aria-label="Période produits vendus">' + periodTabs + "</div></div>" +
+    '<div class="manager-products-period-bar"><div class="period-tabs manager-products-period-tabs" role="tablist" aria-label="فترة المنتوجات المبيعة">' + periodTabs + "</div></div>" +
     '<div class="manager-insight-grid manager-products-insight-grid">' +
-    '<article class="employee-metric-card success"><span>Top vendeur</span><strong>' +
+    '<article class="employee-metric-card success"><span>البائع الأول</span><strong>' +
     (topSeller ? topSeller.seller : "-") +
     "</strong><small>" +
-    (topSeller ? "Net Glossia: " + formatEuroAmount(topSeller.glossiaNet) + " | " + topSeller.units + " article(s)" : "-") +
+    (topSeller ? "صافي Glossia: " + formatEuroAmount(topSeller.glossiaNet) + " | " + topSeller.units + " قطعة" : "-") +
     "</small></article>" +
-    '<article class="employee-metric-card"><span>Total ventes produits</span><strong>' +
+    '<article class="employee-metric-card"><span>مجموع بيوعات المنتوجات</span><strong>' +
     formatEuroAmount(totalRevenue) +
-    "</strong><small>" + records.length + " vente(s) | " + totalUnits + " article(s)</small></article>" +
-    '<article class="employee-metric-card warning"><span>Ticket moyen produit</span><strong>' +
+    "</strong><small>" + records.length + " بيعة | " + totalUnits + " قطعة</small></article>" +
+    '<article class="employee-metric-card warning"><span>متوسط تذكرة المنتوج</span><strong>' +
     formatEuroAmount(averageTicket) +
-    "</strong><small>Net Glossia: " + formatEuroAmount(totalNetGlossia) + "</small></article>" +
-    '<article class="employee-metric-card"><span>Bénéfice employé cumulé</span><strong>' +
+    "</strong><small>صافي Glossia: " + formatEuroAmount(totalNetGlossia) + "</small></article>" +
+    '<article class="employee-metric-card"><span>بنفيس الموظفين المجموع</span><strong>' +
     formatEuroAmount(totalEmployeeProfit) +
-    "</strong><small>Somme part employé sur ventes produit</small></article>" +
-    '<article class="employee-metric-card"><span>Prix d\'achat cumulé</span><strong>' +
+    "</strong><small>مجموع حصة الموظف من بيوعات المنتوجات</small></article>" +
+    '<article class="employee-metric-card"><span>تمن الشراء المجموع</span><strong>' +
     formatEuroAmount(totalPurchaseCost) +
-    "</strong><small>Somme coûts d\'achat des produits vendus</small></article>" +
-    '<article class="employee-metric-card success"><span>Bénéfice net Glossia</span><strong>' +
+    "</strong><small>مجموع تكاليف شراء المنتوجات المبيعة</small></article>" +
+    '<article class="employee-metric-card success"><span>البنفيس الصافي ديال Glossia</span><strong>' +
     formatEuroAmount(totalNetGlossia) +
-    "</strong><small>Vente - bénéfice employé - achat</small></article>" +
+    "</strong><small>البيع - بنفيس الموظف - الشراء</small></article>" +
     "</div>" +
     '<div class="manager-products-ranking-wrap">' +
-    '<h4 class="modal-block-title manager-products-block-title">Classement vendeurs produits · ' + periodLabel + '</h4>' +
+    '<h4 class="modal-block-title manager-products-block-title">ترتيب بائعي المنتوجات · ' + periodLabel + '</h4>' +
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Rang</th><th>Employé</th><th>Ventes</th><th>Articles</th><th>Montant</th><th>Bénéfice employé</th><th>Prix d'achat</th><th>Net Glossia</th></tr></thead>" +
+    "<thead><tr><th>الرتبة</th><th>الموظف</th><th>البيوعات</th><th>القطع</th><th>المبلغ</th><th>بنفيس الموظف</th><th>تمن الشراء</th><th>صافي Glossia</th></tr></thead>" +
     "<tbody>" + rankingRows + "</tbody></table></div></div>" +
-    '<h4 class="modal-block-title manager-products-block-title">Détail chronologique des ventes · ' + periodLabel + '</h4>' +
+    '<h4 class="modal-block-title manager-products-block-title">تفاصيل البيوعات بالتاريخ · ' + periodLabel + '</h4>' +
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Date</th><th>Produit</th><th>Qté</th><th>Vendu par</th><th>Prix vente</th><th>Bénéfice employé</th><th>Prix d'achat</th><th>Net Glossia</th></tr></thead>" +
+    "<thead><tr><th>التاريخ</th><th>المنتوج</th><th>الكمية</th><th>باعها</th><th>تمن البيع</th><th>بنفيس الموظف</th><th>تمن الشراء</th><th>صافي Glossia</th></tr></thead>" +
     "<tbody>" + rows + "</tbody></table></div>";
 }
 
@@ -1273,27 +1273,27 @@ function renderConsumedDetail(liveData) {
   });
 
   if (requests.length === 0) {
-    managerConsumedTable.innerHTML = '<p class="placeholder-text">Aucun besoin de réapprovisionnement signalé.</p>';
+    managerConsumedTable.innerHTML = '<p class="placeholder-text">ماكاين حتى حاجة ديال التزويد متبلغ عليها.</p>';
     return;
   }
 
   const cards = requests.map(function (request) {
     const photo = request.photo
-      ? '<div class="stock-request-card-photo"><img src="' + request.photo + '" alt="' + (request.name || "Produit") + '" /></div>'
-      : '<div class="stock-request-card-photo no-photo">Pas de photo</div>';
+      ? '<div class="stock-request-card-photo"><img src="' + request.photo + '" alt="' + (request.name || "منتوج") + '" /></div>'
+      : '<div class="stock-request-card-photo no-photo">بلا صورة</div>';
 
-    const typeLabel = request.type === "vente" ? "Produit vente" : "Produit salle";
+    const typeLabel = request.type === "vente" ? "منتوج بيع" : "منتوج صالة";
 
     return '<div class="stock-request-card" data-request-id="' + request.id + '">' +
       photo +
       '<div class="stock-request-card-body">' +
       '<span class="stock-request-badge ' + request.type + '">' + typeLabel + "</span>" +
-      '<span class="stock-request-card-name">' + (request.name || "Produit sans nom") + "</span>" +
+      '<span class="stock-request-card-name">' + (request.name || "منتوج بلا سمية") + "</span>" +
       '<div class="stock-request-card-meta">' +
-      '<span class="stock-request-card-qty">Qté: ' + Number(request.quantity || 0) + "</span>" +
+      '<span class="stock-request-card-qty">الكمية: ' + Number(request.quantity || 0) + "</span>" +
       '<span class="stock-request-card-date">' + formatDateTime(request.dateISO) + "</span>" +
       "</div>" +
-      '<button type="button" class="manager-btn manager-btn-muted stock-request-remove" data-request-id="' + request.id + '">Reçu / Supprimer</button>' +
+      '<button type="button" class="manager-btn manager-btn-muted stock-request-remove" data-request-id="' + request.id + '">توصل / مسح</button>' +
       "</div>" +
       "</div>";
   }).join("");
@@ -1311,7 +1311,7 @@ function renderRuptureDetail(liveData) {
   });
 
   if (lowStock.length === 0) {
-    managerRuptureTable.innerHTML = '<p class="placeholder-text">Aucun produit en rupture actuellement.</p>';
+    managerRuptureTable.innerHTML = '<p class="placeholder-text">ماكاين حتى منتوج ناقص دابا.</p>';
     return;
   }
 
@@ -1320,13 +1320,13 @@ function renderRuptureDetail(liveData) {
       "<td>" + product.name + "</td>" +
       "<td>" + Number(product.stock || 0) + "</td>" +
       "<td>" + Number(product.threshold || 0) + "</td>" +
-      "<td>À réapprovisionner</td>" +
+      "<td>خاصو يتزود</td>" +
       "</tr>";
   }).join("");
 
   managerRuptureTable.innerHTML =
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Produit</th><th>Stock actuel</th><th>Seuil</th><th>Action</th></tr></thead>" +
+    "<thead><tr><th>المنتوج</th><th>الستوك الحالي</th><th>السقف</th><th>الإجراء</th></tr></thead>" +
     "<tbody>" + rows + "</tbody></table></div>";
 }
 
@@ -1355,14 +1355,14 @@ function renderTasksDetail(liveData) {
 
     const monthRate = tasks.length > 0 ? Math.round((doneMonth / tasks.length) * 100) : 0;
     let statusClass = "pending";
-    let statusLabel = "A faire";
+    let statusLabel = "باقي يتدار";
 
     if (tasks.length === 0) {
       statusClass = "pending";
-      statusLabel = "A planifier";
+      statusLabel = "خاصو يتخطط";
     } else if (pendingTotal === 0) {
       statusClass = "done";
-      statusLabel = "Tout fait";
+      statusLabel = "كولشي تدار";
     }
 
     return {
@@ -1407,8 +1407,8 @@ function renderTasksDetail(liveData) {
 
   managerTasksTable.innerHTML =
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Employé</th><th>Faites</th><th>Non faites</th><th>Jour</th><th>Semaine</th><th>Mois</th><th>% Mois</th><th>Statut</th></tr></thead>" +
-    "<tbody>" + (rows || '<tr><td colspan="' + totalCols + '" class="employee-empty-cell">Aucune tâche disponible.</td></tr>') + "</tbody></table></div>";
+    "<thead><tr><th>الموظف</th><th>تدارت</th><th>مادارتش</th><th>اليوم</th><th>السيمانة</th><th>الشهر</th><th>% الشهر</th><th>الحالة</th></tr></thead>" +
+    "<tbody>" + (rows || '<tr><td colspan="' + totalCols + '" class="employee-empty-cell">ماكاين حتى تاش متوفرة.</td></tr>') + "</tbody></table></div>";
 }
 
 function renderTimeDetail(liveData) {
@@ -1423,15 +1423,15 @@ function renderTimeDetail(liveData) {
     });
 
     if (entries.length === 0) {
-      return "<tr><td>" + employee.name + "</td><td colspan=\"5\">Aucun horaire enregistré</td></tr>";
+      return "<tr><td>" + employee.name + "</td><td colspan=\"5\">ماكاين حتى توقيت مسجل</td></tr>";
     }
 
     const latest = entries[0][1] || {};
     const calc = latest.calculation;
     const worked = calc?.workedMinutes != null ? formatMinutes(calc.workedMinutes) : "-";
     const status = latest.restDay
-      ? "Repos"
-      : (calc?.meetsTarget ? "Objectif atteint" : (calc ? "Incomplet" : "En attente"));
+      ? "راحة"
+      : (calc?.meetsTarget ? "الهدف تحقق" : (calc ? "ناقص" : "فالانتظار"));
 
     return "<tr>" +
       "<td>" + employee.name + "</td>" +
@@ -1445,7 +1445,7 @@ function renderTimeDetail(liveData) {
 
   managerTimeTable.innerHTML =
     '<div class="employee-table-wrap"><table class="employee-history-table">' +
-    "<thead><tr><th>Employé</th><th>Arrivée</th><th>Pause</th><th>Retour</th><th>Départ</th><th>Résumé</th></tr></thead>" +
+    "<thead><tr><th>الموظف</th><th>الوصول</th><th>الوقفة</th><th>الرجوع</th><th>المغادرة</th><th>الملخص</th></tr></thead>" +
     "<tbody>" + rows + "</tbody></table></div>";
 }
 
@@ -1598,9 +1598,9 @@ function createObjectiveRow(label, actual, target) {
   const metrics = document.createElement("p");
   metrics.className = "manager-objective-metrics";
   metrics.textContent =
-    "Objectif: " + formatEuroAmount(target) +
-    " | Réalisé: " + formatEuroAmount(actual) +
-    " | Reste: " + formatEuroAmount(progress.remaining);
+    "الهدف: " + formatEuroAmount(target) +
+    " | تحقق: " + formatEuroAmount(actual) +
+    " | باقي: " + formatEuroAmount(progress.remaining);
 
   const track = document.createElement("div");
   track.className = "manager-objective-track";
@@ -1612,7 +1612,7 @@ function createObjectiveRow(label, actual, target) {
 
   const percentage = document.createElement("small");
   percentage.className = "manager-objective-percentage " + progress.className;
-  percentage.textContent = Math.round(progress.percentage) + "% atteint";
+  percentage.textContent = Math.round(progress.percentage) + "% تحقق";
 
   row.appendChild(title);
   row.appendChild(metrics);
@@ -1629,7 +1629,7 @@ function renderManagerObjectiveOverview() {
   if (!employee || !settings) {
     const empty = document.createElement("p");
     empty.className = "manager-objective-empty";
-    empty.textContent = "Aucun objectif partagé défini par le propriétaire.";
+    empty.textContent = "ماكاين حتى هدف مشترك محدد من طرف المالك.";
     managerObjectiveOverview.appendChild(empty);
     return;
   }
@@ -1663,21 +1663,21 @@ function renderManagerObjectiveOverview() {
 
   const globalTitle = document.createElement("h5");
   globalTitle.className = "manager-objective-group-title";
-  globalTitle.textContent = "Glossia global";
+  globalTitle.textContent = "Glossia الشامل";
   managerObjectiveOverview.appendChild(globalTitle);
-  managerObjectiveOverview.appendChild(createObjectiveRow("Objectif du jour", globalDaySales, targets.day));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Objectif semaine", globalWeekSales, targets.week));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Objectif mois", globalMonthSales, targets.month));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Objectif campagne", globalCampaignSales, targets.campaign));
+  managerObjectiveOverview.appendChild(createObjectiveRow("هدف اليوم", globalDaySales, targets.day));
+  managerObjectiveOverview.appendChild(createObjectiveRow("هدف السيمانة", globalWeekSales, targets.week));
+  managerObjectiveOverview.appendChild(createObjectiveRow("هدف الشهر", globalMonthSales, targets.month));
+  managerObjectiveOverview.appendChild(createObjectiveRow("هدف الحملة", globalCampaignSales, targets.campaign));
 
   const employeeTitle = document.createElement("h5");
   employeeTitle.className = "manager-objective-group-title";
-  employeeTitle.textContent = employee.name + " · Réalisé personnel";
+  employeeTitle.textContent = employee.name + " · تحقق شخصي";
   managerObjectiveOverview.appendChild(employeeTitle);
-  managerObjectiveOverview.appendChild(createObjectiveRow("Ventes du jour", daySales, targets.day));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Ventes semaine", weekSales, targets.week));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Ventes mois", monthSales, targets.month));
-  managerObjectiveOverview.appendChild(createObjectiveRow("Ventes campagne", campaignSales, targets.campaign));
+  managerObjectiveOverview.appendChild(createObjectiveRow("بيوعات اليوم", daySales, targets.day));
+  managerObjectiveOverview.appendChild(createObjectiveRow("بيوعات السيمانة", weekSales, targets.week));
+  managerObjectiveOverview.appendChild(createObjectiveRow("بيوعات الشهر", monthSales, targets.month));
+  managerObjectiveOverview.appendChild(createObjectiveRow("بيوعات الحملة", campaignSales, targets.campaign));
 }
 
 function renderTaskList() {
@@ -1688,7 +1688,7 @@ function renderTaskList() {
   if (state.tasks.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "muted";
-    emptyText.textContent = "Aucune tâche pour le moment.";
+    emptyText.textContent = "ماكاين حتى تاش دابا.";
     taskList.appendChild(emptyText);
     return;
   }
@@ -1704,9 +1704,9 @@ function renderTaskList() {
 
     const actions = document.createElement("div");
     actions.className = "task-status-actions";
-    actions.appendChild(createTaskStatusButton(index, "done", "Fait", task.status));
-    actions.appendChild(createTaskStatusButton(index, "notdone", "Pas fait", task.status));
-    actions.appendChild(createTaskStatusButton(index, "excuse", "Excusé", task.status));
+    actions.appendChild(createTaskStatusButton(index, "done", "دارها", task.status));
+    actions.appendChild(createTaskStatusButton(index, "notdone", "مادارهاش", task.status));
+    actions.appendChild(createTaskStatusButton(index, "excuse", "معذور", task.status));
 
     row.appendChild(text);
     row.appendChild(actions);
@@ -1716,8 +1716,8 @@ function renderTaskList() {
       const reason = document.createElement("p");
       reason.className = "task-excuse-reason";
       reason.textContent = task.excuseReason
-        ? "Justification de l'employé: " + task.excuseReason
-        : "En attente de justification de l'employé.";
+        ? "المبرر ديال الموظف: " + task.excuseReason
+        : "فالانتظار للمبرر ديال الموظف.";
       taskList.appendChild(reason);
     }
   });
@@ -1743,13 +1743,13 @@ function renderTodaySchedule() {
   calculateDailyWork(todaySchedule);
 
   if (scheduleDayTitle) {
-    scheduleDayTitle.textContent = "Horaires · " + formatDateKeyForHeading(dateKey);
+    scheduleDayTitle.textContent = "التوقيت · " + formatDateKeyForHeading(dateKey);
   }
 
   if (scheduleToggleRestButton) {
     scheduleToggleRestButton.textContent = todaySchedule.restDay
-      ? "Retirer repos"
-      : "Marquer repos";
+      ? "حيد الراحة"
+      : "علم راحة";
   }
 
   scheduleStampButtons.forEach(function (button) {
@@ -1841,7 +1841,7 @@ function renderEmployees() {
     employeeButton.className = "employee-card";
     employeeButton.setAttribute(
       "aria-label",
-      "Ouvrir la fiche de " + employee.name + ", " + employee.post
+      "حل بطاقة " + employee.name + "، " + employee.post
     );
 
     const avatar = document.createElement("span");
@@ -1850,7 +1850,7 @@ function renderEmployees() {
 
     const status = document.createElement("span");
     status.className = "employee-status";
-    status.textContent = "Disponible";
+    status.textContent = "متوفر";
 
     const name = document.createElement("strong");
     name.className = "employee-name";
@@ -1901,13 +1901,13 @@ addEmployeeForm.addEventListener("submit", function (event) {
   const postRaw = employeePostField.value.trim();
 
   if (!name || !postRaw) {
-    showDashboardMessage("Veuillez remplir le nom et le numéro du poste.", true);
+    showDashboardMessage("عمر السمية ورقم المنصب.", true);
     return;
   }
 
-  const normalizedPost = postRaw.toLowerCase().startsWith("post")
+  const normalizedPost = postRaw.toLowerCase().startsWith("post") || postRaw.startsWith("منصب")
     ? postRaw
-    : "Post " + postRaw;
+    : "منصب " + postRaw;
 
   const newEmployee = {
     id: nextEmployeeId,
@@ -1924,7 +1924,7 @@ addEmployeeForm.addEventListener("submit", function (event) {
   renderManagerSectionDetails();
   addEmployeeForm.reset();
   addEmployeeForm.classList.add("hidden");
-  showDashboardMessage("Employé ajouté avec succès.");
+  showDashboardMessage("الموظف تزاد بنجاح.");
 });
 
 salesForm.addEventListener("submit", function (event) {
@@ -1932,7 +1932,7 @@ salesForm.addEventListener("submit", function (event) {
 
   const employee = getSelectedEmployee();
   if (!employee) {
-    showModalFeedback("Employé introuvable.", true);
+    showModalFeedback("الموظف ماتلقاش.", true);
     return;
   }
 
@@ -1947,14 +1947,14 @@ salesForm.addEventListener("submit", function (event) {
   const wantsProduct = Number.isFinite(productUnitAmount) && productUnitAmount > 0;
 
   if (!wantsService && !wantsProduct) {
-    showModalFeedback("Saisissez au moins un montant: service ou produit.", true);
+    showModalFeedback("دخل على الأقل مبلغ وحد: خدمة ولا منتوج.", true);
     return;
   }
 
   if (wantsService) {
     state.salesHistory.push({
       id: createSaleId("srv"),
-      serviceName: "Service",
+      serviceName: "خدمة",
       amount: serviceAmount,
       dateISO: dateISO
     });
@@ -1969,7 +1969,7 @@ salesForm.addEventListener("submit", function (event) {
       id: createSaleId("prd"),
       employeeId: employee.id,
       productId: null,
-      label: "Produit",
+      label: "منتوج",
       quantity: 1,
       unitMargin: 0,
       unitPrice: productUnitAmount,
@@ -1986,7 +1986,7 @@ salesForm.addEventListener("submit", function (event) {
   renderManagerObjectiveOverview();
   renderSalesHistory();
   renderManagerSectionDetails();
-  showModalFeedback("Vente enregistrée pour " + employee.name + ".", false);
+  showModalFeedback("البيعة تسجلات ل" + employee.name + ".", false);
 });
 
 if (salesServiceAmountField) {
@@ -2073,7 +2073,7 @@ scheduleStampContainer.addEventListener("click", function (event) {
 
   const employee = getSelectedEmployee();
   if (!employee) {
-    showModalFeedback("Employé introuvable.", true);
+    showModalFeedback("الموظف ماتلقاش.", true);
     return;
   }
 
@@ -2084,12 +2084,12 @@ scheduleStampContainer.addEventListener("click", function (event) {
   }
 
   if (state.scheduleByDate[dateKey].restDay) {
-    showModalFeedback("Cette journee est marquee comme repos.", true);
+    showModalFeedback("هاد اليوم معلم كراحة.", true);
     return;
   }
 
   if (state.scheduleByDate[dateKey][stampKey]) {
-    showModalFeedback("Horaire déjà enregistré pour " + scheduleFieldLabels[stampKey] + ".", true);
+    showModalFeedback("التوقيت تسجل ديجا ل" + scheduleFieldLabels[stampKey] + ".", true);
     return;
   }
 
@@ -2100,7 +2100,7 @@ scheduleStampContainer.addEventListener("click", function (event) {
   renderTodaySchedule();
   saveSharedData();
   renderManagerSectionDetails();
-  showModalFeedback(scheduleFieldLabels[stampKey] + " enregistré le " + stamp.dateTime + ".", false);
+  showModalFeedback(scheduleFieldLabels[stampKey] + " تسجل فـ " + stamp.dateTime + ".", false);
 });
 
 if (scheduleToggleRestButton) {
@@ -2133,10 +2133,10 @@ if (scheduleToggleRestButton) {
         meetsTarget: true,
         calculatedAtISO: new Date().toISOString()
       };
-      showModalFeedback("Journee marquee comme repos.", false);
+      showModalFeedback("اليوم معلم كراحة.", false);
     } else {
       schedule.calculation = null;
-      showModalFeedback("Repos retire pour cette journee.", false);
+      showModalFeedback("الراحة تحيدات لهاد اليوم.", false);
     }
 
     saveSharedData();
@@ -2243,7 +2243,7 @@ updateSalesTotalAmount = function () {
 };
 
 function formatAccountsRecordType(record) {
-  return record.type === "product" ? "Produit" : "Service";
+  return record.type === "product" ? "منتوج" : "خدمة";
 }
 
 function renderAccountsDetailRange() {
@@ -2274,14 +2274,14 @@ function renderAccountsDetailRange() {
 
   const rangeTotal = sumRecordAmounts(filtered);
   accountsDetailRangeTotal.textContent =
-    filtered.length + " vente(s) · Total: " + formatEuroAmount(rangeTotal);
+    filtered.length + " بيعة · المجموع: " + formatEuroAmount(rangeTotal);
 
   accountsDetailList.innerHTML = "";
 
   if (filtered.length === 0) {
     const empty = document.createElement("li");
     empty.className = "empty";
-    empty.textContent = "Aucune vente sur cette période.";
+    empty.textContent = "ماكاين حتى بيعة فهاد الفترة.";
     accountsDetailList.appendChild(empty);
     return;
   }
@@ -2317,7 +2317,7 @@ function openAccountsDetailModal(employeeId) {
   }
 
   accountsDetailEmployeeId = employeeId;
-  accountsDetailTitle.textContent = "Compte · " + employee.name;
+  accountsDetailTitle.textContent = "الحساب · " + employee.name;
   accountsDetailSubtitle.textContent = employee.post;
 
   const records = getManagerAllSalesRecords(liveData).filter(function (record) {
@@ -2329,9 +2329,9 @@ function openAccountsDetailModal(employeeId) {
   const monthTotal = sumRecordAmounts(getRecordsForPeriod(records, "month"));
 
   accountsDetailSummary.innerHTML =
-    '<div class="employee-metric-card"><span>Aujourd\'hui</span><strong>' + formatEuroAmount(dayTotal) + "</strong></div>" +
-    '<div class="employee-metric-card"><span>Cette semaine</span><strong>' + formatEuroAmount(weekTotal) + "</strong></div>" +
-    '<div class="employee-metric-card"><span>Ce mois</span><strong>' + formatEuroAmount(monthTotal) + "</strong></div>";
+    '<div class="employee-metric-card"><span>اليوم</span><strong>' + formatEuroAmount(dayTotal) + "</strong></div>" +
+    '<div class="employee-metric-card"><span>هاد السيمانة</span><strong>' + formatEuroAmount(weekTotal) + "</strong></div>" +
+    '<div class="employee-metric-card"><span>هاد الشهر</span><strong>' + formatEuroAmount(monthTotal) + "</strong></div>";
 
   const today = getCurrentDateKey();
   accountsDetailStart.value = today;
@@ -2430,7 +2430,7 @@ if (stockRequestForm) {
 
     const quantity = Number(stockRequestQuantityInput.value);
     if (!Number.isFinite(quantity) || quantity <= 0) {
-      stockRequestFeedback.textContent = "Veuillez saisir une quantité valide.";
+      stockRequestFeedback.textContent = "دخل كمية صحيحة.";
       stockRequestFeedback.classList.add("is-error");
       return;
     }
@@ -2458,7 +2458,7 @@ if (stockRequestForm) {
       btn.classList.toggle("active", btn.dataset.type === "salle");
     });
     stockRequestFeedback.classList.remove("is-error");
-    stockRequestFeedback.textContent = "Besoin signalé avec succès.";
+    stockRequestFeedback.textContent = "الحاجة تبلغ عليها بنجاح.";
 
     renderManagerSectionDetails();
   });

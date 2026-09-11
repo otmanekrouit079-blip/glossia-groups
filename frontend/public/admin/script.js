@@ -69,7 +69,7 @@ loginForm.addEventListener("submit", function (event) {
   });
 
   if (!matchedUser) {
-    errorMessage.textContent = "Invalid credentials. Please check role, username, and password.";
+    errorMessage.textContent = "المعلومات خاطئة. تأكد من الصفة، اسم المستخدم، وكلمة السر.";
     return;
   }
 

@@ -127,7 +127,7 @@ let ownerOperationsSnapshot = {
   products: "0,00 DH",
   tasksRate: "0%",
   hours: "0 / 0",
-  consumed: "0 unités",
+  consumed: "0 وحدة",
   ruptureCount: 0
 };
 let ownerFinanceSnapshot = {
@@ -165,42 +165,42 @@ function mountOwnerSectionsInPopup() {
 function getOwnerViewMeta(viewName) {
   if (viewName === "overview") {
     return {
-      title: "Aperçu",
-      subtitle: "Indicateurs clés, objectifs et comptabilité en vue rapide."
+      title: "نظرة عامة",
+      subtitle: "المؤشرات المهمة، الأهداف والمحاسبة فنظرة سريعة."
     };
   }
 
   if (viewName === "targets") {
     return {
-      title: "Objectifs",
-      subtitle: "Pilotage des objectifs et suivi fiscalité équipe."
+      title: "الأهداف",
+      subtitle: "تسيير الأهداف ومتابعة الضريبة ديال الفريق."
     };
   }
 
   if (viewName === "accounting") {
     return {
-      title: "Compta",
-      subtitle: "Suivi des charges, produits, rémunérations et bénéfice net."
+      title: "المحاسبة",
+      subtitle: "متابعة المصاريف، المنتوجات، الأجور والربح الصافي."
     };
   }
 
   if (viewName === "operations") {
     return {
-      title: "Opérations",
-      subtitle: "Navigation opérationnelle et analyses détaillées."
+      title: "العمليات",
+      subtitle: "التنقل بين العمليات والتحليلات المفصلة."
     };
   }
 
   if (viewName === "team") {
     return {
-      title: "Équipe",
-      subtitle: "Vue employé et fiches détaillées de l'équipe."
+      title: "الفريق",
+      subtitle: "نظرة على الموظفين والبطاقات المفصلة ديال الفريق."
     };
   }
 
   return {
-    title: "Tout afficher",
-    subtitle: "Vue complète du dashboard propriétaire."
+    title: "عرض الكل",
+    subtitle: "نظرة شاملة على الداشبورد ديال المالك."
   };
 }
 
@@ -249,8 +249,8 @@ function readOwnerSessionData() {
 
   return {
     employees: [
-      { id: 1, name: "Ahmed", post: "Post 1" },
-      { id: 2, name: "Youssef", post: "Post 2" }
+      { id: 1, name: "Ahmed", post: "منصب 1" },
+      { id: 2, name: "Youssef", post: "منصب 2" }
     ],
     employeeData: {}
   };
@@ -349,16 +349,16 @@ function renderOwnerAccessManager() {
 
   ownerAccessBody.appendChild(createOwnerAccessRow({
     role: "owner",
-    roleLabel: "Propriétaire",
-    nameLabel: "Compte principal",
+    roleLabel: "المالك",
+    nameLabel: "الحساب الرئيسي",
     username: ownerEntry?.username || "owner1",
     password: ownerEntry?.password || "1234"
   }));
 
   ownerAccessBody.appendChild(createOwnerAccessRow({
     role: "manager",
-    roleLabel: "Gérant",
-    nameLabel: "Compte gérant",
+    roleLabel: "الگيرانت",
+    nameLabel: "حساب الگيرانت",
     username: managerEntry?.username || "gerant1",
     password: managerEntry?.password || "1234"
   }));
@@ -367,7 +367,7 @@ function renderOwnerAccessManager() {
     const employeeEntry = findOwnerAuthEntry("employee", employee.id);
     ownerAccessBody.appendChild(createOwnerAccessRow({
       role: "employee",
-      roleLabel: "Employé",
+      roleLabel: "الموظف",
       nameLabel: employee.name,
       employeeId: employee.id,
       username: employeeEntry?.username || ("emp" + employee.id),
@@ -416,7 +416,7 @@ function saveOwnerAccessManagerFromForm() {
 
   if (hasEmpty) {
     if (ownerAccessFeedback) {
-      ownerAccessFeedback.textContent = "Username et mot de passe sont obligatoires pour tous les comptes.";
+      ownerAccessFeedback.textContent = "اسم المستخدم وكلمة السر خاصهم يكونو معمرين لجميع الحسابات.";
     }
     return false;
   }
@@ -427,7 +427,7 @@ function saveOwnerAccessManagerFromForm() {
 
   if (duplicateUsername) {
     if (ownerAccessFeedback) {
-      ownerAccessFeedback.textContent = "Chaque compte doit avoir un username unique.";
+      ownerAccessFeedback.textContent = "كل حساب خاصو يكون عندو اسم مستخدم وحيد.";
     }
     return false;
   }
@@ -454,7 +454,7 @@ function saveOwnerAccessManagerFromForm() {
   }
 
   if (ownerAccessFeedback) {
-    ownerAccessFeedback.textContent = "Comptes mis a jour avec succes.";
+    ownerAccessFeedback.textContent = "الحسابات تبدلات بنجاح.";
   }
 
   renderOwnerAccessManager();
@@ -550,7 +550,7 @@ function renderOwnerProductsPopupList() {
   ownerProductsPopupList.innerHTML = "";
 
   if (products.length === 0) {
-    ownerProductsPopupList.innerHTML = '<tr><td colspan="6" class="employee-empty-cell">Aucun produit ajouté.</td></tr>';
+    ownerProductsPopupList.innerHTML = '<tr><td colspan="6" class="employee-empty-cell">ماكاين حتى منتوج مزيد.</td></tr>';
     return;
   }
 
@@ -570,7 +570,7 @@ function renderOwnerProductsPopupList() {
       "<td>" + formatOwnerAmount(sellingPrice) + "</td>" +
       "<td>" + formatOwnerAmount(employeeProfit) + "</td>" +
       "<td>" + formatOwnerAmount(glossiaNet) + "</td>" +
-      "<td><button type=\"button\" class=\"manager-btn manager-btn-muted\" data-product-index=\"" + index + "\">Supprimer</button></td>";
+      "<td><button type=\"button\" class=\"manager-btn manager-btn-muted\" data-product-index=\"" + index + "\">مسح</button></td>";
 
     ownerProductsPopupList.appendChild(row);
   });
@@ -614,21 +614,21 @@ function addOwnerProductFromPopup() {
 
   if (!name) {
     if (ownerProductsPopupFeedback) {
-      ownerProductsPopupFeedback.textContent = "Veuillez entrer le nom du produit.";
+      ownerProductsPopupFeedback.textContent = "خاصك دخل سمية المنتوج.";
     }
     return;
   }
 
   if (preview.sellingPrice <= 0) {
     if (ownerProductsPopupFeedback) {
-      ownerProductsPopupFeedback.textContent = "Veuillez saisir un prix de vente valide (> 0).";
+      ownerProductsPopupFeedback.textContent = "خاصك دخل تمن بيع صحيح (> 0).";
     }
     return;
   }
 
   if (preview.employeeProfit < 0) {
     if (ownerProductsPopupFeedback) {
-      ownerProductsPopupFeedback.textContent = "Le bénéfice personnel doit être supérieur ou égal à 0 DH.";
+      ownerProductsPopupFeedback.textContent = "البنفيس الشخصي خاصو يكون كبر ولا يساوي 0 DH.";
     }
     return;
   }
@@ -645,7 +645,7 @@ function addOwnerProductFromPopup() {
 
   saveOwnerProductsData();
   if (ownerProductsPopupFeedback) {
-    ownerProductsPopupFeedback.textContent = "Produit ajouté avec succès.";
+    ownerProductsPopupFeedback.textContent = "المنتوج تزاد بنجاح.";
   }
 
   if (ownerProductsPopupForm) {
@@ -684,7 +684,7 @@ function renderOwnerLastSavedIndicator() {
   const label = window.SalonStorage
     ? window.SalonStorage.formatLastSavedAt()
     : "--";
-  ownerLastSavedLabel.textContent = "Derniere sauvegarde: " + label;
+  ownerLastSavedLabel.textContent = "آخر حفظ: " + label;
 }
 
 function exportOwnerDataBackup() {
@@ -724,7 +724,7 @@ function importOwnerDataBackup(file) {
       window.SalonStorage.saveData(normalized);
       window.location.reload();
     } catch (error) {
-      alert("Fichier JSON invalide.");
+      alert("الملف JSON ماشي صحيح.");
     }
   };
 
@@ -947,7 +947,7 @@ function openOwnerAccessModal() {
   ownerAccessModal.classList.remove("hidden");
 
   if (ownerToggleAccessButton) {
-    ownerToggleAccessButton.textContent = "Masquer sécurité";
+    ownerToggleAccessButton.textContent = "خبي الأمان";
     ownerToggleAccessButton.setAttribute("aria-expanded", "true");
   }
 }
@@ -960,7 +960,7 @@ function closeOwnerAccessModal() {
   ownerAccessModal.classList.add("hidden");
 
   if (ownerToggleAccessButton) {
-    ownerToggleAccessButton.textContent = "Afficher sécurité";
+    ownerToggleAccessButton.textContent = "بيّن الأمان";
     ownerToggleAccessButton.setAttribute("aria-expanded", "false");
   }
 }
@@ -1004,7 +1004,7 @@ function getOwnerTopSellerSummary() {
   const employeeHealth = getSortedOwnerEmployeeHealth();
   const topSellerId = getOwnerTopSellerId(employeeHealth);
   if (!topSellerId) {
-    return "Aucune vente aujourd'hui";
+    return "ماكاين حتى بيع اليوم";
   }
 
   const topSeller = employeeHealth.find(function (entry) {
@@ -1012,7 +1012,7 @@ function getOwnerTopSellerSummary() {
   });
 
   if (!topSeller) {
-    return "Aucune vente aujourd'hui";
+    return "ماكاين حتى بيع اليوم";
   }
 
   return topSeller.employee.name + " · " + formatOwnerAmount(topSeller.today.salesTotal);
@@ -1025,22 +1025,22 @@ function updateOwnerFocusPanel(viewName) {
 
   const summary = getFixedOwnerSummary();
   const needsHours = Math.max(0, summary.expectedToday - summary.completedToday);
-  const targetSummaryText = ownerTargetSummary ? ownerTargetSummary.textContent : "Aucun objectif défini.";
+  const targetSummaryText = ownerTargetSummary ? ownerTargetSummary.textContent : "ماكاين حتى هدف محدد.";
   const finance = ownerFinanceSnapshot;
   const operations = ownerOperationsSnapshot;
 
   if (viewName === "targets") {
-    ownerFocusTitle.textContent = "Objectifs et fiscalité";
-    ownerFocusSubtitle.textContent = "Progression campagne et impact des taxes en un coup d'oeil.";
+    ownerFocusTitle.textContent = "الأهداف والضريبة";
+    ownerFocusSubtitle.textContent = "تقدم الحملة وتأثير الضرائب فنظرة وحدة.";
     renderOwnerFocusPills([
-      { label: "Objectif 12h", value: summary.completedToday + " / " + summary.expectedToday, className: needsHours === 0 ? "success" : "warning" },
-      { label: "Tâches restantes", value: String(summary.pendingTasks), className: summary.pendingTasks === 0 ? "success" : "warning" },
-      { label: "Top vendeur", value: getOwnerTopSellerSummary() }
+      { label: "الهدف 12 سا", value: summary.completedToday + " / " + summary.expectedToday, className: needsHours === 0 ? "success" : "warning" },
+      { label: "التاش لي باقيين", value: String(summary.pendingTasks), className: summary.pendingTasks === 0 ? "success" : "warning" },
+      { label: "أحسن بائع", value: getOwnerTopSellerSummary() }
     ]);
     renderOwnerFocusChecklist([
-      { label: "Campagne", value: targetSummaryText || "Aucun objectif défini" },
-      { label: "Action prioritaire", value: needsHours > 0 ? needsHours + " employé(s) à relancer pour les 12h" : "Objectif horaire validé" },
-      { label: "Risque du jour", value: summary.pendingTasks > 0 ? summary.pendingTasks + " tâche(s) à finaliser" : "Aucun retard tâches" }
+      { label: "الحملة", value: targetSummaryText || "ماكاين حتى هدف محدد" },
+      { label: "الأولوية", value: needsHours > 0 ? needsHours + " موظف(ين) خاصهم يكملو 12 سا" : "الهدف ديال الساعات تحقق" },
+      { label: "خطر اليوم", value: summary.pendingTasks > 0 ? summary.pendingTasks + " تاش خاصهم يكملو" : "ماكاين تأخير فالتاش" }
     ]);
     return;
   }
@@ -1053,81 +1053,81 @@ function updateOwnerFocusPanel(viewName) {
     const fullChargesValue = fixedValue + variableValue + payrollValue;
     const glossiaNetValue = revenueValue - fullChargesValue;
 
-    ownerFocusTitle.textContent = "Comptabilité essentielle";
-    ownerFocusSubtitle.textContent = "CA - (charges fixes + variables + rémunération équipe) = bénéfice net Glossia.";
+    ownerFocusTitle.textContent = "المحاسبة الأساسية";
+    ownerFocusSubtitle.textContent = "رقم المعاملات - (المصاريف الثابتة + المتغيرة + أجور الفريق) = الربح الصافي ديال Glossia.";
     renderOwnerFocusPills([
-      { label: "CA", value: finance.revenue },
-      { label: "Charges complètes", value: formatOwnerAmount(fullChargesValue) },
-      { label: "Bénéfice net Glossia", value: formatOwnerAmount(glossiaNetValue), className: glossiaNetValue < 0 ? "danger" : "success" }
+      { label: "رقم المعاملات", value: finance.revenue },
+      { label: "المصاريف الكاملة", value: formatOwnerAmount(fullChargesValue) },
+      { label: "الربح الصافي ديال Glossia", value: formatOwnerAmount(glossiaNetValue), className: glossiaNetValue < 0 ? "danger" : "success" }
     ]);
     renderOwnerFocusChecklist([
-      { label: "Charges fixes", value: finance.fixedTotal },
-      { label: "Charges variables", value: finance.variableTotal },
-      { label: "Rémunération équipe", value: finance.payrollNetTotal },
-      { label: "Formule", value: formatOwnerAmount(revenueValue) + " - " + formatOwnerAmount(fullChargesValue) + " = " + formatOwnerAmount(glossiaNetValue) }
+      { label: "المصاريف الثابتة", value: finance.fixedTotal },
+      { label: "المصاريف المتغيرة", value: finance.variableTotal },
+      { label: "أجور الفريق", value: finance.payrollNetTotal },
+      { label: "المعادلة", value: formatOwnerAmount(revenueValue) + " - " + formatOwnerAmount(fullChargesValue) + " = " + formatOwnerAmount(glossiaNetValue) }
     ]);
     return;
   }
 
   if (viewName === "operations") {
-    ownerFocusTitle.textContent = "Pilotage opérationnel";
-    ownerFocusSubtitle.textContent = "Suivi ventes, exécution et stock pour agir rapidement.";
+    ownerFocusTitle.textContent = "تسيير العمليات";
+    ownerFocusSubtitle.textContent = "متابعة المبيعات، التنفيذ والمخزون باش نتحركو بسرعة.";
     renderOwnerFocusPills([
-      { label: "Services", value: operations.services },
-      { label: "Produits", value: operations.products },
-      { label: "Ruptures", value: String(operations.ruptureCount), className: operations.ruptureCount > 0 ? "warning" : "success" }
+      { label: "الخدمات", value: operations.services },
+      { label: "المنتوجات", value: operations.products },
+      { label: "نقص فالمخزون", value: String(operations.ruptureCount), className: operations.ruptureCount > 0 ? "warning" : "success" }
     ]);
     renderOwnerFocusChecklist([
-      { label: "Taux tâches", value: operations.tasksRate },
-      { label: "Conformité horaires", value: operations.hours },
-      { label: "Produits consommés", value: operations.consumed }
+      { label: "نسبة التاش", value: operations.tasksRate },
+      { label: "احترام التوقيت", value: operations.hours },
+      { label: "المنتوجات المستهلكة", value: operations.consumed }
     ]);
     return;
   }
 
   if (viewName === "team") {
-    ownerFocusTitle.textContent = "Performance équipe";
-    ownerFocusSubtitle.textContent = "Les signaux humains et commerciaux les plus importants.";
+    ownerFocusTitle.textContent = "أداء الفريق";
+    ownerFocusSubtitle.textContent = "أهم الإشارات البشرية والتجارية.";
     renderOwnerFocusPills([
-      { label: "Effectif", value: String(ownerEmployees.length) },
-      { label: "Objectif 12h", value: summary.completedToday + " / " + summary.expectedToday, className: needsHours === 0 ? "success" : "warning" },
-      { label: "Top vendeur", value: getOwnerTopSellerSummary() }
+      { label: "عدد الموظفين", value: String(ownerEmployees.length) },
+      { label: "الهدف 12 سا", value: summary.completedToday + " / " + summary.expectedToday, className: needsHours === 0 ? "success" : "warning" },
+      { label: "أحسن بائع", value: getOwnerTopSellerSummary() }
     ]);
     renderOwnerFocusChecklist([
-      { label: "Tâches en attente", value: String(summary.pendingTasks) },
-      { label: "Tâches terminées", value: summary.completedTasks + " / " + summary.totalTasks },
-      { label: "Point critique", value: needsHours > 0 ? needsHours + " employé(s) en retard sur les 12h" : "Aucun retard horaire" }
+      { label: "التاش فالانتظار", value: String(summary.pendingTasks) },
+      { label: "التاش لي كملات", value: summary.completedTasks + " / " + summary.totalTasks },
+      { label: "النقطة الحرجة", value: needsHours > 0 ? needsHours + " موظف(ين) متأخرين على 12 سا" : "ماكاين تأخير فالتوقيت" }
     ]);
     return;
   }
 
   if (viewName === "all") {
-    ownerFocusTitle.textContent = "Vue globale CEO";
-    ownerFocusSubtitle.textContent = "Business complet avec priorités de pilotage immédiat.";
+    ownerFocusTitle.textContent = "نظرة شاملة للمدير";
+    ownerFocusSubtitle.textContent = "البيزنس كامل مع الأولويات ديال التسيير الفوري.";
     renderOwnerFocusPills([
-      { label: "CA jour", value: formatOwnerAmount(summary.todaySales) },
-      { label: "Bénéfice net", value: finance.profit, className: finance.profit.startsWith("-") ? "danger" : "success" },
-      { label: "Ruptures", value: String(operations.ruptureCount), className: operations.ruptureCount > 0 ? "warning" : "success" }
+      { label: "رقم المعاملات ديال اليوم", value: formatOwnerAmount(summary.todaySales) },
+      { label: "الربح الصافي", value: finance.profit, className: finance.profit.startsWith("-") ? "danger" : "success" },
+      { label: "نقص فالمخزون", value: String(operations.ruptureCount), className: operations.ruptureCount > 0 ? "warning" : "success" }
     ]);
     renderOwnerFocusChecklist([
-      { label: "Objectifs 12h", value: summary.completedToday + " / " + summary.expectedToday },
-      { label: "Tâches en attente", value: String(summary.pendingTasks) },
-      { label: "Campagne", value: targetSummaryText || "Aucun objectif défini" }
+      { label: "الأهداف 12 سا", value: summary.completedToday + " / " + summary.expectedToday },
+      { label: "التاش فالانتظار", value: String(summary.pendingTasks) },
+      { label: "الحملة", value: targetSummaryText || "ماكاين حتى هدف محدد" }
     ]);
     return;
   }
 
-  ownerFocusTitle.textContent = "Pilotage essentiel";
-  ownerFocusSubtitle.textContent = "Indicateurs clés et actions immédiates de la journée.";
+  ownerFocusTitle.textContent = "التسيير الأساسي";
+  ownerFocusSubtitle.textContent = "المؤشرات المهمة والإجراءات الفورية ديال النهار.";
   renderOwnerFocusPills([
-    { label: "CA jour", value: formatOwnerAmount(summary.todaySales) },
-    { label: "CA semaine", value: formatOwnerAmount(summary.weekSales) },
-    { label: "Bénéfice net", value: finance.profit, className: finance.profit.startsWith("-") ? "danger" : "success" }
+    { label: "رقم المعاملات ديال اليوم", value: formatOwnerAmount(summary.todaySales) },
+    { label: "رقم المعاملات ديال السيمانة", value: formatOwnerAmount(summary.weekSales) },
+    { label: "الربح الصافي", value: finance.profit, className: finance.profit.startsWith("-") ? "danger" : "success" }
   ]);
   renderOwnerFocusChecklist([
-    { label: "Objectifs 12h", value: summary.completedToday + " / " + summary.expectedToday },
-    { label: "Tâches en attente", value: String(summary.pendingTasks) },
-    { label: "Top vendeur", value: getOwnerTopSellerSummary() }
+    { label: "الأهداف 12 سا", value: summary.completedToday + " / " + summary.expectedToday },
+    { label: "التاش فالانتظار", value: String(summary.pendingTasks) },
+    { label: "أحسن بائع", value: getOwnerTopSellerSummary() }
   ]);
 }
 
@@ -1508,10 +1508,10 @@ function renderOwnerTopFinanceTrend(period) {
 
   ownerTopFinanceTrend.innerHTML =
     '<div class="owner-top-finance-trend-head">' +
-    '<strong>Tendance bénéfice global</strong>' +
-    '<span>Dernier point: ' + formatOwnerAmount(lastValue) + ' (' + deltaSign + formatOwnerAmount(delta) + ')</span>' +
+    '<strong>اتجاه الربح الشامل</strong>' +
+    '<span>آخر نقطة: ' + formatOwnerAmount(lastValue) + ' (' + deltaSign + formatOwnerAmount(delta) + ')</span>' +
     '</div>' +
-    '<svg class="owner-top-finance-trend-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Courbe du bénéfice global Glossia">' +
+    '<svg class="owner-top-finance-trend-svg" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="المنحنى ديال الربح الشامل ديال Glossia">' +
     '<defs><linearGradient id="ownerFinanceTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(91, 209, 162, 0.35)" /><stop offset="100%" stop-color="rgba(91, 209, 162, 0.03)" /></linearGradient></defs>' +
     '<line x1="' + paddingLeft + '" y1="' + (paddingTop + chartHeight).toFixed(1) + '" x2="' + (paddingLeft + chartWidth).toFixed(1) + '" y2="' + (paddingTop + chartHeight).toFixed(1) + '" stroke="rgba(255,255,255,0.18)" stroke-width="1" />' +
     '<path d="' + areaPath + '" fill="url(#ownerFinanceTrendFill)" />' +
@@ -1751,16 +1751,16 @@ function syncOwnerAccountingPeriod(period) {
 function getOwnerObjectiveTopStatus(period, summary) {
   const targets = getOwnerCampaignTargets();
   const labelMap = {
-    day: "Objectif Jour",
-    week: "Objectif Semaine",
-    month: "Objectif Mois"
+    day: "الهدف ديال اليوم",
+    week: "الهدف ديال السيمانة",
+    month: "الهدف ديال الشهر"
   };
 
   if (!targets) {
     return {
       className: "danger",
-      label: labelMap[period] || "Objectif",
-      value: "Non défini"
+      label: labelMap[period] || "الهدف",
+      value: "ماشي محدد"
     };
   }
 
@@ -1778,8 +1778,8 @@ function getOwnerObjectiveTopStatus(period, summary) {
   if (!Number.isFinite(target) || target <= 0) {
     return {
       className: "danger",
-      label: labelMap[period] || "Objectif",
-      value: "Non défini"
+      label: labelMap[period] || "الهدف",
+      value: "ماشي محدد"
     };
   }
 
@@ -1796,7 +1796,7 @@ function getOwnerObjectiveTopStatus(period, summary) {
 
   return {
     className: className,
-    label: labelMap[period] || "Objectif",
+    label: labelMap[period] || "الهدف",
     value: (ratio * 100).toFixed(1) + "%"
   };
 }
@@ -1855,58 +1855,58 @@ function renderOwnerSummary(activePeriod) {
       ? summary.weekSales
       : summary.monthSales;
 
-  const chargesDetail = "Fixes " + finance.fixedTotal + " · Variables " + finance.variableTotal + " · Paie " + finance.payrollNetTotal;
+  const chargesDetail = "ثابتة " + finance.fixedTotal + " · متغيرة " + finance.variableTotal + " · أجور " + finance.payrollNetTotal;
   ownerSummaryGrid.innerHTML = "";
 
   const cards = [
     createOwnerSummaryCard(
       getOwnerSummaryIcon("team"),
-      "Employés",
+      "الموظفين",
       String(ownerEmployees.length),
-      "Équipe totale",
+      "مجموع الفريق",
       "",
       "",
       { scrollTargetId: "owner-employees-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("sun"),
-      "Ventes aujourd'hui",
+      "مبيعات اليوم",
       formatOwnerAmount(summary.todaySales),
-      "Cumul de l'équipe",
+      "مجموع الفريق",
       "",
       "day",
       { view: "services", range: "day", scrollTargetId: "owner-bi-details-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("trend"),
-      "Ventes semaine",
+      "مبيعات السيمانة",
       formatOwnerAmount(summary.weekSales),
-      "Depuis lundi",
+      "من نهار الإتنين",
       "",
       "week",
       { view: "services", range: "week", scrollTargetId: "owner-bi-details-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("calendar"),
-      "Ventes mois",
+      "مبيعات الشهر",
       formatOwnerAmount(summary.monthSales),
-      "Mois en cours",
+      "الشهر الجاري",
       "",
       "month",
       { view: "services", range: "month", scrollTargetId: "owner-bi-details-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("money"),
-      "Chiffre d'affaires",
+      "رقم المعاملات",
       formatOwnerAmount(periodRevenue),
-      "Période sélectionnée",
+      "المدة المختارة",
       "",
       activePeriod,
       { scrollTargetId: "owner-accounting-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("receipt"),
-      "Charges totales",
+      "مجموع المصاريف",
       finance.expenses,
       chargesDetail,
       "warning",
@@ -1915,36 +1915,36 @@ function renderOwnerSummary(activePeriod) {
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("trend"),
-      "Bénéfice net",
+      "الربح الصافي",
       finance.profit,
-      "CA - charges",
+      "رقم المعاملات - المصاريف",
       String(finance.profit || "").trim().startsWith("-") ? "danger" : "success",
       "",
       { scrollTargetId: "owner-accounting-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("clock"),
-      "Objectif 12h aujourd'hui",
+      "الهدف 12 سا اليوم",
       summary.completedToday + " / " + summary.expectedToday,
-      summary.missingToday + " à compléter",
+      summary.missingToday + " باقي يكملو",
       summary.missingToday === 0 ? "success" : "warning",
       "",
       { view: "hours", range: "day", scrollTargetId: "owner-bi-details-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("check"),
-      "Tâches en attente",
+      "التاش فالانتظار",
       String(summary.pendingTasks),
-      "Toutes équipes",
+      "جميع الفرق",
       summary.pendingTasks === 0 ? "success" : "warning",
       "",
       { view: "tasks", range: "day", scrollTargetId: "owner-bi-details-title" }
     ),
     createOwnerSummaryCard(
       getOwnerSummaryIcon("list"),
-      "Tâches terminées aujourd'hui",
+      "التاش لي كملات اليوم",
       summary.completedTasks + " / " + summary.totalTasks,
-      "Total assigné à l'équipe",
+      "المجموع المسند للفريق",
       summary.pendingTasks === 0 ? "success" : "",
       "",
       { view: "tasks", range: "day", scrollTargetId: "owner-bi-details-title" }
@@ -1962,24 +1962,24 @@ function renderOwnerSummary(activePeriod) {
 function getOwnerPeriodLabels(period) {
   if (period === "day") {
     return {
-      badge: "Aujourd'hui",
-      presence: "Pointage aujourd'hui",
-      sales: "Ventes aujourd'hui"
+      badge: "اليوم",
+      presence: "التسجيل ديال اليوم",
+      sales: "مبيعات اليوم"
     };
   }
 
   if (period === "week") {
     return {
-      badge: "Cette semaine",
-      presence: "Jours pointés",
-      sales: "Ventes semaine"
+      badge: "هاد السيمانة",
+      presence: "الأيام المسجلة",
+      sales: "مبيعات السيمانة"
     };
   }
 
   return {
-    badge: "Ce mois",
-    presence: "Jours pointés",
-    sales: "Ventes mois"
+    badge: "هاد الشهر",
+    presence: "الأيام المسجلة",
+    sales: "مبيعات الشهر"
   };
 }
 
@@ -1989,16 +1989,16 @@ function getOwnerStatusText(metrics) {
   });
 
   if (metrics.scheduleEntries.length === 1 && hasRestDay) {
-    return { text: "Repos", className: "pending" };
+    return { text: "راحة", className: "pending" };
   }
 
   if (metrics.scheduleEntries.length === 0) {
-    return { text: "Aucun pointage", className: "pending" };
+    return { text: "ماكاين تسجيل", className: "pending" };
   }
 
   if (!metrics.complete) {
     return {
-      text: "Incomplet · Manque " + formatOwnerMinutes(metrics.missingMinutes),
+      text: "ناقص · باقي " + formatOwnerMinutes(metrics.missingMinutes),
       className: "warning"
     };
   }
@@ -2011,7 +2011,7 @@ function getOwnerStatusText(metrics) {
   }
 
   return {
-    text: "Manque " + formatOwnerMinutes(metrics.missingMinutes),
+    text: "باقي " + formatOwnerMinutes(metrics.missingMinutes),
     className: "warning"
   };
 }
@@ -2074,16 +2074,16 @@ function createOwnerTrend(weekTotal, maxWeekTotal) {
 
 function getOwnerPresenceText(metrics, period) {
   if (period !== "day") {
-    return metrics.scheduleEntries.length + " jour(s)";
+    return metrics.scheduleEntries.length + " نهار";
   }
 
   const todayEntry = metrics.scheduleEntries[0];
   if (!todayEntry) {
-    return "Non pointé";
+    return "ماتسجلش";
   }
 
   if (todayEntry.schedule.restDay) {
-    return "Repos";
+    return "راحة";
   }
 
   const arrival = todayEntry.schedule.arrival?.time || "--:--";
@@ -2109,7 +2109,7 @@ function renderOwnerEmployeeTable(period) {
     const cell = document.createElement("td");
     cell.colSpan = 6;
     cell.className = "employee-empty-cell";
-    cell.textContent = "Aucun employé enregistré.";
+    cell.textContent = "ماكاين حتى موظف مسجل.";
     row.appendChild(cell);
     ownerEmployeeBody.appendChild(row);
     return;
@@ -2126,7 +2126,7 @@ function renderOwnerEmployeeTable(period) {
     appendOwnerCell(row, getOwnerPresenceText(metrics, period));
     appendOwnerCell(row, status.text, "history-status " + status.className);
     appendOwnerCell(row, formatOwnerAmount(metrics.salesTotal), "owner-sales-cell");
-    appendOwnerCell(row, completedTasks + " / " + tasks.length + " terminées");
+    appendOwnerCell(row, completedTasks + " / " + tasks.length + " كملات");
     appendOwnerCell(row, createOwnerTrend(metrics.weekSalesTotal, maxWeekTotal));
     ownerEmployeeBody.appendChild(row);
   });
@@ -2261,7 +2261,7 @@ function renderOwnerAlerts() {
   ownerAlertBanner.className = "owner-alert-banner " + (hasIssues ? "warning" : "success");
 
   const heading = document.createElement("strong");
-  heading.textContent = hasIssues ? "Alertes du jour" : "Tout est en ordre aujourd'hui";
+  heading.textContent = hasIssues ? "التنبيهات ديال اليوم" : "كلشي مزيان اليوم";
   ownerAlertBanner.appendChild(heading);
 
   if (!hasIssues) {
@@ -2274,8 +2274,7 @@ function renderOwnerAlerts() {
     const item = document.createElement("li");
     item.textContent =
       missingHours.length +
-      " employé" + (missingHours.length > 1 ? "s n'ont" : " n'a") +
-      " pas complété " + (missingHours.length > 1 ? "leurs" : "ses") + " 12h";
+      " موظف(ين) مازال ماكملوش الـ 12 سا";
     list.appendChild(item);
   }
 
@@ -2286,7 +2285,7 @@ function renderOwnerAlerts() {
     }).join(", ");
 
     item.textContent =
-      totalIncompleteTasks + " tâche" + (totalIncompleteTasks > 1 ? "s non terminées" : " non terminée") +
+      totalIncompleteTasks + " تاش ماكملاتش" +
       " (" + breakdown + ")";
     list.appendChild(item);
   }
@@ -2295,33 +2294,33 @@ function renderOwnerAlerts() {
 }
 
 function getOwnerStampText(stamp) {
-  return stamp?.dateTime || stamp?.time || "Non pointé";
+  return stamp?.dateTime || stamp?.time || "ماتسجلش";
 }
 
 function getOwnerDetailedStatus(calculation) {
   if (calculation?.restDay) {
     return {
-      text: "Jour de repos",
+      text: "نهار الراحة",
       className: "pending"
     };
   }
 
   if (!calculation) {
     return {
-      text: "Manque 12h 00min · pointages incomplets",
+      text: "باقي 12 سا 00د · التسجيل ناقص",
       className: "warning"
     };
   }
 
   if (calculation.meetsTarget) {
     return {
-      text: formatOwnerMinutesWithWords(calculation.workedMinutes) + " effectuées",
+      text: formatOwnerMinutesWithWords(calculation.workedMinutes) + " مخدومة",
       className: "success"
     };
   }
 
   return {
-    text: "Manque " + formatOwnerMinutesWithWords(calculation.missingMinutes),
+    text: "باقي " + formatOwnerMinutesWithWords(calculation.missingMinutes),
     className: "warning"
   };
 }
@@ -2329,35 +2328,35 @@ function getOwnerDetailedStatus(calculation) {
 function getOwnerCompactStatus(health) {
   if (health.today?.calculation?.restDay) {
     return {
-      text: "Repos",
+      text: "راحة",
       className: "pending"
     };
   }
 
   if (health.meetsHours) {
     return {
-      text: "Objectif 12h00",
+      text: "الهدف 12سا00",
       className: "success"
     };
   }
 
   const missing = health.missingMinutes || ownerRequiredDailyMinutes;
   return {
-    text: "Manque " + formatOwnerMinutesWithWords(missing),
+    text: "باقي " + formatOwnerMinutesWithWords(missing),
     className: "warning"
   };
 }
 
 function getOwnerPeriodBadge(period) {
   if (period === "day") {
-    return "Jour";
+    return "نهار";
   }
 
   if (period === "week") {
-    return "Semaine";
+    return "سيمانة";
   }
 
-  return "Mois";
+  return "شهر";
 }
 
 function createOwnerTargetProgressBlock(activeSales, activeTarget, targetProgress, period) {
@@ -2367,7 +2366,7 @@ function createOwnerTargetProgressBlock(activeSales, activeTarget, targetProgres
   if (!targetProgress || activeTarget == null) {
     const empty = document.createElement("p");
     empty.className = "owner-target-empty";
-    empty.textContent = "Aucun objectif défini";
+    empty.textContent = "ماكاين حتى هدف محدد";
     block.appendChild(empty);
     return block;
   }
@@ -2376,7 +2375,7 @@ function createOwnerTargetProgressBlock(activeSales, activeTarget, targetProgres
   top.className = "owner-target-progress-top";
 
   const label = document.createElement("span");
-  label.textContent = "Objectif " + getOwnerPeriodBadge(period);
+  label.textContent = "الهدف " + getOwnerPeriodBadge(period);
 
   const value = document.createElement("strong");
   value.textContent = formatOwnerEuro(activeSales) + " / " + formatOwnerEuro(activeTarget);
@@ -2395,11 +2394,11 @@ function createOwnerTargetProgressBlock(activeSales, activeTarget, targetProgres
   const status = document.createElement("p");
   status.className = "owner-target-progress-status " + targetProgress.className;
   if (activeTarget === 0) {
-    status.textContent = "0 jour dans la période de campagne";
+    status.textContent = "0 نهار فمدة الحملة";
     status.className = "owner-target-progress-status warning";
   } else {
     status.textContent =
-      Math.round(targetProgress.percentage) + "% atteint · Reste " + formatOwnerEuro(targetProgress.remaining);
+      Math.round(targetProgress.percentage) + "% تحقق · باقي " + formatOwnerEuro(targetProgress.remaining);
   }
 
   block.appendChild(top);
@@ -2432,7 +2431,7 @@ function createOwnerCompactCard(health, topSellerId) {
   if (health.employee.id === topSellerId) {
     const bestBadge = document.createElement("span");
     bestBadge.className = "owner-best-employee-badge";
-    bestBadge.textContent = "Top vendeur";
+    bestBadge.textContent = "أحسن بائع";
     titleRow.appendChild(bestBadge);
   }
 
@@ -2446,14 +2445,14 @@ function createOwnerCompactCard(health, topSellerId) {
   const tasksBadge = document.createElement("span");
   tasksBadge.className =
     "owner-compact-badge " + (health.incompleteTasks > 0 ? "warning" : "success");
-  tasksBadge.textContent = health.completedTasks + "/" + health.totalTasks + " tâches";
+  tasksBadge.textContent = health.completedTasks + "/" + health.totalTasks + " تاش";
 
   badges.appendChild(statusBadge);
   badges.appendChild(tasksBadge);
 
   const footer = document.createElement("p");
   footer.className = "owner-compact-footer";
-  footer.textContent = "Aujourd'hui: " + formatOwnerAmount(health.today.salesTotal);
+  footer.textContent = "اليوم: " + formatOwnerAmount(health.today.salesTotal);
 
   const targetProgress = createOwnerTargetProgressBlock(
     health.activeSales,
@@ -2485,13 +2484,13 @@ function createOwnerDetailItem(label, value, className) {
 
 function fillOwnerTaskChecklist(tasks) {
   const completedTasks = tasks.filter(function (task) { return task.done; }).length;
-  ownerModalTaskCount.textContent = completedTasks + "/" + tasks.length + " tâches terminées";
+  ownerModalTaskCount.textContent = completedTasks + "/" + tasks.length + " تاش كملات";
   ownerModalTaskList.innerHTML = "";
 
   if (tasks.length === 0) {
     const item = document.createElement("li");
     item.className = "empty";
-    item.textContent = "Aucune tâche assignée.";
+    item.textContent = "ماكاين حتى تاش مسندة.";
     ownerModalTaskList.appendChild(item);
   } else {
     tasks.forEach(function (task, index) {
@@ -2510,7 +2509,7 @@ function fillOwnerTaskChecklist(tasks) {
       removeButton.type = "button";
       removeButton.className = "owner-task-remove";
       removeButton.dataset.taskIndex = String(index);
-      removeButton.setAttribute("aria-label", "Supprimer la tâche");
+      removeButton.setAttribute("aria-label", "مسح التاش");
       removeButton.textContent = "✕";
 
       item.appendChild(checkbox);
@@ -2519,7 +2518,7 @@ function fillOwnerTaskChecklist(tasks) {
       if (task.status === "excuse") {
         const badge = document.createElement("span");
         badge.className = "task-status-badge task-status-excuse";
-        badge.textContent = "Excusé";
+        badge.textContent = "معذور";
         item.appendChild(badge);
       }
 
@@ -2530,8 +2529,8 @@ function fillOwnerTaskChecklist(tasks) {
         const reason = document.createElement("p");
         reason.className = "task-excuse-reason";
         reason.textContent = task.excuseReason
-          ? "Justification: " + task.excuseReason
-          : "En attente de justification de l'employé.";
+          ? "المبرر: " + task.excuseReason
+          : "فالانتظار ديال المبرر ديال الموظف.";
         ownerModalTaskList.appendChild(reason);
       }
     });
@@ -2633,22 +2632,22 @@ function renderOwnerTargetIndicators(items) {
 
 function getOwnerTargetPeriodLabel(period) {
   if (period === "day") {
-    return "Jour";
+    return "نهار";
   }
 
   if (period === "week") {
-    return "Semaine";
+    return "سيمانة";
   }
 
   if (period === "month") {
-    return "Mois";
+    return "شهر";
   }
 
   if (period === "quarter") {
-    return "Trimestre";
+    return "الثلاثي";
   }
 
-  return "Année";
+  return "العام";
 }
 
 function getOwnerTargetPeriodDays(period) {
@@ -2709,14 +2708,14 @@ function renderOwnerTargetSummary() {
 
   const targets = getOwnerCampaignTargets();
   if (!targets) {
-    ownerTargetSummary.textContent = "Aucun objectif défini pour " + selectedLabel + ".";
+    ownerTargetSummary.textContent = "ماكاين حتى هدف محدد ل " + selectedLabel + ".";
     renderOwnerTargetIndicators([
-      { label: "Réalisé " + selectedLabel, value: "0,00 DH" },
-      { label: "Objectif " + selectedLabel, value: "0,00 DH" },
-      { label: "Taux " + selectedLabel, value: "0.0%", className: "danger" },
-      { label: "Reste " + selectedLabel, value: "0,00 DH" },
+      { label: "لي تحقق " + selectedLabel, value: "0,00 DH" },
+      { label: "الهدف " + selectedLabel, value: "0,00 DH" },
+      { label: "النسبة " + selectedLabel, value: "0.0%", className: "danger" },
+      { label: "الباقي " + selectedLabel, value: "0,00 DH" },
       {
-        label: "Glossia global (campagne)",
+        label: "Glossia الشامل (الحملة)",
         value: "0,00 DH / 0,00 DH",
         className: "owner-target-indicator-global danger"
       }
@@ -2734,33 +2733,33 @@ function renderOwnerTargetSummary() {
 
   renderOwnerTargetIndicators([
     {
-      label: "Réalisé " + selectedLabel,
+      label: "لي تحقق " + selectedLabel,
       value: formatOwnerEuro(achieved)
     },
     {
-      label: "Objectif " + selectedLabel,
+      label: "الهدف " + selectedLabel,
       value: formatOwnerEuro(target)
     },
     {
-      label: "Taux " + selectedLabel,
+      label: "النسبة " + selectedLabel,
       value: formatOwnerPercent(progress.percentage),
       className: progress.className
     },
     {
-      label: "Reste " + selectedLabel,
+      label: "الباقي " + selectedLabel,
       value: formatOwnerEuro(remaining),
       className: remaining === 0 ? "success" : ""
     },
     {
-      label: "Glossia global (campagne)",
+      label: "Glossia الشامل (الحملة)",
       value: formatOwnerEuro(globalAchieved) + " / " + formatOwnerEuro(targets.globalTarget),
       className: globalClassName
     }
   ]);
 
   ownerTargetSummary.textContent =
-    "Objectif " + selectedLabel + ": " + formatOwnerEuro(achieved) + " / " + formatOwnerEuro(target) +
-    " (" + formatOwnerPercent(progress.percentage) + ") · Reste: " + formatOwnerEuro(remaining) + ".";
+    "الهدف " + selectedLabel + ": " + formatOwnerEuro(achieved) + " / " + formatOwnerEuro(target) +
+    " (" + formatOwnerPercent(progress.percentage) + ") · الباقي: " + formatOwnerEuro(remaining) + ".";
 }
 
 function renderOwnerTargetForm() {
@@ -2782,11 +2781,11 @@ function openOwnerTargetModal() {
   renderOwnerTaxBrackets();
 
   if (ownerTargetModalTitle) {
-    ownerTargetModalTitle.textContent = "Objectifs personnel et global";
+    ownerTargetModalTitle.textContent = "الأهداف الشخصية والعامة";
   }
 
   if (ownerTargetModalSubtitle) {
-    ownerTargetModalSubtitle.textContent = "Renseignez l'objectif journalier du personnel et l'objectif global de Glossia sur la période.";
+    ownerTargetModalSubtitle.textContent = "دخل الهدف اليومي ديال الموظفين والهدف الشامل ديال Glossia فهاد المدة.";
   }
 
   ownerTargetModal.classList.remove("hidden");
@@ -2804,25 +2803,25 @@ function saveOwnerTargetsFromForm() {
   const globalTarget = Number(ownerTargetGlobalInput.value);
 
   if (!startDate || !endDate) {
-    ownerTargetFeedback.textContent = "Veuillez renseigner une date de début et une date de fin.";
+    ownerTargetFeedback.textContent = "خاصك دخل تاريخ البداية وتاريخ النهاية.";
     ownerTargetFeedback.classList.add("is-error");
     return false;
   }
 
   if (!Number.isFinite(dailyTarget) || dailyTarget <= 0) {
-    ownerTargetFeedback.textContent = "Veuillez saisir un objectif journalier valide (> 0).";
+    ownerTargetFeedback.textContent = "خاصك دخل هدف يومي صحيح (> 0).";
     ownerTargetFeedback.classList.add("is-error");
     return false;
   }
 
   if (!Number.isFinite(globalTarget) || globalTarget <= 0) {
-    ownerTargetFeedback.textContent = "Veuillez saisir un objectif global Glossia valide (> 0).";
+    ownerTargetFeedback.textContent = "خاصك دخل هدف شامل ديال Glossia صحيح (> 0).";
     ownerTargetFeedback.classList.add("is-error");
     return false;
   }
 
   if (ownerDateFromISO(endDate) < ownerDateFromISO(startDate)) {
-    ownerTargetFeedback.textContent = "La date de fin doit être égale ou après la date de début.";
+    ownerTargetFeedback.textContent = "تاريخ النهاية خاصو يكون بعد ولا نفس تاريخ البداية.";
     ownerTargetFeedback.classList.add("is-error");
     return false;
   }
@@ -2833,7 +2832,7 @@ function saveOwnerTargetsFromForm() {
   ownerCampaignTarget.globalTarget = Math.round(globalTarget * 100) / 100;
 
   saveOwnerTargetSettingsToSession();
-  ownerTargetFeedback.textContent = "Objectifs enregistrés.";
+  ownerTargetFeedback.textContent = "تسجلات الأهداف.";
   ownerTargetFeedback.classList.remove("is-error");
   renderOwnerDashboard(ownerActivePeriod);
   return true;
@@ -2850,23 +2849,23 @@ function openOwnerDetailModal(employeeHealth, period) {
   const weekSales = sumOwnerSales(getOwnerSalesForPeriod(state, "week", employee.id));
   const monthSales = sumOwnerSales(getOwnerSalesForPeriod(state, "month", employee.id));
 
-  ownerModalTitle.textContent = "Détails · " + employee.name;
+  ownerModalTitle.textContent = "التفاصيل · " + employee.name;
   ownerModalSubtitle.textContent = employee.post;
 
   ownerModalTimeGrid.innerHTML = "";
-  ownerModalTimeGrid.appendChild(createOwnerDetailItem("Arrivée", getOwnerStampText(today.schedule.arrival)));
-  ownerModalTimeGrid.appendChild(createOwnerDetailItem("Pause déjeuner", getOwnerStampText(today.schedule.lunch)));
-  ownerModalTimeGrid.appendChild(createOwnerDetailItem("Retour", getOwnerStampText(today.schedule.returnTime)));
-  ownerModalTimeGrid.appendChild(createOwnerDetailItem("Départ", getOwnerStampText(today.schedule.departure)));
-  ownerModalTimeGrid.appendChild(createOwnerDetailItem("Heures travaillées", todayStatus.text, todayStatus.className));
+  ownerModalTimeGrid.appendChild(createOwnerDetailItem("الوصول", getOwnerStampText(today.schedule.arrival)));
+  ownerModalTimeGrid.appendChild(createOwnerDetailItem("وقفة الغدا", getOwnerStampText(today.schedule.lunch)));
+  ownerModalTimeGrid.appendChild(createOwnerDetailItem("الرجوع", getOwnerStampText(today.schedule.returnTime)));
+  ownerModalTimeGrid.appendChild(createOwnerDetailItem("الخروج", getOwnerStampText(today.schedule.departure)));
+  ownerModalTimeGrid.appendChild(createOwnerDetailItem("الساعات المخدومة", todayStatus.text, todayStatus.className));
 
   ownerModalSalesGrid.innerHTML = "";
-  ownerModalSalesGrid.appendChild(createOwnerDetailItem("Ventes aujourd'hui", formatOwnerAmount(today.salesTotal)));
-  ownerModalSalesGrid.appendChild(createOwnerDetailItem("Ventes cette semaine", formatOwnerAmount(weekSales)));
-  ownerModalSalesGrid.appendChild(createOwnerDetailItem("Ventes ce mois", formatOwnerAmount(monthSales)));
+  ownerModalSalesGrid.appendChild(createOwnerDetailItem("المبيعات ديال اليوم", formatOwnerAmount(today.salesTotal)));
+  ownerModalSalesGrid.appendChild(createOwnerDetailItem("المبيعات ديال هاد السيمانة", formatOwnerAmount(weekSales)));
+  ownerModalSalesGrid.appendChild(createOwnerDetailItem("المبيعات ديال هاد الشهر", formatOwnerAmount(monthSales)));
   ownerModalSalesGrid.appendChild(
     createOwnerDetailItem(
-      "Période sélectionnée · " + getOwnerPeriodLabels(period).badge,
+      "المدة المختارة · " + getOwnerPeriodLabels(period).badge,
       formatOwnerMinutes(periodMetrics.workedMinutes) + " · " + periodStatus.text,
       periodStatus.className
     )
@@ -2875,7 +2874,7 @@ function openOwnerDetailModal(employeeHealth, period) {
   ownerModalTargetGrid.innerHTML = "";
   if (!employeeHealth.campaignTargets) {
     ownerModalTargetGrid.appendChild(
-      createOwnerDetailItem("Objectif", "Aucun objectif défini", "warning")
+      createOwnerDetailItem("الهدف", "ماكاين حتى هدف محدد", "warning")
     );
   } else {
     const dayProgress = getOwnerTargetProgress(employeeHealth.daySales, employeeHealth.campaignTargets.dailyTarget);
@@ -2885,7 +2884,7 @@ function openOwnerDetailModal(employeeHealth, period) {
 
     ownerModalTargetGrid.appendChild(
       createOwnerDetailItem(
-        "Objectif jour",
+        "الهدف ديال اليوم",
         formatOwnerEuro(employeeHealth.daySales) + " / " + formatOwnerEuro(employeeHealth.campaignTargets.dailyTarget) +
         " (" + Math.round(dayProgress.percentage) + "%)",
         dayProgress.className
@@ -2893,7 +2892,7 @@ function openOwnerDetailModal(employeeHealth, period) {
     );
     ownerModalTargetGrid.appendChild(
       createOwnerDetailItem(
-        "Objectif semaine",
+        "الهدف ديال السيمانة",
         formatOwnerEuro(employeeHealth.weekSales) + " / " + formatOwnerEuro(employeeHealth.campaignTargets.weekTarget) +
         " (" + Math.round(weekProgress.percentage) + "%)",
         weekProgress.className
@@ -2901,7 +2900,7 @@ function openOwnerDetailModal(employeeHealth, period) {
     );
     ownerModalTargetGrid.appendChild(
       createOwnerDetailItem(
-        "Objectif mois",
+        "الهدف ديال الشهر",
         formatOwnerEuro(employeeHealth.monthSales) + " / " + formatOwnerEuro(employeeHealth.campaignTargets.monthTarget) +
         " (" + Math.round(monthProgress.percentage) + "%)",
         monthProgress.className
@@ -2909,7 +2908,7 @@ function openOwnerDetailModal(employeeHealth, period) {
     );
     ownerModalTargetGrid.appendChild(
       createOwnerDetailItem(
-        "Objectif campagne",
+        "الهدف ديال الحملة",
         formatOwnerEuro(employeeHealth.campaignSales) + " / " + formatOwnerEuro(employeeHealth.campaignTargets.campaignTarget) +
         " (" + Math.round(campaignProgress.percentage) + "%)",
         campaignProgress.className
@@ -2917,7 +2916,7 @@ function openOwnerDetailModal(employeeHealth, period) {
     );
     ownerModalTargetGrid.appendChild(
       createOwnerDetailItem(
-        "Période campagne",
+        "مدة الحملة",
         formatDateForOwnerDisplay(employeeHealth.campaignTargets.startDateISO) +
         " → " + formatDateForOwnerDisplay(employeeHealth.campaignTargets.endDateISO)
       )
@@ -2938,7 +2937,7 @@ function renderOwnerEmployeeDetails(period) {
   if (ownerEmployees.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "employee-list-empty";
-    emptyText.textContent = "Aucun employé enregistré.";
+    emptyText.textContent = "ماكاين حتى موظف مسجل.";
     ownerEmployeeCards.appendChild(emptyText);
     return;
   }
@@ -2968,7 +2967,7 @@ function renderOwnerSalesChart(period) {
   if (data.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "employee-list-empty";
-    emptyText.textContent = "Aucune donnée disponible.";
+    emptyText.textContent = "ماكاين حتى معطيات.";
     ownerSalesChart.appendChild(emptyText);
     return;
   }
@@ -3460,7 +3459,7 @@ function openOwnerBriefingModal() {
   const missingHoursItems = employeeHealth
     .filter(function (health) { return !health.meetsHours; })
     .map(function (health) {
-      return health.employee.name + ": " + formatOwnerMinutes(health.missingMinutes) + " manquantes aujourd'hui";
+      return health.employee.name + ": " + formatOwnerMinutes(health.missingMinutes) + " ناقصة اليوم";
     });
 
   const notDoneItems = [];
@@ -3472,35 +3471,35 @@ function openOwnerBriefingModal() {
       } else if (task.status === "excuse") {
         excuseItems.push(
           health.employee.name + ": " + task.text +
-          (task.excuseReason ? " — " + task.excuseReason : " (en attente de justification)")
+          (task.excuseReason ? " — " + task.excuseReason : " (فالانتظار ديال المبرر)")
         );
       }
     });
   });
 
   const stockItems = (ownerSharedData.stockRequests || []).map(function (request) {
-    const typeLabel = request.type === "vente" ? "Produit vente" : "Produit salle";
-    return (request.name || "Produit sans nom") + " — Qté: " + request.quantity + " (" + typeLabel + ")";
+    const typeLabel = request.type === "vente" ? "منتوج البيع" : "منتوج الصالون";
+    return (request.name || "منتوج بلا اسم") + " — الكمية: " + request.quantity + " (" + typeLabel + ")";
   });
 
   ownerBriefingBody.innerHTML = "";
   const sections = [
-    createOwnerBriefingSection("Heures incomplètes", missingHoursItems),
-    createOwnerBriefingSection("Tâches non terminées", notDoneItems),
-    createOwnerBriefingSection("Tâches excusées", excuseItems),
-    createOwnerBriefingSection("Besoins de réapprovisionnement", stockItems)
+    createOwnerBriefingSection("الساعات الناقصة", missingHoursItems),
+    createOwnerBriefingSection("التاش لي ماكملاتش", notDoneItems),
+    createOwnerBriefingSection("التاش المعذورة", excuseItems),
+    createOwnerBriefingSection("احتياجات التموين", stockItems)
   ].filter(Boolean);
 
   const totalIssues = missingHoursItems.length + notDoneItems.length + excuseItems.length + stockItems.length;
 
   if (sections.length === 0) {
-    ownerBriefingSubtitle.textContent = "Tout est en ordre aujourd'hui.";
+    ownerBriefingSubtitle.textContent = "كلشي مزيان اليوم.";
     const okMessage = document.createElement("p");
     okMessage.className = "owner-briefing-ok";
-    okMessage.textContent = "Aucun problème détecté : heures, tâches et stock sont à jour.";
+    okMessage.textContent = "ماكاين حتى مشكل: الساعات، التاش والمخزون كلشي مزيان.";
     ownerBriefingBody.appendChild(okMessage);
   } else {
-    ownerBriefingSubtitle.textContent = totalIssues + " point(s) à vérifier aujourd'hui.";
+    ownerBriefingSubtitle.textContent = totalIssues + " نقطة خاصها تتفقد اليوم.";
     sections.forEach(function (section) {
       ownerBriefingBody.appendChild(section);
     });
@@ -3550,7 +3549,7 @@ function renderOwnerTaxBracketList(listElement, brackets, category) {
   if (brackets.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty";
-    empty.textContent = "Aucun palier défini.";
+    empty.textContent = "ماكاين حتى مستوى محدد.";
     listElement.appendChild(empty);
     return;
   }
@@ -3563,13 +3562,13 @@ function renderOwnerTaxBracketList(listElement, brackets, category) {
       row.className = "owner-cost-row";
 
       const label = document.createElement("span");
-      label.textContent = "À partir de " + formatOwnerAmount(bracket.threshold) + " → -" + formatOwnerAmount(bracket.amount);
+      label.textContent = "بداية من " + formatOwnerAmount(bracket.threshold) + " → -" + formatOwnerAmount(bracket.amount);
 
       const removeButton = document.createElement("button");
       removeButton.type = "button";
       removeButton.className = "owner-task-remove";
       removeButton.textContent = "✕";
-      removeButton.setAttribute("aria-label", "Supprimer ce palier");
+      removeButton.setAttribute("aria-label", "مسح هاد المستوى");
       removeButton.addEventListener("click", function () {
         const brackets = ensureOwnerTaxBrackets()[category];
         const index = brackets.findIndex(function (item) {

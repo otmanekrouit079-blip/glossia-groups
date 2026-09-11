@@ -61,7 +61,7 @@
     }
 
     async function refreshStatus() {
-      setStatus(statusEl, "DB: Checking...", "is-pending");
+      setStatus(statusEl, "القاعدة: كنتأكد...", "is-pending");
       const baseUrl = storage.getApiBaseUrl ? storage.getApiBaseUrl() : "http://localhost:4000";
       root.title = "API: " + baseUrl;
 
@@ -69,31 +69,31 @@
         const health = await checkHealth(baseUrl);
         if (health.ok) {
           if (health.payload?.database === "file-fallback") {
-            setStatus(statusEl, "DB: Local Mode", "is-online");
+            setStatus(statusEl, "القاعدة: محلية", "is-online");
             return;
           }
 
-          setStatus(statusEl, "DB: Connected", "is-online");
+          setStatus(statusEl, "القاعدة: متصلة", "is-online");
           return;
         }
 
-        setStatus(statusEl, "DB: Offline", "is-offline");
+        setStatus(statusEl, "القاعدة: مقطوعة", "is-offline");
       } catch (error) {
-        setStatus(statusEl, "DB: Offline", "is-offline");
+        setStatus(statusEl, "القاعدة: مقطوعة", "is-offline");
       }
     }
 
     syncBtn.addEventListener("click", function () {
-      setStatus(statusEl, "DB: Syncing...", "is-pending");
+      setStatus(statusEl, "القاعدة: كتزامن...", "is-pending");
 
       storage.syncDataNow()
         .then(function () {
-          setStatus(statusEl, "DB: Connected", "is-online");
-          setLastSync(lastEl, "Last sync: " + formatClock(new Date()));
+          setStatus(statusEl, "القاعدة: متصلة", "is-online");
+          setLastSync(lastEl, "آخر مزامنة: " + formatClock(new Date()));
         })
         .catch(function () {
-          setStatus(statusEl, "DB: Offline", "is-offline");
-          setLastSync(lastEl, "Last sync: failed");
+          setStatus(statusEl, "القاعدة: مقطوعة", "is-offline");
+          setLastSync(lastEl, "آخر مزامنة: فشلات");
         });
     });
 
@@ -101,7 +101,7 @@
     if (lastSavedAt) {
       const date = new Date(lastSavedAt);
       if (!Number.isNaN(date.getTime())) {
-        setLastSync(lastEl, "Last local save: " + formatClock(date));
+        setLastSync(lastEl, "آخر حفظ محلي: " + formatClock(date));
       }
     }
 

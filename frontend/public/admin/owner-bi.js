@@ -106,9 +106,9 @@
 
       if (!Array.isArray(parsed.inventoryProducts) || parsed.inventoryProducts.length === 0) {
         parsed.inventoryProducts = [
-          { id: 1, name: "Shampooing", stock: 12, threshold: 5, consumedToday: 2 },
-          { id: 2, name: "Gel coiffant", stock: 4, threshold: 5, consumedToday: 1 },
-          { id: 3, name: "Crème soin", stock: 8, threshold: 3, consumedToday: 1 }
+          { id: 1, name: "شامبو", stock: 12, threshold: 5, consumedToday: 2 },
+          { id: 2, name: "جيل للشعر", stock: 4, threshold: 5, consumedToday: 1 },
+          { id: 3, name: "كريم عناية", stock: 8, threshold: 3, consumedToday: 1 }
         ];
       }
 
@@ -143,15 +143,15 @@
 
       if (!Array.isArray(parsed.fixedCosts)) {
         parsed.fixedCosts = [
-          { id: Date.now() + 1, label: "Loyer", monthlyAmount: 0 },
-          { id: Date.now() + 2, label: "Électricité", monthlyAmount: 0 }
+          { id: Date.now() + 1, label: "الكرا", monthlyAmount: 0 },
+          { id: Date.now() + 2, label: "الكهرباء", monthlyAmount: 0 }
         ];
       }
 
       if (!Array.isArray(parsed.variableCosts)) {
         parsed.variableCosts = [
-          { id: Date.now() + 3, label: "Achat produits", monthlyAmount: 0 },
-          { id: Date.now() + 4, label: "Maintenance", monthlyAmount: 0 }
+          { id: Date.now() + 3, label: "شراء المنتوجات", monthlyAmount: 0 },
+          { id: Date.now() + 4, label: "الصيانة", monthlyAmount: 0 }
         ];
       }
 
@@ -197,7 +197,7 @@
         records.push({
           employeeId: employee.id,
           employeeName: employee.name,
-          label: String(entry.serviceName || entry.label || "Service"),
+          label: String(entry.serviceName || entry.label || "خدمة"),
           amount: Number(entry.amount || 0),
           dateISO: entry.dateISO,
           kind: "service"
@@ -214,8 +214,8 @@
       const employee = employees.find(function (item) { return item.id === entry.employeeId; });
       return {
         employeeId: entry.employeeId,
-        employeeName: employee ? employee.name : "Non assigné",
-        label: entry.label || "Produit",
+        employeeName: employee ? employee.name : "ماشي معيّن",
+        label: entry.label || "منتوج",
         amount: Number(entry.amount || 0),
         dateISO: entry.dateISO,
         kind: "product"
@@ -283,26 +283,26 @@
 
   function getPeriodLabel(period) {
     if (period === "day") {
-      return "Jour";
+      return "اليوم";
     }
 
     if (period === "week") {
-      return "Semaine";
+      return "السيمانة";
     }
 
     if (period === "month") {
-      return "Mois";
+      return "الشهر";
     }
 
     if (period === "quarter") {
-      return "Trimestre";
+      return "الثلاثي";
     }
 
     if (period === "year") {
-      return "Année";
+      return "العام";
     }
 
-    return "Personnalisée";
+    return "مخصصة";
   }
 
   function getDayCountForAccountingPeriod(period, bounds) {
@@ -540,7 +540,7 @@
     ownerNavProductsValue.textContent = formatMoneyDh(productSales);
     ownerNavTasksValue.textContent = Math.round(taskRate) + "%";
     ownerNavHoursValue.textContent = hours.compliant + " / " + hours.total;
-    ownerNavConsumedValue.textContent = consumed + " unités";
+    ownerNavConsumedValue.textContent = consumed + " وحدة";
     ownerNavRuptureValue.textContent = String(lowStockProducts.length);
 
     window.dispatchEvent(new CustomEvent("owner:operations-updated", {
@@ -549,7 +549,7 @@
         products: formatMoneyDh(productSales),
         tasksRate: Math.round(taskRate) + "%",
         hours: hours.compliant + " / " + hours.total,
-        consumed: consumed + " unités",
+        consumed: consumed + " وحدة",
         ruptureCount: lowStockProducts.length
       }
     }));
@@ -566,7 +566,7 @@
     ownerBiChart.innerHTML = "";
 
     if (!bounds || records.length === 0) {
-      ownerBiChart.innerHTML = '<p class="owner-bi-empty">Aucune donnée pour cette période.</p>';
+      ownerBiChart.innerHTML = '<p class="owner-bi-empty">ماكاين حتى بيانات لهاد الفترة.</p>';
       return;
     }
 
@@ -616,7 +616,7 @@
     if (!records.length) {
       const item = document.createElement("li");
       item.className = "modal-list-item muted";
-      item.textContent = "Aucune vente pour cet employé sur cette période.";
+      item.textContent = "ماكاين حتى بيعة لهاد الموظف فهاد الفترة.";
       ownerBiEmployeeSalesList.appendChild(item);
       return;
     }
@@ -657,8 +657,8 @@
     });
 
     if (ranking.length === 0) {
-      ownerBiRanking.innerHTML = '<p class="owner-bi-empty">Aucun classement disponible.</p>';
-      ownerBiEmployeeSalesList.innerHTML = '<li class="modal-list-item muted">Aucune donnée.</li>';
+      ownerBiRanking.innerHTML = '<p class="owner-bi-empty">ماكاين حتى ترتيب متوفر.</p>';
+      ownerBiEmployeeSalesList.innerHTML = '<li class="modal-list-item muted">ماكاين حتى بيانات.</li>';
       return;
     }
 
@@ -703,7 +703,7 @@
 
       row.className = "owner-bi-stock-row";
       label.textContent = product.name;
-      stock.textContent = "Stock: " + Number(product.stock || 0);
+      stock.textContent = "الستوك: " + Number(product.stock || 0);
 
       input.type = "number";
       input.min = "0";
@@ -713,7 +713,7 @@
 
       button.type = "button";
       button.className = "manager-btn manager-btn-muted";
-      button.textContent = "Enregistrer";
+      button.textContent = "سجل";
 
       button.addEventListener("click", function () {
         const nextValue = Number(input.value);
@@ -742,9 +742,9 @@
     ownerBiTaskStats.innerHTML = "";
 
     const stats = [
-      { label: "Taux de complétion (jour)", value: Math.round(dayRate) + "%" },
-      { label: "Taux de complétion (semaine)", value: Math.round(weekRate) + "%" },
-      { label: "Taux de complétion (mois)", value: Math.round(monthRate) + "%" }
+      { label: "نسبة الإنجاز (اليوم)", value: Math.round(dayRate) + "%" },
+      { label: "نسبة الإنجاز (السيمانة)", value: Math.round(weekRate) + "%" },
+      { label: "نسبة الإنجاز (الشهر)", value: Math.round(monthRate) + "%" }
     ];
 
     stats.forEach(function (stat) {
@@ -779,13 +779,13 @@
     const bestRow = document.createElement("div");
     bestRow.className = "owner-task-stat-row";
     bestRow.innerHTML =
-      "<span>Employé le plus fiable</span><strong>" +
-      (best ? best.name + " · " + Math.round(best.rate) + "%" : "Aucune donnée") +
+      "<span>الموظف الأكثر ثقة</span><strong>" +
+      (best ? best.name + " · " + Math.round(best.rate) + "%" : "ماكاين حتى بيانات") +
       "</strong>";
     ownerBiTaskStats.appendChild(bestRow);
 
     const listTitle = document.createElement("h3");
-    listTitle.textContent = "Liste complète des tâches";
+    listTitle.textContent = "اللائحة الكاملة ديال التاش";
     ownerBiTaskStats.appendChild(listTitle);
 
     employees.forEach(function (employee) {
@@ -796,7 +796,7 @@
         const timeText = task.completedAtISO ? formatDateTime(task.completedAtISO) : "-";
         item.innerHTML =
           "<span>" + employee.name + " · " + task.text + "</span><strong>" +
-          (task.done ? "Terminé · " + timeText : "En attente") +
+          (task.done ? "كملات · " + timeText : "فالانتظار") +
           "</strong>";
         ownerBiTaskStats.appendChild(item);
       });
@@ -812,7 +812,7 @@
     ownerBiRecordsTitle.textContent = title;
 
     if (!rows.length) {
-      ownerBiRecords.innerHTML = '<p class="owner-bi-empty">Aucune donnée détaillée disponible.</p>';
+      ownerBiRecords.innerHTML = '<p class="owner-bi-empty">ماكاين حتى بيانات مفصلة متوفرة.</p>';
       return;
     }
 
@@ -841,13 +841,13 @@
       .map(function (record) {
         return [
           formatDateTime(record.dateISO),
-          record.employeeName || "Non assigné",
+          record.employeeName || "ماشي معيّن",
           record.label || "-",
           formatMoneyDh(record.amount)
         ];
       });
 
-    renderRecordsTable(title, ["Date", "Employé", "Libellé", "Montant"], rows);
+    renderRecordsTable(title, ["التاريخ", "الموظف", "الوصف", "المبلغ"], rows);
   }
 
   function renderHoursRecordsDetail(data, bounds) {
@@ -869,7 +869,7 @@
       });
 
       if (entries.length === 0) {
-        return [employee.name, "0", "0h00", "Aucun horaire"];
+        return [employee.name, "0", "0h00", "ماكاين حتى توقيت"];
       }
 
       let workedMinutes = 0;
@@ -886,11 +886,11 @@
         employee.name,
         String(entries.length),
         Math.floor(workedMinutes / 60) + "h" + String(workedMinutes % 60).padStart(2, "0"),
-        completeDays > 0 ? (completeDays + " jour(s) complet(s)") : "Pointages incomplets"
+        completeDays > 0 ? (completeDays + " نهار(ات) كاملين") : "التسجيل ناقص"
       ];
     });
 
-    renderRecordsTable("Détail des horaires", ["Employé", "Jours pointés", "Heures cumulées", "Statut"], rows);
+    renderRecordsTable("تفاصيل التوقيت", ["الموظف", "الأيام المسجلة", "الساعات المجموعة", "الحالة"], rows);
   }
 
   function renderTaskRecordsDetail(data) {
@@ -903,13 +903,13 @@
         rows.push([
           employee.name,
           task.text,
-          task.done ? "Terminée" : "En attente",
+          task.done ? "كملات" : "فالانتظار",
           task.completedAtISO ? formatDateTime(task.completedAtISO) : "-"
         ]);
       });
     });
 
-    renderRecordsTable("Détail des tâches", ["Employé", "Tâche", "Statut", "Date"], rows);
+    renderRecordsTable("تفاصيل التاش", ["الموظف", "التاش", "الحالة", "التاريخ"], rows);
   }
 
   function renderStockRecordsDetail(data, isRupture) {
@@ -927,28 +927,28 @@
         String(Number(product.stock || 0)),
         String(Number(product.threshold || 0)),
         String(Number(product.consumedToday || 0)),
-        Number(product.stock || 0) <= Number(product.threshold || 0) ? "À réapprovisionner" : "OK"
+        Number(product.stock || 0) <= Number(product.threshold || 0) ? "خاصو يتزود" : "مزيان"
       ];
     });
 
     renderRecordsTable(
-      isRupture ? "Détail produits en rupture" : "Détail produits consommés",
-      ["Produit", "Stock", "Seuil", "Consommé (jour)", "Statut"],
+      isRupture ? "تفاصيل المنتوجات الناقصة" : "تفاصيل المنتوجات المستهلكة",
+      ["المنتوج", "الستوك", "السقف", "المستهلك (اليوم)", "الحالة"],
       rows
     );
   }
 
   function renderBiView(data) {
     const labels = {
-      services: "Services vendus",
-      products: "Produits vendus",
-      tasks: "Tâches",
-      hours: "Horaires",
-      consumed: "Produits consommés",
-      rupture: "Produits en rupture"
+      services: "الخدمات المبيعة",
+      products: "المنتوجات المبيعة",
+      tasks: "التاش",
+      hours: "التوقيت",
+      consumed: "المنتوجات المستهلكة",
+      rupture: "المنتوجات الناقصة"
     };
 
-    ownerBiTitle.textContent = labels[biState.activeView] || "Analyse détaillée";
+    ownerBiTitle.textContent = labels[biState.activeView] || "تحليل مفصل";
 
     const bounds = getBoundsForRange(biState.rangeMode, biState.customStart, biState.customEnd);
     ownerBiStockThresholds.classList.add("hidden");
@@ -961,7 +961,7 @@
 
     if (biState.activeView === "tasks") {
       ownerBiTotalRevenue.textContent = "-";
-      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>Vue analytique des tâches.</p>";
+      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>نظرة تحليلية على التاش.</p>";
       ownerBiRankingWrap.classList.add("hidden");
       ownerBiEmployeeSales.classList.add("hidden");
       ownerBiTaskStats.classList.remove("hidden");
@@ -973,7 +973,7 @@
     if (biState.activeView === "hours") {
       const hours = getHoursCompliance(data);
       ownerBiTotalRevenue.textContent = hours.compliant + " / " + hours.total;
-      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>Heures conformes à 12h aujourd'hui.</p>";
+      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>الساعات المطابقة لـ12h اليوم.</p>";
       ownerBiRankingWrap.classList.add("hidden");
       ownerBiEmployeeSales.classList.add("hidden");
       renderHoursRecordsDetail(data, bounds);
@@ -984,8 +984,8 @@
       const consumed = (data.inventoryProducts || []).reduce(function (total, product) {
         return total + Number(product.consumedToday || 0);
       }, 0);
-      ownerBiTotalRevenue.textContent = consumed + " unités";
-      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>Suivi des stocks et seuils d'alerte.</p>";
+      ownerBiTotalRevenue.textContent = consumed + " وحدة";
+      ownerBiChart.innerHTML = "<p class='owner-bi-empty'>متابعة الستوك وحدود التنبيه.</p>";
       ownerBiRankingWrap.classList.add("hidden");
       ownerBiEmployeeSales.classList.add("hidden");
       ownerBiStockThresholds.classList.remove("hidden");
@@ -1004,7 +1004,7 @@
     renderEmployeeRanking(filtered);
     renderSalesRecordsDetail(
       filtered,
-      biState.activeView === "products" ? "Détail des produits vendus" : "Détail des services vendus"
+      biState.activeView === "products" ? "تفاصيل المنتوجات المبيعة" : "تفاصيل الخدمات المبيعة"
     );
   }
 
@@ -1026,14 +1026,14 @@
       amount.type = "text";
       amount.className = "owner-target-input";
       amount.value = String(Number(cost.monthlyAmount || 0));
-      amount.placeholder = "Ex: 4000 DH";
+      amount.placeholder = "مثلا: 4000 DH";
 
       remove.type = "button";
       remove.className = "manager-btn manager-btn-muted";
-      remove.textContent = "Supprimer";
+      remove.textContent = "مسح";
 
       label.addEventListener("change", function () {
-        cost.label = label.value.trim() || "Charge";
+        cost.label = label.value.trim() || "مصروف";
         onChange();
       });
 
@@ -1099,7 +1099,7 @@
     const products = Array.isArray(data.ownerProducts) ? data.ownerProducts : [];
 
     if (products.length === 0) {
-      ownerProductsList.innerHTML = '<p class="owner-bi-empty">Aucun produit configuré.</p>';
+      ownerProductsList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى منتوج معمر.</p>';
       return;
     }
 
@@ -1110,12 +1110,12 @@
     table.className = "employee-history-table owner-products-table";
     table.innerHTML =
       "<thead><tr>" +
-      "<th>Produit</th>" +
-      "<th>Prix d'achat</th>" +
-      "<th>Prix de vente</th>" +
-      "<th>Bénéfice employé</th>" +
-      "<th>Bénéfice net Glossia</th>" +
-      "<th>Action</th>" +
+      "<th>المنتوج</th>" +
+      "<th>تمن الشراء</th>" +
+      "<th>تمن البيع</th>" +
+      "<th>بنفيس الموظف</th>" +
+      "<th>البنفيس الصافي ديال Glossia</th>" +
+      "<th>الإجراء</th>" +
       "</tr></thead>";
 
     const body = document.createElement("tbody");
@@ -1140,32 +1140,32 @@
       nameInput.type = "text";
       nameInput.className = "owner-target-input";
       nameInput.value = String(product.name || "");
-      nameInput.placeholder = "Nom produit";
+      nameInput.placeholder = "سمية المنتوج";
 
       purchaseInput.type = "number";
       purchaseInput.min = "0";
       purchaseInput.step = "0.01";
       purchaseInput.className = "owner-target-input";
       purchaseInput.value = String(Number(product.purchasePrice || 0));
-      purchaseInput.placeholder = "Prix achat (DH)";
+      purchaseInput.placeholder = "تمن الشراء (DH)";
 
       sellingInput.type = "number";
       sellingInput.min = "0";
       sellingInput.step = "0.01";
       sellingInput.className = "owner-target-input";
       sellingInput.value = String(Number(product.sellingPrice || 0));
-      sellingInput.placeholder = "Prix vente (DH)";
+      sellingInput.placeholder = "تمن البيع (DH)";
 
       employeeProfitInput.type = "number";
       employeeProfitInput.min = "0";
       employeeProfitInput.step = "0.01";
       employeeProfitInput.className = "owner-target-input";
       employeeProfitInput.value = String(Number(product.employeeProfit || 0));
-      employeeProfitInput.placeholder = "Bénéfice employé (DH)";
+      employeeProfitInput.placeholder = "بنفيس الموظف (DH)";
 
       removeButton.type = "button";
       removeButton.className = "manager-btn manager-btn-muted";
-      removeButton.textContent = "Supprimer";
+      removeButton.textContent = "مسح";
 
       function refreshGlossiaNet() {
         const purchasePrice = Number(product.purchasePrice || 0);
@@ -1178,7 +1178,7 @@
       }
 
       nameInput.addEventListener("change", function () {
-        product.name = nameInput.value.trim() || "Produit";
+        product.name = nameInput.value.trim() || "منتوج";
         saveOwnerData(data);
         renderAccountingSection();
       });
@@ -1241,7 +1241,7 @@
     const rows = Object.values(compensationMap || {});
 
     if (!rows.length) {
-      ownerSalariesList.innerHTML = '<p class="owner-bi-empty">Aucun employé disponible.</p>';
+      ownerSalariesList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى موظف متوفر.</p>';
       return;
     }
 
@@ -1264,7 +1264,7 @@
 
     ownerSalariesList.innerHTML =
       '<div class="employee-table-wrap"><table class="employee-history-table owner-comp-table">' +
-      "<thead><tr><th>Employé</th><th>Ventes services</th><th>50% services</th><th>+ Bénéfice produits</th><th>= Bénéfice net</th><th>Détail du calcul</th></tr></thead>" +
+      "<thead><tr><th>الموظف</th><th>بيوعات الخدمات</th><th>50% الخدمات</th><th>+ بنفيس المنتوجات</th><th>= البنفيس الصافي</th><th>تفاصيل الحساب</th></tr></thead>" +
       "<tbody>" + bodyHtml + "</tbody></table></div>";
   }
 
@@ -1273,7 +1273,7 @@
       return;
     }
 
-    ownerTaxesList.innerHTML = '<p class="owner-bi-empty">Mode pourcentage actif: aucun salaire fixe ni taxe déduite des employés.</p>';
+    ownerTaxesList.innerHTML = '<p class="owner-bi-empty">وضعية النسبة المئوية فعالة: ماكاين حتى أجرة ثابتة ولا ضريبة متخصمة من الموظفين.</p>';
   }
 
   function getPeriodFactor(period) {
@@ -1334,13 +1334,13 @@
     renderTaxRows(data, compensationMap);
 
     if (ownerTaxPeriodCaption) {
-      ownerTaxPeriodCaption.textContent = "Période: " + getPeriodLabel(biState.accountingPeriod);
+      ownerTaxPeriodCaption.textContent = "الفترة: " + getPeriodLabel(biState.accountingPeriod);
     }
 
     if (ownerVariableCostsBreakdown) {
       ownerVariableCostsBreakdown.textContent =
-        "Variables = Manuel " + formatMoneyDh(manualVariableTotal) +
-        " (Produits consommés auto: " + formatMoneyDh(consumedProductsAutoTotal) + " · info)";
+        "المتغيرة = يدوي " + formatMoneyDh(manualVariableTotal) +
+        " (المنتوجات المستهلكة أوتوماتيك: " + formatMoneyDh(consumedProductsAutoTotal) + " · معلومة)";
     }
 
     const payrollNetTotal = Object.values(compensationMap).reduce(function (total, entry) {
@@ -1419,14 +1419,14 @@
 
   ownerAddFixedCost.addEventListener("click", function () {
     const data = loadOwnerData();
-    data.fixedCosts.push({ id: Date.now(), label: "Nouvelle charge fixe", monthlyAmount: 0 });
+    data.fixedCosts.push({ id: Date.now(), label: "مصروف ثابت جديد", monthlyAmount: 0 });
     saveOwnerData(data);
     renderAccountingSection();
   });
 
   ownerAddVariableCost.addEventListener("click", function () {
     const data = loadOwnerData();
-    data.variableCosts.push({ id: Date.now(), label: "Nouvelle charge variable", monthlyAmount: 0 });
+    data.variableCosts.push({ id: Date.now(), label: "مصروف متغير جديد", monthlyAmount: 0 });
     saveOwnerData(data);
     renderAccountingSection();
   });
@@ -1440,7 +1440,7 @@
 
       data.ownerProducts.push({
         id: Date.now(),
-        name: "Nouveau produit",
+        name: "منتوج جديد",
         purchasePrice: 0,
         sellingPrice: 0,
         employeeProfit: 0

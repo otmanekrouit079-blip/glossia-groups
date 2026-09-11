@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Gérant</title>
+  <title>فضاء الگيرانت</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,80 +11,80 @@
     <header class="manager-header">
       <div>
         <p class="eyebrow owner-brand-title">GLOSSIA GROUPS SYSTEM</p>
-        <h1>Dashboard Gérant</h1>
+        <h1>فضاء الگيرانت</h1>
       </div>
       <div class="manager-header-actions">
-        <button id="open-access-modal" class="manager-btn manager-btn-muted" type="button">Mots de passe employés</button>
+        <button id="open-access-modal" class="manager-btn manager-btn-muted" type="button">كلمات سر الموظفين</button>
         <div class="sync-toolbar" data-sync-toolbar>
-          <span class="sync-status is-pending" data-sync-status>DB: Checking...</span>
-          <span class="sync-last" data-sync-last>Last sync: --</span>
-          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">Sync now</button>
+          <span class="sync-status is-pending" data-sync-status>القاعدة: كنتأكد...</span>
+          <span class="sync-last" data-sync-last>آخر مزامنة: --</span>
+          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">زامن دابا</button>
         </div>
-        <a href="login.html" class="logout-btn">Logout</a>
+        <a href="login.html" class="logout-btn">خروج</a>
       </div>
     </header>
 
-    <section class="dashboard-nav" aria-label="Navigation principale">
+    <section class="dashboard-nav" aria-label="التنقل الرئيسي">
       <button type="button" class="nav-card active" data-section="employes">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><path d="M16 19a4 4 0 0 1 4 4M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 0c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Zm6-4a3 3 0 1 0 0-6"/></svg>
         </span>
-        <span class="nav-label">Employés</span>
+        <span class="nav-label">الموظفين</span>
       </button>
       <button type="button" class="nav-card" data-section="comptes">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
         </span>
-        <span class="nav-label">Comptes</span>
+        <span class="nav-label">الحسابات</span>
       </button>
       <button type="button" class="nav-card" data-section="produits-vendus">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><path d="M6 8h12l-1 11H7L6 8Zm3 0V6a3 3 0 1 1 6 0v2"/></svg>
         </span>
-        <span class="nav-label">Produits vendus</span>
+        <span class="nav-label">المنتوجات المبيعة</span>
       </button>
       <button type="button" class="nav-card" data-section="produits-consommes">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5v-7Z"/><path d="M12 20v-7.5M3 8.5l9 4.5 9-4.5"/></svg>
         </span>
-        <span class="nav-label">Produits consommés</span>
+        <span class="nav-label">المنتوجات المستهلكة</span>
       </button>
       <button type="button" class="nav-card" data-section="produits-rupture">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 9v5M12 17h.01"/></svg>
         </span>
-        <span class="nav-label">Produits en rupture</span>
+        <span class="nav-label">المنتوجات الناقصة</span>
       </button>
       <button type="button" class="nav-card" data-section="taches-personnel">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8.5 12 2.5 2.5L16 9.5"/></svg>
         </span>
-        <span class="nav-label">Tâches du personnel</span>
+        <span class="nav-label">تاش الموظفين</span>
       </button>
       <button type="button" class="nav-card" data-section="temps-horaires">
         <span class="nav-icon" aria-hidden="true">
           <svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13V9m0 4 3 2M9 3h6"/></svg>
         </span>
-        <span class="nav-label">Temps / Horaires</span>
+        <span class="nav-label">الوقت / التوقيت</span>
       </button>
     </section>
 
     <section id="section-employes" class="manager-section content-section">
       <div class="section-top">
-        <h2>Salles / Postes Employés</h2>
-        <button id="toggle-add-form" class="manager-btn" type="button">+ Ajouter un employé</button>
+        <h2>الصالات / المناصب</h2>
+        <button id="toggle-add-form" class="manager-btn" type="button">+ زيد موظف</button>
       </div>
 
       <form id="add-employee-form" class="add-employee-form hidden" novalidate>
         <div class="form-row">
-          <label for="employee-name">Nom employé</label>
-          <input id="employee-name" name="employee-name" type="text" placeholder="Ex: Karim" required />
+          <label for="employee-name">سمية الموظف</label>
+          <input id="employee-name" name="employee-name" type="text" placeholder="مثلا: كريم" required />
         </div>
         <div class="form-row">
-          <label for="employee-post">Numéro du poste</label>
-          <input id="employee-post" name="employee-post" type="text" placeholder="Ex: Post 3" required />
+          <label for="employee-post">رقم المنصب</label>
+          <input id="employee-post" name="employee-post" type="text" placeholder="مثلا: منصب 3" required />
         </div>
-        <button class="manager-btn" type="submit">Ajouter</button>
+        <button class="manager-btn" type="submit">زيد</button>
       </form>
 
       <p id="dashboard-message" class="dashboard-message" aria-live="polite"></p>
@@ -93,79 +93,79 @@
     </section>
 
     <section id="section-comptes" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Ventes globales</h2>
+      <h2>البيوعات الشاملة</h2>
       <div id="manager-services-summary" class="manager-insight-grid"></div>
       <div id="manager-services-table" class="manager-detail-table-wrap"></div>
     </section>
 
     <section id="section-produits-vendus" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Produits vendus</h2>
+      <h2>المنتوجات المبيعة</h2>
       <div id="manager-products-table" class="manager-detail-table-wrap"></div>
     </section>
 
     <section id="section-produits-consommes" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Produits consommés</h2>
-      <p class="muted">Prenez une photo du produit, précisez son type et la quantité nécessaire pour le réapprovisionnement.</p>
+      <h2>المنتوجات المستهلكة</h2>
+      <p class="muted">صور المنتوج، حدد نوعو والكمية اللازمة باش تجي من الستوك.</p>
 
       <form id="stock-request-form" class="stock-request-form" novalidate>
         <div class="form-row">
-          <label for="stock-request-photo">Photo du produit</label>
+          <label for="stock-request-photo">صورة المنتوج</label>
           <input id="stock-request-photo" type="file" accept="image/*" capture="environment" />
           <div id="stock-request-preview" class="stock-request-preview hidden">
-            <img id="stock-request-preview-img" alt="Aperçu du produit" />
+            <img id="stock-request-preview-img" alt="معاينة المنتوج" />
           </div>
         </div>
 
         <div class="form-row">
-          <label>Type de produit</label>
+          <label>نوع المنتوج</label>
           <div id="stock-request-type-toggle" class="stock-request-type-toggle">
-            <button type="button" class="manager-btn manager-btn-muted stock-type-btn active" data-type="salle">Produit salle</button>
-            <button type="button" class="manager-btn manager-btn-muted stock-type-btn" data-type="vente">Produit vente</button>
+            <button type="button" class="manager-btn manager-btn-muted stock-type-btn active" data-type="salle">منتوج صالة</button>
+            <button type="button" class="manager-btn manager-btn-muted stock-type-btn" data-type="vente">منتوج بيع</button>
           </div>
         </div>
 
         <div class="form-row">
-          <label for="stock-request-name">Nom du produit</label>
-          <input id="stock-request-name" type="text" placeholder="Ex: Shampoing lissant" />
+          <label for="stock-request-name">سمية المنتوج</label>
+          <input id="stock-request-name" type="text" placeholder="مثلا: شامبو" />
         </div>
 
         <div class="form-row">
-          <label for="stock-request-quantity">Quantité nécessaire</label>
-          <input id="stock-request-quantity" type="number" min="1" step="1" placeholder="Ex: 3" required />
+          <label for="stock-request-quantity">الكمية اللازمة</label>
+          <input id="stock-request-quantity" type="number" min="1" step="1" placeholder="مثلا: 3" required />
         </div>
 
         <p id="stock-request-feedback" class="modal-feedback" aria-live="polite"></p>
-        <button class="manager-btn" type="submit">+ Signaler ce besoin</button>
+        <button class="manager-btn" type="submit">+ بلّغ على هاد الحاجة</button>
       </form>
 
       <div id="manager-consumed-table" class="manager-detail-table-wrap"></div>
     </section>
 
     <section id="section-produits-rupture" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Produits en rupture</h2>
+      <h2>المنتوجات الناقصة</h2>
       <div id="manager-rupture-table" class="manager-detail-table-wrap"></div>
     </section>
 
     <section id="section-taches-personnel" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Tâches du personnel</h2>
+      <h2>تاش الموظفين</h2>
       <div id="manager-tasks-table" class="manager-detail-table-wrap"></div>
     </section>
 
     <section id="section-temps-horaires" class="manager-section content-section hidden" aria-hidden="true">
-      <h2>Temps / Horaires</h2>
+      <h2>الوقت / التوقيت</h2>
       <div id="manager-time-table" class="manager-detail-table-wrap"></div>
     </section>
   </main>
 
   <div id="sales-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-content">
-      <h3 id="modal-title">Détails Employé</h3>
+      <h3 id="modal-title">تفاصيل الموظف</h3>
       <p id="selected-employee-label" class="modal-subtitle"></p>
 
-      <div class="modal-tabs" role="tablist" aria-label="Sections employé">
-        <button type="button" class="modal-tab-btn active" data-tab="ventes" role="tab" aria-selected="true">Ventes</button>
-        <button type="button" class="modal-tab-btn" data-tab="taches" role="tab" aria-selected="false">Tâches</button>
-        <button type="button" class="modal-tab-btn" data-tab="horaires" role="tab" aria-selected="false">Horaires</button>
+      <div class="modal-tabs" role="tablist" aria-label="أقسام الموظف">
+        <button type="button" class="modal-tab-btn active" data-tab="ventes" role="tab" aria-selected="true">البيوعات</button>
+        <button type="button" class="modal-tab-btn" data-tab="taches" role="tab" aria-selected="false">التاش</button>
+        <button type="button" class="modal-tab-btn" data-tab="horaires" role="tab" aria-selected="false">التوقيت</button>
       </div>
 
       <p id="modal-feedback" class="modal-feedback" aria-live="polite"></p>
@@ -173,89 +173,89 @@
       <section id="tab-ventes" class="modal-tab-panel" role="tabpanel">
         <form id="sales-form" class="sales-entry-form" novalidate>
           <div id="sales-service-row" class="form-row">
-            <label for="sales-service-amount">Prix de vente service (DH)</label>
+            <label for="sales-service-amount">تمن بيع الخدمة (DH)</label>
             <div class="price-preset-grid" data-preset-for="sales-service-amount"></div>
-            <input id="sales-service-amount" type="number" min="0" step="0.01" placeholder="Autre montant (+100 DH)" />
+            <input id="sales-service-amount" type="number" min="0" step="0.01" placeholder="مبلغ آخر (+100 DH)" />
           </div>
 
           <div id="sales-product-row" class="form-row">
-            <label for="sales-product-unit-amount">Prix de vente produit (DH)</label>
+            <label for="sales-product-unit-amount">تمن بيع المنتوج (DH)</label>
             <div class="price-preset-grid" data-preset-for="sales-product-unit-amount"></div>
-            <input id="sales-product-unit-amount" type="number" min="0" step="0.01" placeholder="Autre montant (+100 DH)" />
+            <input id="sales-product-unit-amount" type="number" min="0" step="0.01" placeholder="مبلغ آخر (+100 DH)" />
           </div>
 
-          <label for="sales-total-amount">Montant total (DH)</label>
+          <label for="sales-total-amount">المبلغ الكامل (DH)</label>
           <input id="sales-total-amount" type="number" min="0" step="0.01" readonly />
-          <small class="muted">Total automatique = service + prix produit.</small>
-          <button class="manager-btn" type="submit">Enregistrer</button>
+          <small class="muted">المجموع أوتوماتيك = الخدمة + تمن المنتوج.</small>
+          <button class="manager-btn" type="submit">سجل</button>
         </form>
 
-        <h4 class="modal-block-title">Objectifs Glossia et personnel</h4>
+        <h4 class="modal-block-title">أهداف Glossia والموظف</h4>
         <div id="manager-objective-overview" class="manager-objective-overview"></div>
 
-        <h4 class="modal-block-title">Historique du jour</h4>
+        <h4 class="modal-block-title">تاريخ اليوم</h4>
         <ul id="sales-today-list" class="modal-list"></ul>
 
-        <h4 class="modal-block-title">Historique complet</h4>
+        <h4 class="modal-block-title">التاريخ الكامل</h4>
         <ul id="sales-history-list" class="modal-list"></ul>
       </section>
 
       <section id="tab-taches" class="modal-tab-panel hidden" role="tabpanel" aria-hidden="true">
-        <h4 class="modal-block-title">Checklist des tâches</h4>
-        <p class="muted">Cochez les tâches réalisées. L'ajout et la modification des tâches se font depuis le dashboard Propriétaire.</p>
+        <h4 class="modal-block-title">لائحة التاش</h4>
+        <p class="muted">أشر على التاش اللي تدارت. الزيادة والتعديل كيتديرو من فضاء المالك.</p>
         <div id="task-list" class="task-list"></div>
       </section>
 
       <section id="tab-horaires" class="modal-tab-panel hidden" role="tabpanel" aria-hidden="true">
         <div class="schedule-panel-intro">
-          <h4 class="modal-block-title">Pointage journalier</h4>
-          <p class="muted">Interface simple: cliquez sur chaque etape pour enregistrer l'horaire.</p>
+          <h4 class="modal-block-title">تسجيل التوقيت اليومي</h4>
+          <p class="muted">واجهة بسيطة: كليكي على كل مرحلة باش تسجل الوقت.</p>
         </div>
 
         <div class="schedule-nav-toolbar">
-          <button type="button" id="schedule-toggle-rest" class="manager-btn manager-btn-muted"><svg class="app-icon" viewBox="0 0 24 24"><path d="M14 3a8 8 0 1 0 7 11 7 7 0 1 1-7-11Z"/></svg>Marquer repos</button>
+          <button type="button" id="schedule-toggle-rest" class="manager-btn manager-btn-muted"><svg class="app-icon" viewBox="0 0 24 24"><path d="M14 3a8 8 0 1 0 7 11 7 7 0 1 1-7-11Z"/></svg>علم راحة</button>
         </div>
 
         <div id="schedule-stamp-buttons" class="stamp-grid">
           <button type="button" class="manager-btn stamp-btn" data-stamp-key="arrival">
-            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m16.95 6.95-1.4-1.4M6.45 6.45l-1.4-1.4m12.9 0-1.4 1.4m-10.1 10.1-1.4 1.4"/></svg>Arrivée:</span> <span class="stamp-time">--/--/---- - --:--</span>
+            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m16.95 6.95-1.4-1.4M6.45 6.45l-1.4-1.4m12.9 0-1.4 1.4m-10.1 10.1-1.4 1.4"/></svg>الوصول:</span> <span class="stamp-time">--/--/---- - --:--</span>
           </button>
           <button type="button" class="manager-btn stamp-btn" data-stamp-key="lunch">
-            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M6 3v8a2 2 0 0 0 2 2v8M10 3v8M4 3v8m12-8v8m0 0a2 2 0 0 0 2 2v8"/></svg>Pause déjeuner:</span> <span class="stamp-time">--/--/---- - --:--</span>
+            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M6 3v8a2 2 0 0 0 2 2v8M10 3v8M4 3v8m12-8v8m0 0a2 2 0 0 0 2 2v8"/></svg>وقفة الغدا:</span> <span class="stamp-time">--/--/---- - --:--</span>
           </button>
           <button type="button" class="manager-btn stamp-btn" data-stamp-key="returnTime">
-            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M8 7 3 12l5 5"/><path d="M4 12h10a7 7 0 1 1 0 14h-3"/></svg>Retour de pause:</span> <span class="stamp-time">--/--/---- - --:--</span>
+            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M8 7 3 12l5 5"/><path d="M4 12h10a7 7 0 1 1 0 14h-3"/></svg>الرجوع من الوقفة:</span> <span class="stamp-time">--/--/---- - --:--</span>
           </button>
           <button type="button" class="manager-btn stamp-btn" data-stamp-key="departure">
-            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M14 3a8 8 0 1 0 7 11 7 7 0 1 1-7-11Z"/></svg>Départ:</span> <span class="stamp-time">--/--/---- - --:--</span>
+            <span class="stamp-label"><svg class="app-icon" viewBox="0 0 24 24"><path d="M14 3a8 8 0 1 0 7 11 7 7 0 1 1-7-11Z"/></svg>المغادرة:</span> <span class="stamp-time">--/--/---- - --:--</span>
           </button>
         </div>
 
         <div id="work-hours-summary" class="work-hours-summary" aria-live="polite"></div>
 
-        <h4 id="schedule-day-title" class="modal-block-title">Horaires enregistres</h4>
+        <h4 id="schedule-day-title" class="modal-block-title">التوقيتات المسجلة</h4>
         <div id="today-schedule-display" class="schedule-display"></div>
       </section>
 
       <div class="modal-actions">
-        <button id="close-modal" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+        <button id="close-modal" class="manager-btn manager-btn-muted" type="button">سد</button>
       </div>
     </div>
   </div>
 
   <div id="manager-access-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="manager-access-title">
     <div class="modal-content manager-access-modal-content">
-      <h3 id="manager-access-title">Gestion des mots de passe employés</h3>
-      <p class="modal-subtitle">Modifier rapidement les mots de passe des employés actifs.</p>
+      <h3 id="manager-access-title">تسيير كلمات سر الموظفين</h3>
+      <p class="modal-subtitle">بدل بسرعة كلمات السر ديال الموظفين النشيطين.</p>
 
       <form id="manager-access-form" novalidate>
         <div class="employee-table-wrap">
           <table class="employee-history-table manager-access-table">
             <thead>
               <tr>
-                <th>Employé</th>
-                <th>Username</th>
-                <th>Nouveau mot de passe</th>
+                <th>الموظف</th>
+                <th>اسم المستخدم</th>
+                <th>كلمة السر الجديدة</th>
               </tr>
             </thead>
             <tbody id="manager-access-body"></tbody>
@@ -264,8 +264,8 @@
         <p id="manager-access-feedback" class="modal-feedback" aria-live="polite"></p>
 
         <div class="modal-actions">
-          <button type="submit" class="manager-btn">Enregistrer</button>
-          <button id="close-access-modal" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+          <button type="submit" class="manager-btn">سجل</button>
+          <button id="close-access-modal" class="manager-btn manager-btn-muted" type="button">سد</button>
         </div>
       </form>
     </div>
@@ -273,24 +273,24 @@
 
   <div id="accounts-detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="accounts-detail-title">
     <div class="modal-content owner-detail-modal-content">
-      <button id="accounts-detail-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="accounts-detail-title">Compte employé</h3>
+      <button id="accounts-detail-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="accounts-detail-title">حساب الموظف</h3>
       <p id="accounts-detail-subtitle" class="modal-subtitle"></p>
 
       <div id="accounts-detail-summary" class="sales-total-grid"></div>
 
-      <h4 class="modal-block-title">Historique par période</h4>
+      <h4 class="modal-block-title">التاريخ حسب الفترة</h4>
       <div class="owner-bi-custom-range">
         <input id="accounts-detail-start" type="date" class="owner-target-input" />
         <input id="accounts-detail-end" type="date" class="owner-target-input" />
-        <button id="accounts-detail-apply" type="button" class="manager-btn">Appliquer</button>
+        <button id="accounts-detail-apply" type="button" class="manager-btn">طبق</button>
       </div>
       <p id="accounts-detail-range-total" class="owner-task-count"></p>
 
       <ul id="accounts-detail-list" class="modal-list"></ul>
 
       <div class="modal-actions">
-        <button id="accounts-detail-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+        <button id="accounts-detail-close" class="manager-btn manager-btn-muted" type="button">سد</button>
       </div>
     </div>
   </div>

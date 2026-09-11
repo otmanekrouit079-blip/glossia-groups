@@ -29,7 +29,7 @@ const employee = sharedData.employees.find(function (item) {
   return item.id === currentUser.employeeId;
 }) || {
   id: currentUser.employeeId || 1,
-  name: currentUser.name || "Employé",
+  name: currentUser.name || "الموظف",
   post: currentUser.post || ""
 };
 
@@ -223,22 +223,22 @@ function renderPeriodSummary(period) {
   hoursSummary.innerHTML = "";
 
   if (summary.restDay) {
-    hoursSummary.appendChild(createMetricCard("Heures effectuees", "Repos"));
-    hoursSummary.appendChild(createMetricCard("Objectif", "Exclu du calcul"));
-    hoursSummary.appendChild(createMetricCard("Statut", "Jour de repos", "pending"));
+    hoursSummary.appendChild(createMetricCard("الساعات المنجزة", "راحة"));
+    hoursSummary.appendChild(createMetricCard("الهدف", "خارج الحساب"));
+    hoursSummary.appendChild(createMetricCard("الحالة", "يوم راحة", "pending"));
     return;
   }
 
   hoursSummary.appendChild(
-    createMetricCard("Heures effectuées", formatMinutes(summary.workedMinutes))
+    createMetricCard("الساعات المنجزة", formatMinutes(summary.workedMinutes))
   );
   hoursSummary.appendChild(
-    createMetricCard("Objectif", formatMinutes(summary.targetMinutes))
+    createMetricCard("الهدف", formatMinutes(summary.targetMinutes))
   );
 
   if (summary.targetMinutes === 0) {
     hoursSummary.appendChild(
-      createMetricCard("Statut", "Aucune journée enregistrée", "pending")
+      createMetricCard("الحالة", "ماكاين حتى يوم مسجل", "pending")
     );
     return;
   }
@@ -246,8 +246,8 @@ function renderPeriodSummary(period) {
   if (!summary.complete) {
     hoursSummary.appendChild(
       createMetricCard(
-        "Statut",
-        "Pointages incomplets · Manque " + formatMinutes(summary.missingMinutes),
+        "الحالة",
+        "التسجيل ناقص · باقي " + formatMinutes(summary.missingMinutes),
         "warning"
       )
     );
@@ -256,13 +256,13 @@ function renderPeriodSummary(period) {
 
   if (summary.missingMinutes === 0) {
     hoursSummary.appendChild(
-      createMetricCard("Statut", formatMinutes(summary.workedMinutes) + " effectuées", "success")
+      createMetricCard("الحالة", formatMinutes(summary.workedMinutes) + " كاملة", "success")
     );
     return;
   }
 
   hoursSummary.appendChild(
-    createMetricCard("Statut", "Manque " + formatMinutes(summary.missingMinutes), "warning")
+    createMetricCard("الحالة", "باقي " + formatMinutes(summary.missingMinutes), "warning")
   );
 }
 
@@ -301,7 +301,7 @@ function renderDailyHistory() {
     const cell = document.createElement("td");
     cell.colSpan = 7;
     cell.className = "employee-empty-cell";
-    cell.textContent = "Aucun pointage enregistré pour le moment.";
+    cell.textContent = "ماكاين حتى تسجيل دابا.";
     row.appendChild(cell);
     historyBody.appendChild(row);
     return;
@@ -319,20 +319,20 @@ function renderDailyHistory() {
     appendTableCell(
       row,
       entry.schedule.restDay
-        ? "Repos"
-        : (calculation ? formatMinutes(calculation.workedMinutes) : "En attente")
+        ? "راحة"
+        : (calculation ? formatMinutes(calculation.workedMinutes) : "فالانتظار")
     );
 
     if (entry.schedule.restDay) {
-      appendTableCell(row, "Repos", "history-status pending");
+      appendTableCell(row, "راحة", "history-status pending");
     } else if (!calculation) {
-      appendTableCell(row, "Pointages incomplets", "history-status warning");
+      appendTableCell(row, "التسجيل ناقص", "history-status warning");
     } else if (calculation.meetsTarget) {
-      appendTableCell(row, "Objectif atteint", "history-status success");
+      appendTableCell(row, "الهدف تحقق", "history-status success");
     } else {
       appendTableCell(
         row,
-        "Manque " + formatMinutes(calculation.missingMinutes),
+        "باقي " + formatMinutes(calculation.missingMinutes),
         "history-status warning"
       );
     }
@@ -368,7 +368,7 @@ function getServiceBenefitEntries() {
     return {
       dateISO: sale.dateISO,
       benefit: Number(sale.amount || 0) * 0.5,
-      label: sale.serviceName || "Service"
+      label: sale.serviceName || "خدمة"
     };
   });
 }
@@ -388,7 +388,7 @@ function getProductBenefitEntries() {
     return {
       dateISO: sale.dateISO,
       benefit: benefit,
-      label: sale.label || "Produit"
+      label: sale.label || "منتوج"
     };
   });
 }
@@ -428,12 +428,12 @@ function renderBenefitSummary() {
 
   netBenefitElement.textContent = formatAmount(netBenefit);
 
-  const detailParts = ["Brut: " + formatAmount(grossBenefit)];
+  const detailParts = ["الخام: " + formatAmount(grossBenefit)];
   if (serviceTax > 0) {
-    detailParts.push("Taxe services: -" + formatAmount(serviceTax));
+    detailParts.push("ضريبة الخدمات: -" + formatAmount(serviceTax));
   }
   if (productTax > 0) {
-    detailParts.push("Taxe produits: -" + formatAmount(productTax));
+    detailParts.push("ضريبة المنتوجات: -" + formatAmount(productTax));
   }
   netBenefitDetailElement.textContent = detailParts.join(" · ");
 }
@@ -451,8 +451,8 @@ function renderBenefitList() {
     const emptyItem = document.createElement("li");
     emptyItem.className = "employee-list-empty";
     emptyItem.textContent = activeBenefitType === "service"
-      ? "Aucun service enregistré."
-      : "Aucun produit enregistré.";
+      ? "ماكاين حتى خدمة مسجلة."
+      : "ماكاين حتى منتوج مسجل.";
     benefitList.appendChild(emptyItem);
     return;
   }
@@ -504,7 +504,7 @@ function renderTasks() {
   if (tasks.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "employee-list-empty";
-    emptyText.textContent = "Aucune tâche assignée.";
+    emptyText.textContent = "ماكاين حتى تاش موكولة ليك.";
     taskList.appendChild(emptyText);
     return;
   }
@@ -522,9 +522,9 @@ function renderTasks() {
     const status = task.status || "pending";
     badge.className = "task-status-badge task-status-" + status;
     badge.textContent =
-      status === "done" ? "Fait" :
-      status === "notdone" ? "Pas fait" :
-      status === "excuse" ? "Excusé" : "En attente";
+      status === "done" ? "دارها" :
+      status === "notdone" ? "مادارهاش" :
+      status === "excuse" ? "معذور" : "فالانتظار";
 
     row.appendChild(text);
     row.appendChild(badge);
@@ -543,23 +543,23 @@ function createTaskExcuseBox(task) {
   if (task.excuseReason) {
     const savedReason = document.createElement("p");
     savedReason.className = "task-excuse-reason";
-    savedReason.textContent = "Votre justification: " + task.excuseReason;
+    savedReason.textContent = "المبرر ديالك: " + task.excuseReason;
     box.appendChild(savedReason);
     return box;
   }
 
   const label = document.createElement("p");
   label.className = "task-excuse-label";
-  label.textContent = "Justifiez pourquoi cette tâche n'a pas été faite:";
+  label.textContent = "بيّن علاش هاد التاش مادارتيهاش:";
 
   const input = document.createElement("textarea");
   input.className = "task-excuse-input";
-  input.placeholder = "Expliquez votre excuse...";
+  input.placeholder = "شرح العذر ديالك...";
 
   const saveButton = document.createElement("button");
   saveButton.type = "button";
   saveButton.className = "manager-btn";
-  saveButton.textContent = "Envoyer la justification";
+  saveButton.textContent = "صيفط المبرر";
   saveButton.addEventListener("click", function () {
     const reasonText = input.value.trim();
     if (!reasonText) {
@@ -597,7 +597,7 @@ logoutButton.addEventListener("click", function () {
   }
 });
 
-welcomeHeading.textContent = "Bienvenue " + employee.name;
+welcomeHeading.textContent = "مرحبا " + employee.name;
 employeePostLabel.textContent = employee.post;
 renderPeriodSummary("day");
 renderDailyHistory();

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Employé</title>
+  <title>فضاء الموظف</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,30 +11,30 @@
     <header class="manager-header">
       <div>
         <p class="eyebrow owner-brand-title">GLOSSIA GROUPS SYSTEM</p>
-        <h1 id="employee-welcome">Bienvenue</h1>
+        <h1 id="employee-welcome">مرحبا</h1>
         <p id="employee-post-label" class="employee-header-post"></p>
       </div>
       <div class="manager-header-actions">
         <div class="sync-toolbar" data-sync-toolbar>
-          <span class="sync-status is-pending" data-sync-status>DB: Checking...</span>
-          <span class="sync-last" data-sync-last>Last sync: --</span>
-          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">Sync now</button>
+          <span class="sync-status is-pending" data-sync-status>القاعدة: كنتأكد...</span>
+          <span class="sync-last" data-sync-last>آخر مزامنة: --</span>
+          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">زامن دابا</button>
         </div>
-        <a id="employee-logout" href="login.html" class="logout-btn">Logout</a>
+        <a id="employee-logout" href="login.html" class="logout-btn">خروج</a>
       </div>
     </header>
 
     <section class="employee-dashboard-section" aria-labelledby="hours-heading">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Temps de travail</p>
-          <h2 id="hours-heading">Mes heures</h2>
+          <p class="eyebrow">وقت الخدمة</p>
+          <h2 id="hours-heading">الساعات ديالي</h2>
         </div>
 
-        <div class="period-tabs" role="tablist" aria-label="Période du résumé">
-          <button type="button" class="period-tab active" data-period="day" aria-selected="true">Jour</button>
-          <button type="button" class="period-tab" data-period="week" aria-selected="false">Semaine</button>
-          <button type="button" class="period-tab" data-period="month" aria-selected="false">Mois</button>
+        <div class="period-tabs" role="tablist" aria-label="فترة الملخص">
+          <button type="button" class="period-tab active" data-period="day" aria-selected="true">اليوم</button>
+          <button type="button" class="period-tab" data-period="week" aria-selected="false">السيمانة</button>
+          <button type="button" class="period-tab" data-period="month" aria-selected="false">الشهر</button>
         </div>
       </div>
 
@@ -44,8 +44,8 @@
     <section class="employee-dashboard-section" aria-labelledby="history-heading">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Pointages récents</p>
-          <h2 id="history-heading">Historique quotidien</h2>
+          <p class="eyebrow">التسجيلات الأخيرة</p>
+          <h2 id="history-heading">التاريخ اليومي</h2>
         </div>
       </div>
 
@@ -53,13 +53,13 @@
         <table class="employee-history-table">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Arrivée</th>
-              <th>Pause</th>
-              <th>Retour</th>
-              <th>Départ</th>
-              <th>Travail</th>
-              <th>Statut</th>
+              <th>التاريخ</th>
+              <th>الوصول</th>
+              <th>الوقفة</th>
+              <th>الرجوع</th>
+              <th>المغادرة</th>
+              <th>الخدمة</th>
+              <th>الحالة</th>
             </tr>
           </thead>
           <tbody id="employee-history-body"></tbody>
@@ -71,20 +71,20 @@
       <section class="employee-dashboard-section" aria-labelledby="sales-heading">
         <div class="employee-section-heading">
           <div>
-            <p class="eyebrow">Mes résultats</p>
-            <h2 id="sales-heading">Mon bénéfice</h2>
+            <p class="eyebrow">النتائج ديالي</p>
+            <h2 id="sales-heading">البنفيس ديالي</h2>
           </div>
         </div>
 
         <div class="employee-net-benefit-card">
-          <span>Bénéfice net (après taxe)</span>
+          <span>البنفيس الصافي (بعد الضريبة)</span>
           <strong id="employee-net-benefit">0,00 DH</strong>
           <small id="employee-net-benefit-detail"></small>
         </div>
 
         <div id="employee-benefit-toggle" class="employee-benefit-toggle">
-          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn active" data-type="service">Services</button>
-          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn" data-type="product">Produits</button>
+          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn active" data-type="service">الخدمات</button>
+          <button type="button" class="manager-btn manager-btn-muted benefit-type-btn" data-type="product">المنتوجات</button>
         </div>
 
         <ul id="employee-benefit-list" class="employee-simple-list"></ul>
@@ -93,10 +93,10 @@
       <section class="employee-dashboard-section" aria-labelledby="tasks-heading">
         <div class="employee-section-heading">
           <div>
-            <p class="eyebrow">À consulter</p>
-            <h2 id="tasks-heading">Mes tâches</h2>
+            <p class="eyebrow">للإطلاع</p>
+            <h2 id="tasks-heading">التاش ديالي</h2>
           </div>
-          <span class="readonly-badge">Lecture seule</span>
+          <span class="readonly-badge">قراءة فقط</span>
         </div>
 
         <div id="employee-task-list" class="employee-readonly-tasks"></div>

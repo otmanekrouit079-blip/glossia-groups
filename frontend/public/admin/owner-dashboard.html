@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Propriétaire</title>
+  <title>فضاء المالك</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="owner-theme">
@@ -11,76 +11,76 @@
     <header class="manager-header">
       <div>
         <p class="eyebrow owner-brand-title">GLOSSIA GROUPS SYSTEM</p>
-        <h1>Bienvenue Propriétaire</h1>
-        <p class="owner-header-note">Données en lecture seule</p>
-        <p id="owner-last-saved" class="owner-last-saved">Dernière sauvegarde: --</p>
+        <h1>مرحبا بالمالك</h1>
+        <p class="owner-header-note">بيانات للقراءة فقط</p>
+        <p id="owner-last-saved" class="owner-last-saved">آخر حفظ: --</p>
       </div>
       <div class="manager-header-actions">
-        <button id="owner-open-products-popup" type="button" class="manager-btn manager-btn-muted">Produits vente</button>
-        <button id="owner-toggle-access" type="button" class="manager-btn manager-btn-muted" aria-expanded="false" aria-controls="owner-section-access">Afficher sécurité</button>
+        <button id="owner-open-products-popup" type="button" class="manager-btn manager-btn-muted">منتوجات البيع</button>
+        <button id="owner-toggle-access" type="button" class="manager-btn manager-btn-muted" aria-expanded="false" aria-controls="owner-section-access">وري الأمان</button>
         <div class="sync-toolbar" data-sync-toolbar>
-          <span class="sync-status is-pending" data-sync-status>DB: Checking...</span>
-          <span class="sync-last" data-sync-last>Last sync: --</span>
-          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">Sync now</button>
+          <span class="sync-status is-pending" data-sync-status>القاعدة: كنتأكد...</span>
+          <span class="sync-last" data-sync-last>آخر مزامنة: --</span>
+          <button class="manager-btn manager-btn-muted sync-now-btn" data-sync-now type="button">زامن دابا</button>
         </div>
-        <a id="owner-logout" href="login.html" class="logout-btn">Logout</a>
+        <a id="owner-logout" href="login.html" class="logout-btn">خروج</a>
       </div>
     </header>
 
-    <section class="owner-top-kpi-strip" aria-label="Synthèse financière rapide">
+    <section class="owner-top-kpi-strip" aria-label="ملخص مالي سريع">
       <div class="owner-top-kpi-head">
-        <p class="eyebrow">Finance rapide</p>
-        <div id="owner-top-period-tabs" class="period-tabs" role="tablist" aria-label="Période financière rapide">
-          <button type="button" class="period-tab owner-top-period-btn active" data-period="day" aria-selected="true">Jour</button>
-          <button type="button" class="period-tab owner-top-period-btn" data-period="week" aria-selected="false">Semaine</button>
-          <button type="button" class="period-tab owner-top-period-btn" data-period="month" aria-selected="false">Mois</button>
+        <p class="eyebrow">مالية سريعة</p>
+        <div id="owner-top-period-tabs" class="period-tabs" role="tablist" aria-label="فترة مالية سريعة">
+          <button type="button" class="period-tab owner-top-period-btn active" data-period="day" aria-selected="true">اليوم</button>
+          <button type="button" class="period-tab owner-top-period-btn" data-period="week" aria-selected="false">السيمانة</button>
+          <button type="button" class="period-tab owner-top-period-btn" data-period="month" aria-selected="false">الشهر</button>
         </div>
       </div>
 
       <div class="owner-top-kpi-grid">
         <article class="owner-top-kpi-card revenue">
-          <span>Chiffre d'affaires</span>
+          <span>رقم المعاملات</span>
           <strong id="owner-top-kpi-revenue">0,00 DH</strong>
         </article>
         <article class="owner-top-kpi-card charges">
-          <span>Charges totales</span>
+          <span>المصاريف الكاملة</span>
           <strong id="owner-top-kpi-expenses">0,00 DH</strong>
         </article>
         <article class="owner-top-kpi-card profit">
-          <span>Bénéfice global Glossia</span>
+          <span>البنفيس الشامل ديال Glossia</span>
           <strong id="owner-top-kpi-profit">0,00 DH</strong>
         </article>
         <article class="owner-top-kpi-card product-net">
-          <span>Net Glossia produits</span>
+          <span>صافي Glossia من المنتوجات</span>
           <strong id="owner-top-kpi-glossia-product-net">0,00 DH</strong>
         </article>
         <article id="owner-top-kpi-objective-card" class="owner-top-kpi-card objective danger">
-          <span id="owner-top-kpi-objective-label">Objectif</span>
+          <span id="owner-top-kpi-objective-label">الهدف</span>
           <strong id="owner-top-kpi-objective-value">0%</strong>
         </article>
       </div>
 
-      <div id="owner-top-finance-trend" class="owner-top-finance-trend" aria-label="Tendance bénéfice global"></div>
+      <div id="owner-top-finance-trend" class="owner-top-finance-trend" aria-label="اتجاه البنفيس الشامل"></div>
     </section>
 
-    <section class="owner-alert-top" aria-label="Alerte du jour">
+    <section class="owner-alert-top" aria-label="تنبيه اليوم">
       <div id="owner-alert-banner" class="owner-alert-banner" role="status" aria-live="polite"></div>
     </section>
 
-    <section class="owner-compact-nav" aria-label="Navigation rapide propriétaire">
-      <button type="button" class="owner-compact-nav-btn active" data-owner-section="overview">Aperçu</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="targets">Objectifs</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="accounting">Compta</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="operations">Opérations</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="team">Équipe</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="all">Tout afficher</button>
+    <section class="owner-compact-nav" aria-label="تنقل سريع للمالك">
+      <button type="button" class="owner-compact-nav-btn active" data-owner-section="overview">نظرة عامة</button>
+      <button type="button" class="owner-compact-nav-btn" data-owner-section="targets">الأهداف</button>
+      <button type="button" class="owner-compact-nav-btn" data-owner-section="accounting">المحاسبة</button>
+      <button type="button" class="owner-compact-nav-btn" data-owner-section="operations">العمليات</button>
+      <button type="button" class="owner-compact-nav-btn" data-owner-section="team">الفريق</button>
+      <button type="button" class="owner-compact-nav-btn" data-owner-section="all">وري كولشي</button>
     </section>
 
     <section id="owner-focus-panel" class="owner-focus-panel" aria-live="polite" aria-labelledby="owner-focus-title">
       <div class="owner-focus-head">
-        <p class="eyebrow">Lecture rapide</p>
-        <h2 id="owner-focus-title">Pilotage essentiel</h2>
-        <p id="owner-focus-subtitle" class="owner-focus-subtitle">Vue prioritaire pour décider rapidement.</p>
+        <p class="eyebrow">قراءة سريعة</p>
+        <h2 id="owner-focus-title">التسيير الأساسي</h2>
+        <p id="owner-focus-subtitle" class="owner-focus-subtitle">نظرة ذات أولوية باش تقرر بسرعة.</p>
       </div>
       <div id="owner-focus-pills" class="owner-focus-pills"></div>
       <ul id="owner-focus-list" class="owner-focus-list"></ul>
@@ -89,20 +89,20 @@
     <section id="owner-section-overview" class="owner-overview" aria-labelledby="owner-overview-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Vue d'ensemble</p>
-          <h2 id="owner-overview-title">Indicateurs clés</h2>
+          <p class="eyebrow">نظرة شاملة</p>
+          <h2 id="owner-overview-title">المؤشرات الأساسية</h2>
         </div>
 
-        <div class="period-tabs" role="tablist" aria-label="Période du dashboard">
-          <button type="button" class="period-tab owner-period-tab active" data-period="day" aria-selected="true">Jour</button>
-          <button type="button" class="period-tab owner-period-tab" data-period="week" aria-selected="false">Semaine</button>
-          <button type="button" class="period-tab owner-period-tab" data-period="month" aria-selected="false">Mois</button>
+        <div class="period-tabs" role="tablist" aria-label="فترة الداشبورد">
+          <button type="button" class="period-tab owner-period-tab active" data-period="day" aria-selected="true">اليوم</button>
+          <button type="button" class="period-tab owner-period-tab" data-period="week" aria-selected="false">السيمانة</button>
+          <button type="button" class="period-tab owner-period-tab" data-period="month" aria-selected="false">الشهر</button>
         </div>
 
         <div class="owner-overview-date-nav">
-          <button id="owner-prev-day" type="button" class="manager-btn manager-btn-muted">Jour precedent</button>
+          <button id="owner-prev-day" type="button" class="manager-btn manager-btn-muted">اليوم السابق</button>
           <input id="owner-reference-date" type="date" class="owner-target-input" />
-          <button id="owner-next-day" type="button" class="manager-btn manager-btn-muted">Jour suivant</button>
+          <button id="owner-next-day" type="button" class="manager-btn manager-btn-muted">اليوم الموالي</button>
         </div>
       </div>
 
@@ -114,20 +114,20 @@
         <article class="owner-pilotage-card">
           <div class="employee-section-heading">
             <div>
-              <p class="eyebrow">Pilotage mensuel</p>
-              <h2 id="owner-targets-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/><path d="m14 10 7-7"/></svg></span>Objectifs</h2>
+              <p class="eyebrow">تسيير شهري</p>
+              <h2 id="owner-targets-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/><path d="m14 10 7-7"/></svg></span>الأهداف</h2>
             </div>
             <div class="modal-actions">
-              <button id="owner-open-target-modal" class="manager-btn" type="button">Objectifs personnel + global Glossia</button>
+              <button id="owner-open-target-modal" class="manager-btn" type="button">أهداف الموظف + الهدف الشامل Glossia</button>
             </div>
           </div>
-          <p id="owner-target-summary" class="owner-target-summary">Aucun objectif défini.</p>
-          <div class="period-tabs owner-target-period-tabs" role="tablist" aria-label="Période objectifs">
-            <button type="button" class="period-tab owner-target-period-btn active" data-period="day" aria-selected="true">Jour</button>
-            <button type="button" class="period-tab owner-target-period-btn" data-period="week" aria-selected="false">Semaine</button>
-            <button type="button" class="period-tab owner-target-period-btn" data-period="month" aria-selected="false">Mois</button>
-            <button type="button" class="period-tab owner-target-period-btn" data-period="quarter" aria-selected="false">Trimestre</button>
-            <button type="button" class="period-tab owner-target-period-btn" data-period="year" aria-selected="false">Année</button>
+          <p id="owner-target-summary" class="owner-target-summary">ماكاين حتى هدف محدد.</p>
+          <div class="period-tabs owner-target-period-tabs" role="tablist" aria-label="فترة الأهداف">
+            <button type="button" class="period-tab owner-target-period-btn active" data-period="day" aria-selected="true">اليوم</button>
+            <button type="button" class="period-tab owner-target-period-btn" data-period="week" aria-selected="false">السيمانة</button>
+            <button type="button" class="period-tab owner-target-period-btn" data-period="month" aria-selected="false">الشهر</button>
+            <button type="button" class="period-tab owner-target-period-btn" data-period="quarter" aria-selected="false">الثلاثي</button>
+            <button type="button" class="period-tab owner-target-period-btn" data-period="year" aria-selected="false">العام</button>
           </div>
           <div id="owner-target-indicators" class="owner-target-indicators"></div>
         </article>
@@ -135,10 +135,10 @@
         <article class="owner-pilotage-card owner-taxes-card" aria-labelledby="owner-taxes-title">
           <div class="employee-section-heading">
             <div>
-              <p class="eyebrow">Fiscalité équipe</p>
-              <h2 id="owner-taxes-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>Taxes</h2>
+              <p class="eyebrow">ضرائب الفريق</p>
+              <h2 id="owner-taxes-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>الضرائب</h2>
             </div>
-            <span id="owner-tax-period-caption" class="readonly-badge">Période: Jour</span>
+            <span id="owner-tax-period-caption" class="readonly-badge">الفترة: اليوم</span>
           </div>
           <div id="owner-taxes-list" class="owner-cost-list"></div>
         </article>
@@ -148,35 +148,35 @@
     <section id="owner-section-bi-nav" class="owner-dashboard-section" aria-labelledby="owner-bi-nav-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Business Intelligence</p>
-          <h2 id="owner-bi-nav-title">Navigation opérationnelle</h2>
+          <p class="eyebrow">التحليل الذكي</p>
+          <h2 id="owner-bi-nav-title">تنقل العمليات</h2>
         </div>
-        <button id="owner-open-products-management" type="button" class="manager-btn owner-products-shortcut-btn">🏷️ Gestion des produits</button>
+        <button id="owner-open-products-management" type="button" class="manager-btn owner-products-shortcut-btn">🏷️ تسيير المنتوجات</button>
       </div>
 
       <div id="owner-bi-nav" class="owner-bi-nav-grid">
         <button type="button" class="owner-bi-nav-card active" data-view="services">
-          <span class="owner-bi-nav-title">Services vendus (jour)</span>
+          <span class="owner-bi-nav-title">الخدمات المبيعة (اليوم)</span>
           <strong id="owner-bi-nav-services-value">0,00 DH</strong>
         </button>
         <button type="button" class="owner-bi-nav-card" data-view="products">
-          <span class="owner-bi-nav-title">Produits vendus (jour)</span>
+          <span class="owner-bi-nav-title">المنتوجات المبيعة (اليوم)</span>
           <strong id="owner-bi-nav-products-value">0,00 DH</strong>
         </button>
         <button type="button" class="owner-bi-nav-card" data-view="tasks">
-          <span class="owner-bi-nav-title">Tâches</span>
+          <span class="owner-bi-nav-title">التاش</span>
           <strong id="owner-bi-nav-tasks-value">0%</strong>
         </button>
         <button type="button" class="owner-bi-nav-card" data-view="hours">
-          <span class="owner-bi-nav-title">Horaires</span>
+          <span class="owner-bi-nav-title">التوقيت</span>
           <strong id="owner-bi-nav-hours-value">0 / 0</strong>
         </button>
         <button type="button" class="owner-bi-nav-card" data-view="consumed">
-          <span class="owner-bi-nav-title">Produits consommés</span>
-          <strong id="owner-bi-nav-consumed-value">0 unités</strong>
+          <span class="owner-bi-nav-title">المنتوجات المستهلكة</span>
+          <strong id="owner-bi-nav-consumed-value">0 وحدة</strong>
         </button>
         <button type="button" class="owner-bi-nav-card owner-bi-rupture-card" data-view="rupture">
-          <span class="owner-bi-nav-title">Produits en rupture</span>
+          <span class="owner-bi-nav-title">المنتوجات الناقصة</span>
           <strong id="owner-bi-nav-rupture-value">0</strong>
           <span id="owner-bi-rupture-badge" class="owner-bi-rupture-badge hidden">0</span>
         </button>
@@ -186,30 +186,30 @@
     <section id="owner-section-bi-details" class="owner-dashboard-section" aria-labelledby="owner-bi-details-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Analyse détaillée</p>
-          <h2 id="owner-bi-details-title">Services vendus</h2>
+          <p class="eyebrow">تحليل مفصل</p>
+          <h2 id="owner-bi-details-title">الخدمات المبيعة</h2>
         </div>
       </div>
 
       <div class="owner-bi-range-toolbar">
-        <div id="owner-bi-range-buttons" class="period-tabs" role="tablist" aria-label="Période analytique">
-          <button type="button" class="period-tab owner-bi-range-btn active" data-range="hour">Heure</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="day">Jour</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="week">Semaine</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="month">Mois</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="quarter">Trimestre</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="year">Année</button>
-          <button type="button" class="period-tab owner-bi-range-btn" data-range="custom">Personnalisé</button>
+        <div id="owner-bi-range-buttons" class="period-tabs" role="tablist" aria-label="فترة التحليل">
+          <button type="button" class="period-tab owner-bi-range-btn active" data-range="hour">الساعة</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="day">اليوم</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="week">السيمانة</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="month">الشهر</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="quarter">الثلاثي</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="year">العام</button>
+          <button type="button" class="period-tab owner-bi-range-btn" data-range="custom">مخصص</button>
         </div>
         <div id="owner-bi-custom-range" class="owner-bi-custom-range hidden">
           <input id="owner-bi-start-date" type="date" class="owner-target-input" />
           <input id="owner-bi-end-date" type="date" class="owner-target-input" />
-          <button id="owner-bi-apply-range" type="button" class="manager-btn">Appliquer</button>
+          <button id="owner-bi-apply-range" type="button" class="manager-btn">طبق</button>
         </div>
       </div>
 
       <div id="owner-bi-summary" class="owner-bi-summary">
-        <p>Chiffre d'affaires</p>
+        <p>رقم المعاملات</p>
         <strong id="owner-bi-total-revenue">0,00 DH</strong>
       </div>
 
@@ -219,17 +219,17 @@
       <div id="owner-bi-chart" class="owner-bi-chart"></div>
 
       <div id="owner-bi-ranking-wrap" class="owner-bi-ranking-wrap">
-        <h3>Classement employés</h3>
+        <h3>ترتيب الموظفين</h3>
         <div id="owner-bi-ranking" class="owner-bi-ranking"></div>
       </div>
 
       <div id="owner-bi-employee-sales" class="owner-bi-employee-sales">
-        <h3>Détail des ventes employé</h3>
+        <h3>تفاصيل بيوعات الموظف</h3>
         <ul id="owner-bi-employee-sales-list" class="modal-list"></ul>
       </div>
 
       <div id="owner-bi-records-wrap" class="owner-bi-records-wrap">
-        <h3 id="owner-bi-records-title">Registre détaillé</h3>
+        <h3 id="owner-bi-records-title">السجل المفصل</h3>
         <div id="owner-bi-records" class="owner-bi-records"></div>
       </div>
     </section>
@@ -237,10 +237,10 @@
     <section id="owner-section-sales-chart" class="owner-dashboard-section" aria-labelledby="sales-chart-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Performance commerciale</p>
-          <h2 id="sales-chart-title">Ventes par employé</h2>
+          <p class="eyebrow">الأداء التجاري</p>
+          <h2 id="sales-chart-title">البيوعات حسب الموظف</h2>
         </div>
-        <span id="owner-period-label" class="readonly-badge">Aujourd'hui</span>
+        <span id="owner-period-label" class="readonly-badge">اليوم</span>
       </div>
 
       <div id="owner-sales-chart" class="owner-sales-chart"></div>
@@ -249,22 +249,22 @@
     <section id="owner-section-employees" class="owner-dashboard-section" aria-labelledby="owner-employees-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Équipe</p>
-          <h2 id="owner-employees-title">Vue rapide par employé</h2>
+          <p class="eyebrow">الفريق</p>
+          <h2 id="owner-employees-title">نظرة سريعة حسب الموظف</h2>
         </div>
-        <span class="readonly-badge">Lecture seule</span>
+        <span class="readonly-badge">قراءة فقط</span>
       </div>
 
       <div class="employee-table-wrap">
         <table class="employee-history-table owner-employee-table">
           <thead>
             <tr>
-              <th>Employé</th>
-              <th id="owner-presence-heading">Pointage aujourd'hui</th>
-              <th>Heures / Statut</th>
-              <th id="owner-sales-heading">Ventes aujourd'hui</th>
-              <th>Tâches</th>
-              <th>Tendance semaine</th>
+              <th>الموظف</th>
+              <th id="owner-presence-heading">التسجيل اليوم</th>
+              <th>الساعات / الحالة</th>
+              <th id="owner-sales-heading">البيوعات اليوم</th>
+              <th>التاش</th>
+              <th>اتجاه السيمانة</th>
             </tr>
           </thead>
           <tbody id="owner-employee-body"></tbody>
@@ -275,62 +275,62 @@
     <section id="owner-section-accounting" class="owner-dashboard-section" aria-labelledby="owner-accounting-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Finance</p>
-          <h2 id="owner-accounting-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 1 1 8 0v2"/></svg></span>Comptabilité</h2>
+          <p class="eyebrow">المالية</p>
+          <h2 id="owner-accounting-title"><span class="heading-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 1 1 8 0v2"/></svg></span>المحاسبة</h2>
         </div>
         <div class="owner-backup-actions">
-          <button id="owner-export-data" type="button" class="manager-btn manager-btn-muted">Exporter les donnees</button>
-          <button id="owner-import-data" type="button" class="manager-btn manager-btn-muted">Importer</button>
+          <button id="owner-export-data" type="button" class="manager-btn manager-btn-muted">صدر البيانات</button>
+          <button id="owner-import-data" type="button" class="manager-btn manager-btn-muted">استورد</button>
           <input id="owner-import-file" type="file" accept="application/json" class="hidden" />
         </div>
       </div>
 
-      <div id="owner-accounting-period-buttons" class="period-tabs" role="tablist" aria-label="Période comptabilité">
-        <button type="button" class="period-tab owner-accounting-period-btn active" data-period="day">Jour</button>
-        <button type="button" class="period-tab owner-accounting-period-btn" data-period="week">Semaine</button>
-        <button type="button" class="period-tab owner-accounting-period-btn" data-period="month">Mois</button>
-        <button type="button" class="period-tab owner-accounting-period-btn" data-period="quarter">Trimestre</button>
-        <button type="button" class="period-tab owner-accounting-period-btn" data-period="year">Année</button>
+      <div id="owner-accounting-period-buttons" class="period-tabs" role="tablist" aria-label="فترة المحاسبة">
+        <button type="button" class="period-tab owner-accounting-period-btn active" data-period="day">اليوم</button>
+        <button type="button" class="period-tab owner-accounting-period-btn" data-period="week">السيمانة</button>
+        <button type="button" class="period-tab owner-accounting-period-btn" data-period="month">الشهر</button>
+        <button type="button" class="period-tab owner-accounting-period-btn" data-period="quarter">الثلاثي</button>
+        <button type="button" class="period-tab owner-accounting-period-btn" data-period="year">العام</button>
       </div>
 
       <div class="owner-accounting-grid">
         <article class="owner-accounting-card">
-          <h3>Charges fixes</h3>
+          <h3>المصاريف الثابتة</h3>
           <div id="owner-fixed-costs-list" class="owner-cost-list"></div>
-          <button id="owner-add-fixed-cost" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+          <button id="owner-add-fixed-cost" type="button" class="manager-btn manager-btn-muted">+ زيد</button>
         </article>
 
         <article class="owner-accounting-card">
-          <h3>Charges variables</h3>
+          <h3>المصاريف المتغيرة</h3>
           <div id="owner-variable-costs-list" class="owner-cost-list"></div>
           <p id="owner-variable-costs-breakdown" class="owner-accounting-note"></p>
-          <button id="owner-add-variable-cost" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+          <button id="owner-add-variable-cost" type="button" class="manager-btn manager-btn-muted">+ زيد</button>
         </article>
 
         <article class="owner-accounting-card">
-          <h3>Gestion des produits</h3>
+          <h3>تسيير المنتوجات</h3>
           <div id="owner-products-list" class="owner-cost-list"></div>
-          <button id="owner-add-product" type="button" class="manager-btn manager-btn-muted">+ Ajouter produit</button>
+          <button id="owner-add-product" type="button" class="manager-btn manager-btn-muted">+ زيد منتوج</button>
         </article>
 
         <article class="owner-accounting-card owner-compensation-card">
-          <h3>Rémunération automatique équipe</h3>
-          <p class="owner-accounting-note">Formule: 50% ventes services + bénéfice employé produits (Pers. DH × quantité). Aucun salaire fixe.</p>
+          <h3>الأجرة الأوتوماتيكية ديال الفريق</h3>
+          <p class="owner-accounting-note">القانون: 50% من بيوعات الخدمات + بنفيس الموظف من المنتوجات (البنفيس الشخصي DH × الكمية). ماكاين حتى أجرة ثابتة.</p>
           <div id="owner-salaries-list" class="owner-cost-list"></div>
         </article>
       </div>
 
       <div class="owner-profit-strip">
         <div>
-          <span>Chiffre d'affaires</span>
+          <span>رقم المعاملات</span>
           <strong id="owner-accounting-revenue">0,00 DH</strong>
         </div>
         <div>
-          <span>Total charges</span>
+          <span>مجموع المصاريف</span>
           <strong id="owner-accounting-expenses">0,00 DH</strong>
         </div>
         <div>
-          <span>Bénéfice net</span>
+          <span>البنفيس الصافي</span>
           <strong id="owner-accounting-profit" class="profit-positive">0,00 DH</strong>
         </div>
       </div>
@@ -339,58 +339,58 @@
     <section id="owner-section-details" class="owner-dashboard-section" aria-labelledby="owner-details-title">
       <div class="employee-section-heading">
         <div>
-          <p class="eyebrow">Visibilité complète</p>
-          <h2 id="owner-details-title">Fiches détaillées des employés</h2>
+          <p class="eyebrow">رؤية كاملة</p>
+          <h2 id="owner-details-title">بطاقات مفصلة للموظفين</h2>
         </div>
-        <span class="readonly-badge">Cliquer pour ouvrir le détail</span>
+        <span class="readonly-badge">كليكي باش تفتح التفاصيل</span>
       </div>
 
       <div id="owner-employee-cards" class="owner-employee-cards"></div>
     </section>
 
-    
+
   </main>
 
   <div id="owner-sections-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-sections-title">
     <div class="modal-content owner-detail-modal-content owner-sections-modal-content">
-      <button id="owner-sections-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="owner-sections-title">Vue Dashboard</h3>
-      <p id="owner-sections-subtitle" class="modal-subtitle">Choisissez une vue depuis les boutons du haut.</p>
+      <button id="owner-sections-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-sections-title">نظرة الداشبورد</h3>
+      <p id="owner-sections-subtitle" class="modal-subtitle">اختار نظرة من الأزرار اللي فوق.</p>
       <div id="owner-sections-modal-body" class="owner-sections-modal-body"></div>
       <div class="modal-actions">
-        <button id="owner-sections-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+        <button id="owner-sections-close" class="manager-btn manager-btn-muted" type="button">سد</button>
       </div>
     </div>
   </div>
 
   <div id="owner-products-popup-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-products-popup-title">
     <div class="modal-content owner-detail-modal-content owner-products-popup-content">
-      <button id="owner-products-popup-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="owner-products-popup-title">Produits à vendre en magasin</h3>
-      <p class="modal-subtitle">Ajoutez les produits et saisissez directement le bénéfice personnel en DH.</p>
+      <button id="owner-products-popup-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-products-popup-title">منتوجات للبيع فالمحل</h3>
+      <p class="modal-subtitle">زيد المنتوجات وكتب مباشرة البنفيس الشخصي بالدرهم.</p>
 
       <form id="owner-products-popup-form" class="owner-products-popup-form" novalidate>
         <div class="owner-products-popup-grid">
-          <label class="owner-target-label" for="owner-products-popup-name">Nom produit</label>
-          <input id="owner-products-popup-name" class="owner-target-input" type="text" placeholder="Ex: Gel coiffant" required />
+          <label class="owner-target-label" for="owner-products-popup-name">سمية المنتوج</label>
+          <input id="owner-products-popup-name" class="owner-target-input" type="text" placeholder="مثلا: جيل للشعر" required />
 
-          <label class="owner-target-label" for="owner-products-popup-purchase">Prix achat (DH)</label>
-          <input id="owner-products-popup-purchase" class="owner-target-input" type="number" min="0" step="0.01" placeholder="Ex: 20" required />
+          <label class="owner-target-label" for="owner-products-popup-purchase">تمن الشراء (DH)</label>
+          <input id="owner-products-popup-purchase" class="owner-target-input" type="number" min="0" step="0.01" placeholder="مثلا: 20" required />
 
-          <label class="owner-target-label" for="owner-products-popup-selling">Prix vente (DH)</label>
-          <input id="owner-products-popup-selling" class="owner-target-input" type="number" min="0" step="0.01" placeholder="Ex: 45" required />
+          <label class="owner-target-label" for="owner-products-popup-selling">تمن البيع (DH)</label>
+          <input id="owner-products-popup-selling" class="owner-target-input" type="number" min="0" step="0.01" placeholder="مثلا: 45" required />
 
-          <label class="owner-target-label" for="owner-products-popup-employee-share">Bénéfice personnel (DH)</label>
-          <input id="owner-products-popup-employee-share" class="owner-target-input" type="number" min="0" step="0.01" placeholder="Ex: 7" required />
+          <label class="owner-target-label" for="owner-products-popup-employee-share">البنفيس الشخصي (DH)</label>
+          <input id="owner-products-popup-employee-share" class="owner-target-input" type="number" min="0" step="0.01" placeholder="مثلا: 7" required />
 
-          <label class="owner-target-label" for="owner-products-popup-net">Bénéfice net Glossia (DH)</label>
+          <label class="owner-target-label" for="owner-products-popup-net">البنفيس الصافي ديال Glossia (DH)</label>
           <input id="owner-products-popup-net" class="owner-target-input" type="text" readonly />
         </div>
 
         <p id="owner-products-popup-feedback" class="modal-feedback" aria-live="polite"></p>
         <div class="modal-actions">
-          <button type="submit" class="manager-btn">Ajouter produit</button>
-          <button id="owner-products-popup-close" type="button" class="manager-btn manager-btn-muted">Fermer</button>
+          <button type="submit" class="manager-btn">زيد المنتوج</button>
+          <button id="owner-products-popup-close" type="button" class="manager-btn manager-btn-muted">سد</button>
         </div>
       </form>
 
@@ -398,12 +398,12 @@
         <table class="employee-history-table owner-products-popup-table">
           <thead>
             <tr>
-              <th>Produit</th>
-              <th>Achat</th>
-              <th>Vente</th>
-              <th>Pers. (DH)</th>
-              <th>Net Glossia</th>
-              <th>Action</th>
+              <th>المنتوج</th>
+              <th>الشراء</th>
+              <th>البيع</th>
+              <th>شخصي (DH)</th>
+              <th>صافي Glossia</th>
+              <th>الإجراء</th>
             </tr>
           </thead>
           <tbody id="owner-products-popup-list"></tbody>
@@ -414,19 +414,19 @@
 
   <div id="owner-access-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-access-title">
     <div class="modal-content owner-detail-modal-content owner-access-modal-content">
-      <button id="owner-access-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="owner-access-title">Comptes et mots de passe</h3>
-      <p class="modal-subtitle">Paramètres sécurité (popup).</p>
+      <button id="owner-access-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-access-title">الحسابات وكلمات السر</h3>
+      <p class="modal-subtitle">إعدادات الأمان (نافذة).</p>
 
       <form id="owner-access-form" novalidate>
         <div class="employee-table-wrap">
           <table class="employee-history-table owner-access-table">
             <thead>
               <tr>
-                <th>Rôle</th>
-                <th>Nom</th>
-                <th>Username</th>
-                <th>Mot de passe</th>
+                <th>الصفة</th>
+                <th>السمية</th>
+                <th>اسم المستخدم</th>
+                <th>كلمة السر</th>
               </tr>
             </thead>
             <tbody id="owner-access-body"></tbody>
@@ -434,8 +434,8 @@
         </div>
         <p id="owner-access-feedback" class="modal-feedback" aria-live="polite"></p>
         <div class="modal-actions">
-          <button type="submit" class="manager-btn">Enregistrer les accès</button>
-          <button id="owner-access-close" type="button" class="manager-btn manager-btn-muted">Fermer</button>
+          <button type="submit" class="manager-btn">سجل الحسابات</button>
+          <button id="owner-access-close" type="button" class="manager-btn manager-btn-muted">سد</button>
         </div>
       </form>
     </div>
@@ -443,90 +443,90 @@
 
   <div id="owner-detail-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-modal-title">
     <div class="modal-content owner-detail-modal-content">
-      <button id="owner-modal-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="owner-modal-title">Détails Employé</h3>
+      <button id="owner-modal-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-modal-title">تفاصيل الموظف</h3>
       <p id="owner-modal-subtitle" class="modal-subtitle"></p>
 
       <section class="owner-modal-section">
-        <h4 class="modal-block-title">Pointages aujourd'hui</h4>
+        <h4 class="modal-block-title">التسجيلات اليوم</h4>
         <div id="owner-modal-time-grid" class="owner-modal-grid"></div>
       </section>
 
       <section class="owner-modal-section">
-        <h4 class="modal-block-title">Ventes</h4>
+        <h4 class="modal-block-title">البيوعات</h4>
         <div id="owner-modal-sales-grid" class="owner-modal-grid"></div>
       </section>
 
       <section class="owner-modal-section">
-        <h4 class="modal-block-title">Objectifs campagne</h4>
+        <h4 class="modal-block-title">أهداف الحملة</h4>
         <div id="owner-modal-target-grid" class="owner-modal-grid"></div>
       </section>
 
       <section class="owner-modal-section">
-        <h4 class="modal-block-title">Checklist des tâches</h4>
+        <h4 class="modal-block-title">لائحة التاش</h4>
         <p id="owner-modal-task-count" class="owner-task-count"></p>
         <ul id="owner-modal-task-list" class="owner-modal-task-list"></ul>
         <form id="owner-add-task-form" class="inline-form" novalidate>
-          <input id="owner-new-task-input" type="text" placeholder="Nouvelle tâche" required />
-          <button class="manager-btn" type="submit">+ Ajouter une tâche</button>
+          <input id="owner-new-task-input" type="text" placeholder="تاش جديدة" required />
+          <button class="manager-btn" type="submit">+ زيد تاش</button>
         </form>
       </section>
 
       <div class="modal-actions">
-        <button id="owner-modal-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+        <button id="owner-modal-close" class="manager-btn manager-btn-muted" type="button">سد</button>
       </div>
     </div>
   </div>
 
   <div id="owner-target-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-target-modal-title">
     <div class="modal-content owner-detail-modal-content owner-target-modal-content">
-      <button id="owner-target-modal-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <h3 id="owner-target-modal-title">Objectifs personnel et global</h3>
-      <p id="owner-target-modal-subtitle" class="modal-subtitle">Réglez les objectifs personnel (journalier) et l'objectif global Glossia.</p>
+      <button id="owner-target-modal-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-target-modal-title">أهداف الموظف والهدف الشامل</h3>
+      <p id="owner-target-modal-subtitle" class="modal-subtitle">حدد الهدف الشخصي (يومي) والهدف الشامل ديال Glossia.</p>
 
       <form id="owner-target-form" class="owner-target-form">
         <div class="owner-campaign-grid">
-          <label class="owner-target-label" for="owner-target-start-date">Date de début</label>
+          <label class="owner-target-label" for="owner-target-start-date">تاريخ البداية</label>
           <input id="owner-target-start-date" class="owner-target-input" type="date" required />
 
-          <label class="owner-target-label" for="owner-target-end-date">Date de fin</label>
+          <label class="owner-target-label" for="owner-target-end-date">تاريخ النهاية</label>
           <input id="owner-target-end-date" class="owner-target-input" type="date" required />
 
-          <label class="owner-target-label" for="owner-target-daily">Objectif journalier (DH)</label>
-          <input id="owner-target-daily" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="Ex: 300" required />
+          <label class="owner-target-label" for="owner-target-daily">الهدف اليومي (DH)</label>
+          <input id="owner-target-daily" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 300" required />
 
-          <label class="owner-target-label" for="owner-target-global">Objectif global Glossia (DH)</label>
-          <input id="owner-target-global" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="Ex: 120000" required />
+          <label class="owner-target-label" for="owner-target-global">الهدف الشامل ديال Glossia (DH)</label>
+          <input id="owner-target-global" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 120000" required />
         </div>
         <p id="owner-target-feedback" class="modal-feedback"></p>
         <div class="modal-actions">
-          <button id="owner-target-save" class="manager-btn" type="submit">Enregistrer</button>
-          <button id="owner-target-modal-close" class="manager-btn manager-btn-muted" type="button">Fermer</button>
+          <button id="owner-target-save" class="manager-btn" type="submit">سجل</button>
+          <button id="owner-target-modal-close" class="manager-btn manager-btn-muted" type="button">سد</button>
         </div>
       </form>
 
       <div class="owner-tax-config">
-        <h4 class="modal-block-title">Taxes sur le chiffre d'affaires (par palier)</h4>
-        <p class="modal-subtitle">S'applique à tous les employés selon leur propre chiffre d'affaires. Ex: à partir de 100 DH, -5 DH ; à partir de 200 DH, -10 DH.</p>
+        <h4 class="modal-block-title">الضرائب على رقم المعاملات (بالمراحل)</h4>
+        <p class="modal-subtitle">كتطبق على جميع الموظفين حسب رقم المعاملات ديال كل واحد. مثلا: من 100 DH، -5 DH؛ من 200 DH، -10 DH.</p>
 
         <div class="owner-tax-columns">
           <div class="owner-tax-column">
-            <h5>Taxe services</h5>
+            <h5>ضريبة الخدمات</h5>
             <div id="owner-tax-service-list" class="owner-cost-list"></div>
             <div class="owner-tax-add-row">
-              <input id="owner-tax-service-threshold" type="number" min="0" step="0.01" placeholder="Seuil CA (DH)" />
-              <input id="owner-tax-service-amount" type="number" min="0" step="0.01" placeholder="Taxe (DH)" />
-              <button id="owner-tax-service-add" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+              <input id="owner-tax-service-threshold" type="number" min="0" step="0.01" placeholder="سقف رقم المعاملات (DH)" />
+              <input id="owner-tax-service-amount" type="number" min="0" step="0.01" placeholder="الضريبة (DH)" />
+              <button id="owner-tax-service-add" type="button" class="manager-btn manager-btn-muted">+ زيد</button>
             </div>
           </div>
 
           <div class="owner-tax-column">
-            <h5>Taxe produits</h5>
+            <h5>ضريبة المنتوجات</h5>
             <div id="owner-tax-product-list" class="owner-cost-list"></div>
             <div class="owner-tax-add-row">
-              <input id="owner-tax-product-threshold" type="number" min="0" step="0.01" placeholder="Seuil CA (DH)" />
-              <input id="owner-tax-product-amount" type="number" min="0" step="0.01" placeholder="Taxe (DH)" />
-              <button id="owner-tax-product-add" type="button" class="manager-btn manager-btn-muted">+ Ajouter</button>
+              <input id="owner-tax-product-threshold" type="number" min="0" step="0.01" placeholder="سقف رقم المعاملات (DH)" />
+              <input id="owner-tax-product-amount" type="number" min="0" step="0.01" placeholder="الضريبة (DH)" />
+              <button id="owner-tax-product-add" type="button" class="manager-btn manager-btn-muted">+ زيد</button>
             </div>
           </div>
         </div>
@@ -536,15 +536,15 @@
 
   <div id="owner-briefing-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-briefing-title">
     <div class="modal-content owner-detail-modal-content owner-briefing-content">
-      <button id="owner-briefing-close-icon" class="owner-modal-close-icon" type="button" aria-label="Fermer la fenêtre">✕</button>
-      <p class="eyebrow">Résumé du jour</p>
-      <h3 id="owner-briefing-title">Points à vérifier</h3>
+      <button id="owner-briefing-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <p class="eyebrow">ملخص اليوم</p>
+      <h3 id="owner-briefing-title">نقط خاصها تفقد</h3>
       <p id="owner-briefing-subtitle" class="modal-subtitle"></p>
 
       <div id="owner-briefing-body"></div>
 
       <div class="modal-actions">
-        <button id="owner-briefing-close" class="manager-btn" type="button">J'ai vérifié, fermer</button>
+        <button id="owner-briefing-close" class="manager-btn" type="button">تفقدت، سد</button>
       </div>
     </div>
   </div>
