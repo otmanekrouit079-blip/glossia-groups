@@ -45,7 +45,6 @@ const dashboardRoutes = {
 };
 
 const loginForm = document.getElementById("login-form");
-const roleField = document.getElementById("role");
 const usernameField = document.getElementById("username");
 const passwordField = document.getElementById("password");
 const errorMessage = document.getElementById("login-error");
@@ -53,23 +52,21 @@ const errorMessage = document.getElementById("login-error");
 loginForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const selectedRole = roleField.value;
   const enteredUsername = usernameField.value.trim();
   const enteredPassword = passwordField.value;
 
   const authContext = getAuthContext();
 
-  // Match role + username + password.
+  // Match username + password; the role comes from whichever account matches.
   const matchedUser = authContext.users.find(function (user) {
     return (
-      user.role === selectedRole &&
       user.username === enteredUsername &&
       user.password === enteredPassword
     );
   });
 
   if (!matchedUser) {
-    errorMessage.textContent = "المعلومات خاطئة. تأكد من الصفة، اسم المستخدم، وكلمة السر.";
+    errorMessage.textContent = "المعلومات خاطئة. تأكد من اسم المستخدم وكلمة السر.";
     return;
   }
 
