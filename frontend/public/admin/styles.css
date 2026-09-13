@@ -583,10 +583,11 @@ button.danger,
 .owner-modal-grid,
 manager-insight-grid,
 .manager-insight-grid,
-.owner-bi-nav-grid,
-.owner-products-popup-grid {
+.owner-bi-nav-grid {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
+
+.owner-products-popup-grid { grid-template-columns: 1fr; }
 
 [class$="-card"],
 [class*="-card "],

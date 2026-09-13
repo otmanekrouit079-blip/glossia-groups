@@ -726,6 +726,9 @@ function addOwnerProductFromPopup() {
   }
   updateOwnerProductsPopupPreview();
   renderOwnerProductsPopupList();
+
+  closeOwnerProductsPopupModal();
+  openOwnerStoreProductFormPrefilled(name, preview.sellingPrice);
 }
 
 function deleteOwnerProductFromPopup(index) {
@@ -4733,6 +4736,22 @@ function openOwnerStoreModal() {
   ownerStoreModal.classList.remove("hidden");
   loadOwnerStoreProducts();
   loadOwnerStoreServices();
+}
+
+function openOwnerStoreProductFormPrefilled(name, sellingPrice) {
+  openOwnerStoreModal();
+  setOwnerStoreTab("products");
+  openOwnerStoreProductForm(null);
+
+  if (ownerStoreProductName) {
+    ownerStoreProductName.value = name || "";
+  }
+  if (ownerStoreProductPrice1 && Number(sellingPrice) > 0) {
+    ownerStoreProductPrice1.value = sellingPrice;
+  }
+  if (ownerStoreProductFeedback) {
+    ownerStoreProductFeedback.textContent = "زيد التصويرة والوصف باش المنتوج ينشر فالستور.";
+  }
 }
 
 function closeOwnerStoreModal() {
