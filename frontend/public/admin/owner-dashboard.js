@@ -74,6 +74,7 @@ const ownerLastSavedLabel = document.getElementById("owner-last-saved");
 const ownerExportDataButton = document.getElementById("owner-export-data");
 const ownerImportDataButton = document.getElementById("owner-import-data");
 const ownerImportFileInput = document.getElementById("owner-import-file");
+const ownerNetOverviewPeriodButtons = document.querySelectorAll(".owner-net-overview-period-btn");
 const ownerNetOverviewChart = document.getElementById("owner-net-overview-chart");
 const ownerNetCaTotal = document.getElementById("owner-net-ca-total");
 const ownerNetCaServices = document.getElementById("owner-net-ca-services");
@@ -128,6 +129,7 @@ const ownerSections = {
   ]
 };
 
+let ownerNetOverviewPeriod = "day";
 let ownerActivePeriod = "day";
 let ownerReferenceDate = new Date();
 let ownerActiveCompactView = "overview";
@@ -1446,9 +1448,12 @@ function setOwnerCreditAmount(value) {
   saveOwnerProductsData();
 }
 
-function getOwnerActiveAccountingPeriod() {
-  const activeButton = document.querySelector(".owner-accounting-period-btn.active");
-  return activeButton?.dataset.period || "day";
+function setOwnerNetOverviewPeriod(period) {
+  ownerNetOverviewPeriod = period || "day";
+  ownerNetOverviewPeriodButtons.forEach(function (button) {
+    button.classList.toggle("active", button.dataset.period === ownerNetOverviewPeriod);
+  });
+  renderOwnerNetOverview();
 }
 
 function renderOwnerNetOverviewChart(caTotal, chargesTotal, benefitGlossia) {
@@ -1496,7 +1501,7 @@ function renderOwnerNetOverview() {
     return;
   }
 
-  const period = getOwnerActiveAccountingPeriod();
+  const period = ownerNetOverviewPeriod;
 
   const caServices = getOwnerServiceSalesTotalForPeriod(period);
   const caProducts = getOwnerProductSalesTotalForPeriod(period);
@@ -3800,9 +3805,9 @@ if (ownerNetCreditInput) {
   });
 }
 
-document.querySelectorAll(".owner-accounting-period-btn").forEach(function (button) {
+ownerNetOverviewPeriodButtons.forEach(function (button) {
   button.addEventListener("click", function () {
-    renderOwnerNetOverview();
+    setOwnerNetOverviewPeriod(button.dataset.period || "day");
   });
 });
 

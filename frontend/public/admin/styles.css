@@ -598,12 +598,20 @@ manager-insight-grid,
 .owner-net-overview {
   background: var(--surface);
   border: 1px solid var(--borderline);
-  border-radius: var(--radius-md);
-  padding: 18px;
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
   margin-bottom: var(--gap-lg);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
+}
+.owner-net-overview-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  flex-wrap: wrap;
 }
 .owner-net-overview-heading h3 { margin: 2px 0 0; }
 
