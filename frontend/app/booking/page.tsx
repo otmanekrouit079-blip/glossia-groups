@@ -394,43 +394,24 @@ export default function BookingPage() {
           <SectionCard number={5} icon="🛍️" title="اختار منتوج" subtitle="اختياري">
             <div className="grid gap-3 sm:grid-cols-2">
               {products.map((product) => {
-                const qty = getProductQuantity(product.id);
+                const selected = getProductQuantity(product.id) > 0;
                 return (
-                  <div
+                  <button
                     key={product.id}
-                    className={`rounded-2xl border-2 p-3 ${qty > 0 ? "border-brass" : "border-borderline bg-surface-alt"}`}
+                    type="button"
+                    onClick={() => setProductQuantity(product.id, selected ? 0 : 1)}
+                    className={`chip-selectable rounded-2xl border-2 p-4 text-right ${
+                      selected ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
+                    }`}
                   >
-                    <div className="relative">
-                      <img
-                        src={resolveImageUrl(product.image_url)}
-                        alt={product.name}
-                        className="mb-2 h-28 w-full rounded-xl object-cover"
-                      />
-                      {qty > 0 ? (
-                        <span className="badge-gradient absolute left-2 top-2 shadow">{qty} مختار</span>
-                      ) : null}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-bold">{product.name}</span>
+                      {selected ? <span className="text-lg">✓</span> : null}
                     </div>
-                    <p className="mb-2 font-bold text-ink">{product.name}</p>
-                    <div className="grid grid-cols-4 gap-1">
-                      {[
-                        { q: 0, label: "لا" },
-                        { q: 1, label: `1 (${product.price_1})` },
-                        { q: 2, label: `2 (${product.price_2})` },
-                        { q: 3, label: `3 (${product.price_3})` },
-                      ].map((opt) => (
-                        <button
-                          key={opt.q}
-                          type="button"
-                          onClick={() => setProductQuantity(product.id, opt.q)}
-                          className={`chip-selectable rounded-lg border-2 py-1.5 text-[11px] font-bold ${
-                            qty === opt.q ? "chip-selected" : "border-borderline text-textmain"
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                    <span className={`font-digits text-sm ${selected ? "text-white/85" : "text-textmuted"}`}>
+                      {product.price_1} DH
+                    </span>
+                  </button>
                 );
               })}
             </div>
