@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 import {
   getBranches,
@@ -25,6 +25,36 @@ type CouponState = {
   discountType?: "percent" | "fixed";
   discountValue?: number;
 };
+
+function SectionCard({
+  number,
+  icon,
+  title,
+  subtitle,
+  children,
+}: {
+  number: number;
+  icon: string;
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="card card-hover p-5 md:p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="section-badge h-10 w-10 shrink-0 rounded-2xl text-lg font-extrabold">{number}</span>
+        <div>
+          <h2 className="flex items-center gap-2 font-heading text-lg font-extrabold text-ink">
+            <span>{icon}</span>
+            {title}
+          </h2>
+          {subtitle ? <p className="text-xs text-textmuted">{subtitle}</p> : null}
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
 
 export default function BookingPage() {
   const [branches, setBranches] = useState<Branch[]>([]);
@@ -121,6 +151,10 @@ export default function BookingPage() {
 
   function toggleService(id: string) {
     setServiceIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  function getProductQuantity(productId: string) {
+    return selectedProducts.find((item) => item.product_id === productId)?.quantity || 0;
   }
 
   function setProductQuantity(productId: string, quantity: number) {
@@ -226,9 +260,9 @@ export default function BookingPage() {
 
   if (confirmed) {
     return (
-      <section className="mx-auto max-w-lg px-4 py-16 text-center">
-        <div className="card p-8">
-          <div className="mb-4 text-5xl">✅</div>
+      <section className="hero-glow flex min-h-[70vh] items-center justify-center px-4 py-16">
+        <div className="card w-full max-w-md p-10 text-center">
+          <div className="section-badge mx-auto mb-5 h-16 w-16 rounded-full text-3xl">✓</div>
           <h1 className="font-heading text-2xl font-extrabold text-ink">تأكد الحجز ديالك بنجاح!</h1>
           <p className="mt-3 text-textmuted">غادي نتصلو بيك 30 دقيقة قبل الموعد باش نذكروك.</p>
         </div>
@@ -237,237 +271,293 @@ export default function BookingPage() {
   }
 
   return (
-    <section className="mx-auto max-w-2xl px-4 py-12">
-      <div className="card p-6 md:p-8">
-        <h1 className="font-heading text-2xl font-extrabold text-ink">حجز الموعد</h1>
-        <p className="mt-1 text-sm text-textmuted">عمر المعلومات لي تحت وأكد الحجز فالأخير.</p>
+    <>
+      <section className="hero-glow px-4 pb-16 pt-14 text-center">
+        <span className="badge-gradient">📅 حجز أونلاين</span>
+        <h1 className="mt-4 font-heading text-3xl font-extrabold text-white md:text-4xl">احجز وقتك فGLOSSIA</h1>
+        <p className="mx-auto mt-2 max-w-md text-white/70">عمر المعلومات لي تحت وأكد الحجز فالأخير، فدقيقتين.</p>
+      </section>
 
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">1. اختار العروض ديالك</h2>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {services.map((service) => (
-              <label
-                key={service.id}
-                className="flex items-center gap-2 rounded-xl border border-borderline bg-surface-alt p-3"
-              >
-                <input type="checkbox" checked={serviceIds.includes(service.id)} onChange={() => toggleService(service.id)} />
-                <span>
-                  {service.name} ({service.price} DH)
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">2. اختار شكون بغيتيه يخدمك</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setStaffPreference("has")}
-              className={`rounded-xl border p-4 text-center font-semibold ${
-                staffPreference === "has" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-              }`}
-            >
-              عندي مفضل
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setStaffPreference("any");
-                setStaffId("");
-              }}
-              className={`rounded-xl border p-4 text-center font-semibold ${
-                staffPreference === "any" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-              }`}
-            >
-              اللي خاوي، أنا مزروب
-            </button>
-          </div>
-
-          {staffPreference === "has" ? (
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {staffList.map((member) => (
-                <button
-                  key={member.id}
-                  type="button"
-                  onClick={() => setStaffId(member.id)}
-                  className={`rounded-xl border p-3 text-center ${
-                    staffId === member.id ? "border-brass bg-brass/10" : "border-borderline"
-                  }`}
-                >
-                  <img
-                    src={resolveImageUrl(member.photo_url)}
-                    alt={member.name}
-                    className="mx-auto mb-2 h-16 w-16 rounded-full object-cover"
-                  />
-                  <span className="text-sm font-semibold text-ink">{member.name}</span>
-                </button>
-              ))}
-              {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
+      <section className="mx-auto -mt-10 max-w-2xl px-4 pb-40">
+        <div className="space-y-5">
+          <SectionCard number={1} icon="💈" title="اختار العروض ديالك">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {services.map((service) => {
+                const active = serviceIds.includes(service.id);
+                return (
+                  <button
+                    key={service.id}
+                    type="button"
+                    onClick={() => toggleService(service.id)}
+                    className={`chip-selectable rounded-2xl border-2 p-4 text-right ${
+                      active ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-bold">{service.name}</span>
+                      {active ? <span className="text-lg">✓</span> : null}
+                    </div>
+                    <span className={`font-digits text-sm ${active ? "text-white/85" : "text-textmuted"}`}>
+                      {service.price} DH
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-          ) : null}
-        </div>
+          </SectionCard>
 
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">3. اختار اليوم</h2>
-          <input
-            className="w-full rounded-xl border border-borderline p-3"
-            type="date"
-            value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
-              setTime("");
-            }}
-          />
-        </div>
-
-        {date ? (
-          <div className="mt-6 border-t border-borderline pt-6">
-            <h2 className="mb-3 font-bold text-ink">4. اختار الوقت</h2>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {slots.filter((slot) => slot.available).map((slot) => (
-                <button
-                  key={slot.time}
-                  type="button"
-                  onClick={() => setTime(slot.time)}
-                  className={`rounded-xl border p-2 text-sm font-semibold ${
-                    time === slot.time ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-                  }`}
-                >
-                  {slot.time}
-                </button>
-              ))}
-              {slots.filter((slot) => slot.available).length === 0 ? (
-                <p className="col-span-full text-sm text-textmuted">ماكاين حتى وقت خالي هاد النهار، جرب يوم آخر.</p>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">5. اختار منتوج (اختياري)</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {products.map((product) => (
-              <div key={product.id} className="rounded-xl border border-borderline bg-surface-alt p-3">
-                <img src={resolveImageUrl(product.image_url)} alt={product.name} className="mb-2 h-28 w-full rounded-lg object-cover" />
-                <p className="font-semibold text-ink">{product.name}</p>
-                <select
-                  className="mt-2 w-full rounded-lg border border-borderline p-2"
-                  onChange={(e) => setProductQuantity(product.id, Number(e.target.value))}
-                  defaultValue="0"
-                >
-                  <option value="0">ما بغيتش</option>
-                  <option value="1">قطعة وحدة ({product.price_1} DH)</option>
-                  <option value="2">جوج قطع ({product.price_2} DH)</option>
-                  <option value="3">3 قطع ({product.price_3} DH)</option>
-                </select>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">6. تأكيد الطلب وكود التخفيض</h2>
-          <div className="rounded-xl border border-borderline bg-surface-alt p-4">
-            <p className="text-textmain">
-              المجموع: <span className="font-digits text-lg font-extrabold text-brass">{subtotal.toFixed(2)} DH</span>
-            </p>
-          </div>
-
-          <p className="mb-2 mt-4 font-semibold text-ink">واش عندك كود تخفيض؟</p>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setWantsCoupon("yes")}
-              className={`rounded-xl border p-3 text-center font-semibold ${
-                wantsCoupon === "yes" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-              }`}
-            >
-              عندي كود
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setWantsCoupon("no");
-                setCoupon(null);
-                setCouponInput("");
-              }}
-              className={`rounded-xl border p-3 text-center font-semibold ${
-                wantsCoupon === "no" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-              }`}
-            >
-              ماعنديش كود
-            </button>
-          </div>
-
-          {wantsCoupon === "yes" ? (
-            <div className="mt-3 flex gap-2">
-              <input
-                className="flex-1 rounded-xl border border-borderline p-3"
-                placeholder="دخل الكود"
-                value={couponInput}
-                onChange={(e) => setCouponInput(e.target.value)}
-              />
+          <SectionCard number={2} icon="🧑‍🔧" title="اختار شكون بغيتيه يخدمك">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={checkCoupon}
-                disabled={couponChecking}
-                className="btn-gradient rounded-xl px-4 py-2 text-sm"
+                onClick={() => setStaffPreference("has")}
+                className={`chip-selectable rounded-2xl border-2 p-4 text-center font-extrabold ${
+                  staffPreference === "has" ? "chip-selected" : "border-borderline text-textmain"
+                }`}
               >
-                {couponChecking ? "..." : "تحقق"}
+                عندي مفضل
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setStaffPreference("any");
+                  setStaffId("");
+                }}
+                className={`chip-selectable rounded-2xl border-2 p-4 text-center font-extrabold ${
+                  staffPreference === "any" ? "chip-selected" : "border-borderline text-textmain"
+                }`}
+              >
+                اللي خاوي، أنا مزروب
               </button>
             </div>
-          ) : null}
-          {coupon ? <p className={`mt-2 text-sm ${coupon.valid ? "text-deepgreen" : "text-ember"}`}>{coupon.message}</p> : null}
 
-          {discountAmount > 0 ? (
-            <p className="mt-3 text-textmain">
-              بعد التخفيض: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
-            </p>
+            {staffPreference === "has" ? (
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {staffList.map((member) => (
+                  <button
+                    key={member.id}
+                    type="button"
+                    onClick={() => setStaffId(member.id)}
+                    className={`chip-selectable rounded-2xl border-2 p-3 text-center ${
+                      staffId === member.id ? "chip-selected" : "border-borderline"
+                    }`}
+                  >
+                    <img
+                      src={resolveImageUrl(member.photo_url)}
+                      alt={member.name}
+                      className="mx-auto mb-2 h-16 w-16 rounded-full border-2 border-white object-cover shadow"
+                    />
+                    <span className="text-sm font-bold">{member.name}</span>
+                  </button>
+                ))}
+                {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
+              </div>
+            ) : null}
+          </SectionCard>
+
+          <SectionCard number={3} icon="📅" title="اختار اليوم">
+            <input
+              className="w-full rounded-2xl border-2 border-borderline p-4 font-digits text-lg font-bold"
+              type="date"
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                setTime("");
+              }}
+            />
+          </SectionCard>
+
+          {date ? (
+            <SectionCard number={4} icon="⏰" title="اختار الوقت">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {slots
+                  .filter((slot) => slot.available)
+                  .map((slot) => (
+                    <button
+                      key={slot.time}
+                      type="button"
+                      onClick={() => setTime(slot.time)}
+                      className={`chip-selectable rounded-xl border-2 p-2 font-digits text-sm font-extrabold ${
+                        time === slot.time ? "chip-selected" : "border-borderline text-textmain"
+                      }`}
+                    >
+                      {slot.time}
+                    </button>
+                  ))}
+                {slots.filter((slot) => slot.available).length === 0 ? (
+                  <p className="col-span-full text-sm text-textmuted">ماكاين حتى وقت خالي هاد النهار، جرب يوم آخر.</p>
+                ) : null}
+              </div>
+            </SectionCard>
+          ) : null}
+
+          <SectionCard number={5} icon="🛍️" title="اختار منتوج" subtitle="اختياري">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {products.map((product) => {
+                const qty = getProductQuantity(product.id);
+                return (
+                  <div
+                    key={product.id}
+                    className={`rounded-2xl border-2 p-3 ${qty > 0 ? "border-brass" : "border-borderline bg-surface-alt"}`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={resolveImageUrl(product.image_url)}
+                        alt={product.name}
+                        className="mb-2 h-28 w-full rounded-xl object-cover"
+                      />
+                      {qty > 0 ? (
+                        <span className="badge-gradient absolute left-2 top-2 shadow">{qty} مختار</span>
+                      ) : null}
+                    </div>
+                    <p className="mb-2 font-bold text-ink">{product.name}</p>
+                    <div className="grid grid-cols-4 gap-1">
+                      {[
+                        { q: 0, label: "لا" },
+                        { q: 1, label: `1 (${product.price_1})` },
+                        { q: 2, label: `2 (${product.price_2})` },
+                        { q: 3, label: `3 (${product.price_3})` },
+                      ].map((opt) => (
+                        <button
+                          key={opt.q}
+                          type="button"
+                          onClick={() => setProductQuantity(product.id, opt.q)}
+                          className={`chip-selectable rounded-lg border-2 py-1.5 text-[11px] font-bold ${
+                            qty === opt.q ? "chip-selected" : "border-borderline text-textmain"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </SectionCard>
+
+          <SectionCard number={6} icon="🎟️" title="تأكيد الطلب وكود التخفيض">
+            <div className="rounded-2xl bg-ink p-4 text-white">
+              <p className="text-sm text-white/70">المجموع</p>
+              <p className="font-digits text-2xl font-extrabold">{subtotal.toFixed(2)} DH</p>
+            </div>
+
+            <p className="mb-2 mt-4 font-extrabold text-ink">واش عندك كود تخفيض؟</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setWantsCoupon("yes")}
+                className={`chip-selectable rounded-2xl border-2 p-3 text-center font-extrabold ${
+                  wantsCoupon === "yes" ? "chip-selected" : "border-borderline text-textmain"
+                }`}
+              >
+                عندي كود
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setWantsCoupon("no");
+                  setCoupon(null);
+                  setCouponInput("");
+                }}
+                className={`chip-selectable rounded-2xl border-2 p-3 text-center font-extrabold ${
+                  wantsCoupon === "no" ? "chip-selected" : "border-borderline text-textmain"
+                }`}
+              >
+                ماعنديش كود
+              </button>
+            </div>
+
+            {wantsCoupon === "yes" ? (
+              <div className="mt-3 flex gap-2">
+                <input
+                  className="flex-1 rounded-2xl border-2 border-borderline p-3 font-bold uppercase"
+                  placeholder="دخل الكود"
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={checkCoupon}
+                  disabled={couponChecking}
+                  className="btn-gradient rounded-2xl px-5 text-sm"
+                >
+                  {couponChecking ? "..." : "تحقق"}
+                </button>
+              </div>
+            ) : null}
+            {coupon ? (
+              <p
+                className={`mt-2 rounded-xl p-2 text-sm font-bold ${
+                  coupon.valid ? "bg-deepgreen/10 text-deepgreen" : "bg-ember/10 text-ember"
+                }`}
+              >
+                {coupon.message}
+              </p>
+            ) : null}
+
+            {discountAmount > 0 ? (
+              <p className="mt-3 text-textmain">
+                بعد التخفيض: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
+              </p>
+            ) : null}
+          </SectionCard>
+
+          <SectionCard number={7} icon="📱" title="المعلومات الشخصية">
+            <div className="grid gap-3">
+              <input
+                className="rounded-2xl border-2 border-borderline p-4 font-bold"
+                placeholder="الاسم الكامل"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+              />
+              <input
+                className="rounded-2xl border-2 border-borderline p-4 font-bold font-digits"
+                placeholder="رقم الواتساب (06XXXXXXXX)"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+              />
+              <p className="rounded-xl bg-brass/10 p-2 text-xs font-bold text-brass-dark">
+                رقم الواتساب ضروري باش نصيفطو ليك كود التأكيد ديال الحجز.
+              </p>
+              <textarea
+                className="rounded-2xl border-2 border-borderline p-4"
+                placeholder="ملاحظة (اختياري)"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          </SectionCard>
+
+          {submitError ? (
+            <p className="rounded-xl bg-ember/10 p-3 text-sm font-bold text-ember">{submitError}</p>
           ) : null}
         </div>
+      </section>
 
-        <div className="mt-6 border-t border-borderline pt-6">
-          <h2 className="mb-3 font-bold text-ink">7. المعلومات الشخصية</h2>
-          <div className="grid gap-3">
-            <input
-              className="rounded-xl border border-borderline p-3"
-              placeholder="الاسم الكامل"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-            />
-            <input
-              className="rounded-xl border border-borderline p-3"
-              placeholder="رقم الواتساب (06XXXXXXXX)"
-              value={clientPhone}
-              onChange={(e) => setClientPhone(e.target.value)}
-            />
-            <p className="text-xs text-textmuted">رقم الواتساب ضروري باش نصيفطو ليك كود التأكيد ديال الحجز.</p>
-            <textarea
-              className="rounded-xl border border-borderline p-3"
-              placeholder="ملاحظة (اختياري)"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
+      <div className="sticky-bar fixed inset-x-0 bottom-0 z-40 px-4 py-4">
+        <div className="mx-auto flex max-w-2xl items-center gap-4">
+          <div className="shrink-0">
+            <p className="text-xs text-textmuted">المجموع</p>
+            <p className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</p>
           </div>
+          <button
+            type="button"
+            disabled={submitting || !canSubmit}
+            onClick={submitBooking}
+            className={`btn-gradient flex-1 rounded-2xl px-4 py-3.5 text-base disabled:animate-none ${
+              canSubmit ? "cta-pulse" : ""
+            }`}
+          >
+            {submitting ? "...كنصيفطو" : "أكد الحجز 🚀"}
+          </button>
         </div>
-
-        {submitError ? <p className="mt-4 text-sm text-ember">{submitError}</p> : null}
-
-        <button
-          type="button"
-          disabled={submitting || !canSubmit}
-          onClick={submitBooking}
-          className="btn-gradient mt-6 w-full rounded-xl px-4 py-3 disabled:opacity-50"
-        >
-          {submitting ? "...كنصيفطو" : `أكد الحجز (${total.toFixed(2)} DH)`}
-        </button>
       </div>
 
       {showOtpPopup ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="card w-full max-w-sm p-6 text-center">
+            <div className="section-badge mx-auto mb-4 h-14 w-14 rounded-full text-2xl">🔐</div>
             <h2 className="font-heading text-xl font-extrabold text-ink">تأكيد الحجز</h2>
             <p className="mt-2 text-sm text-textmuted">دخل الكود اللي وصلك فالواتساب باش تأكد الحجز.</p>
             {devConfirmationCode ? (
@@ -477,24 +567,24 @@ export default function BookingPage() {
               </p>
             ) : null}
             <input
-              className="mt-4 w-full rounded-xl border border-borderline p-3 text-center font-digits text-lg tracking-widest"
+              className="mt-4 w-full rounded-2xl border-2 border-borderline p-3 text-center font-digits text-2xl font-extrabold tracking-[0.5em]"
               placeholder="000000"
               value={otpInput}
               onChange={(e) => setOtpInput(e.target.value)}
               maxLength={6}
             />
-            {confirmError ? <p className="mt-2 text-sm text-ember">{confirmError}</p> : null}
+            {confirmError ? <p className="mt-2 text-sm font-bold text-ember">{confirmError}</p> : null}
             <button
               type="button"
               disabled={confirming || otpInput.trim().length === 0}
               onClick={confirmOtp}
-              className="btn-gradient mt-4 w-full rounded-xl px-4 py-3 disabled:opacity-50"
+              className="btn-gradient mt-4 w-full rounded-2xl px-4 py-3.5 disabled:opacity-50"
             >
               {confirming ? "...كنأكدو" : "أكد الكود"}
             </button>
           </div>
         </div>
       ) : null}
-    </section>
+    </>
   );
 }

@@ -147,6 +147,45 @@ textarea:focus {
     font-weight: 700;
     box-shadow: 0 4px 14px -4px rgba(255, 71, 71, 0.5);
   }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark));
+    color: #fff;
+    box-shadow: 0 8px 18px -6px rgba(255, 71, 71, 0.55);
+  }
+
+  .chip-selectable {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+
+  .chip-selectable:hover {
+    transform: translateY(-2px);
+    border-color: var(--borderline-strong);
+  }
+
+  .chip-selected {
+    background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark)) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 12px 26px -10px rgba(255, 71, 71, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .hero-glow {
+    background:
+      radial-gradient(60% 120% at 15% 0%, rgba(255, 122, 61, 0.35), transparent 60%),
+      radial-gradient(50% 100% at 90% 10%, rgba(255, 71, 71, 0.3), transparent 60%),
+      linear-gradient(180deg, #17110f 0%, #1a1a1a 100%);
+  }
+
+  .sticky-bar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -12px 30px -16px rgba(0, 0, 0, 0.28);
+  }
 }
 
 .cta-pulse {
