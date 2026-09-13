@@ -682,6 +682,17 @@ manager-insight-grid,
   color: var(--ink);
 }
 .owner-net-box-ca strong { color: var(--brass); }
+.owner-net-box-clickable {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.owner-net-box-clickable:hover,
+.owner-net-box-clickable:focus-visible {
+  border-color: var(--borderline-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
 .owner-net-box-charge strong { color: var(--danger); }
 .owner-net-box-credit input { margin: 0; }
 .owner-net-box-benefit strong { color: var(--success); }

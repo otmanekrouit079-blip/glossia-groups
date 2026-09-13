@@ -74,6 +74,14 @@ const ownerLastSavedLabel = document.getElementById("owner-last-saved");
 const ownerExportDataButton = document.getElementById("owner-export-data");
 const ownerImportDataButton = document.getElementById("owner-import-data");
 const ownerImportFileInput = document.getElementById("owner-import-file");
+const ownerNetCaServicesBox = document.getElementById("owner-net-ca-services-box");
+const ownerNetCaProductsBox = document.getElementById("owner-net-ca-products-box");
+const ownerNetBreakdownModal = document.getElementById("owner-net-breakdown-modal");
+const ownerNetBreakdownTitle = document.getElementById("owner-net-breakdown-title");
+const ownerNetBreakdownSubtitle = document.getElementById("owner-net-breakdown-subtitle");
+const ownerNetBreakdownList = document.getElementById("owner-net-breakdown-list");
+const ownerNetBreakdownCloseButton = document.getElementById("owner-net-breakdown-close");
+const ownerNetBreakdownCloseIconButton = document.getElementById("owner-net-breakdown-close-icon");
 const ownerNetOverviewPeriodButtons = document.querySelectorAll(".owner-net-overview-period-btn");
 const ownerNetOverviewChart = document.getElementById("owner-net-overview-chart");
 const ownerNetCaTotal = document.getElementById("owner-net-ca-total");
@@ -1494,6 +1502,95 @@ function renderOwnerNetOverviewChart(caTotal, chargesTotal, benefitGlossia) {
   ownerNetOverviewChart.appendChild(buildBarRow("رقم المعاملات", caTotal, ""));
   ownerNetOverviewChart.appendChild(buildBarRow("المصاريف", chargesTotal, "charges"));
   ownerNetOverviewChart.appendChild(buildBarRow("البنفيس الصافي", benefitGlossia, "benefit" + (benefitGlossia < 0 ? " negative" : "")));
+}
+
+function getOwnerServiceSalesByEmployeeForPeriod(period) {
+  return ownerEmployees.map(function (employee) {
+    const state = getOwnerEmployeeState(employee.id);
+    const serviceSales = (state.salesHistory || []).filter(function (sale) {
+      return sale?.dateISO && isOwnerDateInPeriod(new Date(sale.dateISO), period);
+    });
+
+    return {
+      employee: employee,
+      amount: sumOwnerSales(serviceSales)
+    };
+  });
+}
+
+function getOwnerProductSalesByEmployeeForPeriod(period) {
+  return ownerEmployees.map(function (employee) {
+    const productSales = getOwnerEmployeeProductSales(employee.id).filter(function (sale) {
+      return sale?.dateISO && isOwnerDateInPeriod(new Date(sale.dateISO), period);
+    });
+
+    return {
+      employee: employee,
+      amount: productSales.reduce(function (total, sale) {
+        return total + Number(sale.amount || 0);
+      }, 0)
+    };
+  });
+}
+
+function openOwnerNetBreakdownModal(kind) {
+  if (!ownerNetBreakdownModal) {
+    return;
+  }
+
+  const period = ownerNetOverviewPeriod;
+  const isServices = kind === "services";
+  const entries = (isServices
+    ? getOwnerServiceSalesByEmployeeForPeriod(period)
+    : getOwnerProductSalesByEmployeeForPeriod(period))
+    .slice()
+    .sort(function (first, second) { return second.amount - first.amount; });
+
+  const topAmount = entries.length ? entries[0].amount : 0;
+
+  ownerNetBreakdownTitle.textContent = isServices
+    ? "توزيع رقم معاملات الخدمات"
+    : "توزيع رقم معاملات المنتوجات";
+  ownerNetBreakdownSubtitle.textContent = "حسب الموظف · " + getOwnerPeriodLabels(period).badge;
+
+  ownerNetBreakdownList.innerHTML = "";
+
+  if (entries.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty";
+    empty.textContent = "ماكاين حتى موظف مسجل.";
+    ownerNetBreakdownList.appendChild(empty);
+  } else {
+    entries.forEach(function (entry) {
+      const item = document.createElement("li");
+
+      const nameWrap = document.createElement("span");
+      nameWrap.textContent = entry.employee.name;
+
+      if (topAmount > 0 && entry.amount === topAmount) {
+        const badge = document.createElement("span");
+        badge.className = "owner-best-employee-badge";
+        badge.textContent = "أحسن بائع";
+        nameWrap.appendChild(document.createTextNode(" "));
+        nameWrap.appendChild(badge);
+      }
+
+      const amount = document.createElement("strong");
+      amount.textContent = formatOwnerAmount(entry.amount);
+
+      item.appendChild(nameWrap);
+      item.appendChild(amount);
+      ownerNetBreakdownList.appendChild(item);
+    });
+  }
+
+  ownerNetBreakdownModal.classList.remove("hidden");
+}
+
+function closeOwnerNetBreakdownModal() {
+  if (ownerNetBreakdownModal) {
+    ownerNetBreakdownModal.classList.add("hidden");
+  }
 }
 
 function renderOwnerNetOverview() {
@@ -3810,6 +3907,42 @@ ownerNetOverviewPeriodButtons.forEach(function (button) {
     setOwnerNetOverviewPeriod(button.dataset.period || "day");
   });
 });
+
+function bindOwnerNetBoxOpener(box, kind) {
+  if (!box) {
+    return;
+  }
+
+  box.addEventListener("click", function () {
+    openOwnerNetBreakdownModal(kind);
+  });
+
+  box.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openOwnerNetBreakdownModal(kind);
+    }
+  });
+}
+
+bindOwnerNetBoxOpener(ownerNetCaServicesBox, "services");
+bindOwnerNetBoxOpener(ownerNetCaProductsBox, "products");
+
+if (ownerNetBreakdownCloseButton) {
+  ownerNetBreakdownCloseButton.addEventListener("click", closeOwnerNetBreakdownModal);
+}
+
+if (ownerNetBreakdownCloseIconButton) {
+  ownerNetBreakdownCloseIconButton.addEventListener("click", closeOwnerNetBreakdownModal);
+}
+
+if (ownerNetBreakdownModal) {
+  ownerNetBreakdownModal.addEventListener("click", function (event) {
+    if (event.target === ownerNetBreakdownModal) {
+      closeOwnerNetBreakdownModal();
+    }
+  });
+}
 
 renderOwnerDashboard("day");
 mountOwnerSectionsInPopup();

@@ -50,11 +50,11 @@
           <span>رقم المعاملات الشامل</span>
           <strong id="owner-net-ca-total">0,00 DH</strong>
         </article>
-        <article class="owner-net-box">
+        <article id="owner-net-ca-services-box" class="owner-net-box owner-net-box-clickable" role="button" tabindex="0" aria-label="وري توزيع رقم معاملات الخدمات حسب الموظف">
           <span>رقم معاملات الخدمات</span>
           <strong id="owner-net-ca-services">0,00 DH</strong>
         </article>
-        <article class="owner-net-box">
+        <article id="owner-net-ca-products-box" class="owner-net-box owner-net-box-clickable" role="button" tabindex="0" aria-label="وري توزيع رقم معاملات المنتوجات حسب الموظف">
           <span>رقم معاملات المنتوجات</span>
           <strong id="owner-net-ca-products">0,00 DH</strong>
         </article>
@@ -574,6 +574,21 @@
 
       <div class="modal-actions">
         <button id="owner-briefing-close" class="manager-btn" type="button">تفقدت، سد</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="owner-net-breakdown-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-net-breakdown-title">
+    <div class="modal-content owner-detail-modal-content">
+      <button id="owner-net-breakdown-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <p class="eyebrow">توزيع رقم المعاملات</p>
+      <h3 id="owner-net-breakdown-title">حسب الموظف</h3>
+      <p id="owner-net-breakdown-subtitle" class="modal-subtitle"></p>
+
+      <ul id="owner-net-breakdown-list" class="owner-cost-list"></ul>
+
+      <div class="modal-actions">
+        <button id="owner-net-breakdown-close" class="manager-btn manager-btn-muted" type="button">سد</button>
       </div>
     </div>
   </div>
