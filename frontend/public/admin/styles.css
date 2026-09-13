@@ -923,6 +923,7 @@ tbody tr:hover { background: var(--surface-alt); }
 }
 
 .modal.hidden { display: none !important; }
+#owner-backend-auth-modal { z-index: 60; }
 
 .modal-content {
   position: relative;
