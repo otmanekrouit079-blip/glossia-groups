@@ -713,11 +713,46 @@
       <p class="modal-subtitle">زيد وبدل المنتوجات والخدمات، الأتمان والتصاور اللي كيبانو فالستور.</p>
 
       <div class="modal-tabs" role="tablist">
-        <button type="button" class="modal-tab-btn active" data-store-tab="products">المنتوجات</button>
+        <button type="button" class="modal-tab-btn active" data-store-tab="packages">الباقات</button>
+        <button type="button" class="modal-tab-btn" data-store-tab="products">المنتوجات</button>
         <button type="button" class="modal-tab-btn" data-store-tab="services">الخدمات</button>
       </div>
 
-      <section id="owner-store-tab-products" class="modal-tab-panel">
+      <section id="owner-store-tab-packages" class="modal-tab-panel">
+        <button id="owner-store-add-package-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد باقة جديدة</button>
+
+        <form id="owner-store-package-form" class="owner-store-form hidden" novalidate>
+          <input id="owner-store-package-id" type="hidden" />
+          <label class="owner-target-label" for="owner-store-package-name">سمية الباقة</label>
+          <input id="owner-store-package-name" class="owner-target-input" type="text" required />
+
+          <label class="owner-target-label" for="owner-store-package-desc">الوصف</label>
+          <textarea id="owner-store-package-desc" class="owner-target-input" rows="2"></textarea>
+
+          <label class="owner-target-label" for="owner-store-package-price">تمن الباقة (DH)</label>
+          <input id="owner-store-package-price" class="owner-target-input" type="number" min="0" step="0.01" required />
+
+          <label class="owner-target-label">الخدمات فالباقة</label>
+          <div id="owner-store-package-services-checks" class="owner-store-checklist"></div>
+
+          <label class="owner-target-label">المنتوجات فالباقة</label>
+          <div id="owner-store-package-products-checks" class="owner-store-checklist"></div>
+
+          <label class="owner-target-label" for="owner-store-package-photo">تصويرة الباقة</label>
+          <input id="owner-store-package-photo" type="file" accept="image/*" />
+          <img id="owner-store-package-photo-preview" class="owner-store-photo-preview hidden" alt="" />
+
+          <p id="owner-store-package-feedback" class="modal-feedback" aria-live="polite"></p>
+          <div class="modal-actions">
+            <button type="submit" class="manager-btn">سجل الباقة</button>
+            <button id="owner-store-package-cancel" type="button" class="manager-btn manager-btn-muted">إلغاء</button>
+          </div>
+        </form>
+
+        <div id="owner-store-packages-list" class="owner-store-items-grid"></div>
+      </section>
+
+      <section id="owner-store-tab-products" class="modal-tab-panel hidden">
         <button id="owner-store-add-product-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد منتوج جديد</button>
 
         <form id="owner-store-product-form" class="owner-store-form hidden" novalidate>

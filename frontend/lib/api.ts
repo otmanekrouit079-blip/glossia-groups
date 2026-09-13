@@ -32,6 +32,17 @@ export type Branch = {
   address: string;
 };
 
+export type Package = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  image_url: string;
+  price: string;
+  service_names: string[];
+  product_names: string[];
+};
+
 const fallbackServices: Service[] = [
   {
     id: "svc-1",
@@ -110,6 +121,8 @@ const fallbackProducts: Product[] = [
   },
 ];
 
+const fallbackPackages: Package[] = [];
+
 const fallbackBranches: Branch[] = [
   {
     id: "br-1",
@@ -128,6 +141,7 @@ async function fetcher<T>(path: string): Promise<T> {
   } catch {
     if (path.includes("/api/services")) return fallbackServices as T;
     if (path.includes("/api/products")) return fallbackProducts as T;
+    if (path.includes("/api/packages")) return fallbackPackages as T;
     if (path.includes("/api/branches")) return fallbackBranches as T;
     return [] as T;
   }
@@ -139,6 +153,10 @@ export function getServices() {
 
 export function getProducts() {
   return fetcher<Product[]>("/api/products/");
+}
+
+export function getPackages() {
+  return fetcher<Package[]>("/api/packages/");
 }
 
 export function getBranches() {

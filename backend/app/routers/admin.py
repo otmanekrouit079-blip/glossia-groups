@@ -12,19 +12,23 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import AdminUser, create_access_token, get_current_admin
 from app.models.booking import Booking, BookingProduct
+from app.models.package import Package, PackageProduct, PackageService
 from app.models.product import Product
 from app.models.service import Service
+from app.routers.packages import _package_to_out
 from app.schemas.admin import (
     BookingDetailOut,
     BookingProductDetailOut,
     BookingServiceOut,
     LoginIn,
     LoginOut,
+    PackageWriteIn,
     ProductWriteIn,
     ServiceWriteIn,
     UploadOut,
 )
 from app.schemas.booking import BookingUpdateIn
+from app.schemas.package import PackageOut
 from app.schemas.product import ProductOut
 from app.schemas.service import ServiceOut
 
@@ -234,6 +238,80 @@ def delete_service(
         raise HTTPException(status_code=404, detail="Service not found")
 
     db.delete(service)
+    db.commit()
+    return {"ok": True}
+
+
+def _sync_package_links(db: Session, package: Package, service_ids: list, product_ids: list) -> None:
+    db.query(PackageService).filter(PackageService.package_id == package.id).delete()
+    db.query(PackageProduct).filter(PackageProduct.package_id == package.id).delete()
+
+    for service_id in service_ids:
+        db.add(PackageService(package_id=package.id, service_id=service_id))
+    for product_id in product_ids:
+        db.add(PackageProduct(package_id=package.id, product_id=product_id))
+
+
+@router.post("/packages", response_model=PackageOut)
+def create_package(
+    payload: PackageWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> PackageOut:
+    package = Package(
+        slug=_unique_slug(db, Package, payload.name),
+        name=payload.name,
+        description=payload.description,
+        image_url=payload.image_url,
+        price=payload.price,
+    )
+    db.add(package)
+    db.flush()
+    _sync_package_links(db, package, payload.service_ids, payload.product_ids)
+    db.commit()
+    db.refresh(package)
+
+    services_by_id = {row.id: row.name for row in db.query(Service).all()}
+    products_by_id = {row.id: row.name for row in db.query(Product).all()}
+    return _package_to_out(package, services_by_id, products_by_id)
+
+
+@router.put("/packages/{package_id}", response_model=PackageOut)
+def update_package(
+    package_id: UUID,
+    payload: PackageWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> PackageOut:
+    package = db.query(Package).filter(Package.id == package_id).first()
+    if package is None:
+        raise HTTPException(status_code=404, detail="Package not found")
+
+    package.name = payload.name
+    package.description = payload.description
+    package.image_url = payload.image_url
+    package.price = payload.price
+    _sync_package_links(db, package, payload.service_ids, payload.product_ids)
+
+    db.commit()
+    db.refresh(package)
+
+    services_by_id = {row.id: row.name for row in db.query(Service).all()}
+    products_by_id = {row.id: row.name for row in db.query(Product).all()}
+    return _package_to_out(package, services_by_id, products_by_id)
+
+
+@router.delete("/packages/{package_id}")
+def delete_package(
+    package_id: UUID,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    package = db.query(Package).filter(Package.id == package_id).first()
+    if package is None:
+        raise HTTPException(status_code=404, detail="Package not found")
+
+    db.delete(package)
     db.commit()
     return {"ok": True}
 

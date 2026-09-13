@@ -111,6 +111,20 @@ const ownerStoreCloseIconButton = document.getElementById("owner-store-close-ico
 const ownerStoreCloseButton = document.getElementById("owner-store-close");
 const ownerStoreTabButtons = document.querySelectorAll(".modal-tab-btn[data-store-tab]");
 
+const ownerStoreAddPackageToggle = document.getElementById("owner-store-add-package-toggle");
+const ownerStorePackageForm = document.getElementById("owner-store-package-form");
+const ownerStorePackageId = document.getElementById("owner-store-package-id");
+const ownerStorePackageName = document.getElementById("owner-store-package-name");
+const ownerStorePackageDesc = document.getElementById("owner-store-package-desc");
+const ownerStorePackagePrice = document.getElementById("owner-store-package-price");
+const ownerStorePackageServicesChecks = document.getElementById("owner-store-package-services-checks");
+const ownerStorePackageProductsChecks = document.getElementById("owner-store-package-products-checks");
+const ownerStorePackagePhoto = document.getElementById("owner-store-package-photo");
+const ownerStorePackagePhotoPreview = document.getElementById("owner-store-package-photo-preview");
+const ownerStorePackageFeedback = document.getElementById("owner-store-package-feedback");
+const ownerStorePackageCancel = document.getElementById("owner-store-package-cancel");
+const ownerStorePackagesList = document.getElementById("owner-store-packages-list");
+
 const ownerStoreAddProductToggle = document.getElementById("owner-store-add-product-toggle");
 const ownerStoreProductForm = document.getElementById("owner-store-product-form");
 const ownerStoreProductId = document.getElementById("owner-store-product-id");
@@ -3913,6 +3927,7 @@ const OWNER_BACKEND_TOKEN_KEY = "ownerBackendToken";
 let ownerBackendAuthPendingAction = null;
 let ownerStoreEditingProductId = null;
 let ownerStoreEditingServiceId = null;
+let ownerStoreEditingPackageId = null;
 
 function getOwnerApiBase() {
   return window.SalonStorage ? window.SalonStorage.getApiBaseUrl() : "";
@@ -4425,8 +4440,12 @@ function setOwnerStoreTab(tabName) {
     button.classList.toggle("active", button.dataset.storeTab === tabName);
   });
 
+  const packagesPanel = document.getElementById("owner-store-tab-packages");
   const productsPanel = document.getElementById("owner-store-tab-products");
   const servicesPanel = document.getElementById("owner-store-tab-services");
+  if (packagesPanel) {
+    packagesPanel.classList.toggle("hidden", tabName !== "packages");
+  }
   if (productsPanel) {
     productsPanel.classList.toggle("hidden", tabName !== "products");
   }
@@ -4578,6 +4597,9 @@ function renderOwnerStoreProducts(products) {
   });
 }
 
+let ownerStoreProductsCache = [];
+let ownerStoreServicesCache = [];
+
 function loadOwnerStoreProducts() {
   if (!ownerStoreProductsList) {
     return;
@@ -4590,7 +4612,11 @@ function loadOwnerStoreProducts() {
       }
       return response.json();
     })
-    .then(renderOwnerStoreProducts)
+    .then(function (products) {
+      ownerStoreProductsCache = products;
+      renderOwnerStoreProducts(products);
+      renderOwnerStorePackageChecklists();
+    })
     .catch(function () {
       ownerStoreProductsList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل المنتوجات.</p>';
     });
@@ -4827,7 +4853,11 @@ function loadOwnerStoreServices() {
       }
       return response.json();
     })
-    .then(renderOwnerStoreServices)
+    .then(function (services) {
+      ownerStoreServicesCache = services;
+      renderOwnerStoreServices(services);
+      renderOwnerStorePackageChecklists();
+    })
     .catch(function () {
       ownerStoreServicesList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل الخدمات.</p>';
     });
@@ -4916,6 +4946,303 @@ if (ownerStoreServiceForm) {
   });
 }
 
+let ownerStorePackagesCache = [];
+
+function renderOwnerStorePackageChecklists(selectedServiceIds, selectedProductIds) {
+  if (ownerStorePackageServicesChecks) {
+    ownerStorePackageServicesChecks.innerHTML = "";
+    if (!ownerStoreServicesCache.length) {
+      ownerStorePackageServicesChecks.innerHTML = '<span class="empty">ماكاين حتى خدمة بعد.</span>';
+    } else {
+      ownerStoreServicesCache.forEach(function (service) {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = service.id;
+        checkbox.checked = Boolean(selectedServiceIds && selectedServiceIds.indexOf(service.id) !== -1);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(service.name));
+        ownerStorePackageServicesChecks.appendChild(label);
+      });
+    }
+  }
+
+  if (ownerStorePackageProductsChecks) {
+    ownerStorePackageProductsChecks.innerHTML = "";
+    if (!ownerStoreProductsCache.length) {
+      ownerStorePackageProductsChecks.innerHTML = '<span class="empty">ماكاين حتى منتوج بعد.</span>';
+    } else {
+      ownerStoreProductsCache.forEach(function (product) {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = product.id;
+        checkbox.checked = Boolean(selectedProductIds && selectedProductIds.indexOf(product.id) !== -1);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(product.name));
+        ownerStorePackageProductsChecks.appendChild(label);
+      });
+    }
+  }
+}
+
+function getOwnerStoreCheckedValues(container) {
+  if (!container) {
+    return [];
+  }
+
+  return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(function (input) {
+    return input.value;
+  });
+}
+
+function openOwnerStorePackageForm(pkg) {
+  if (!ownerStorePackageForm) {
+    return;
+  }
+
+  ownerStorePackageForm.classList.remove("hidden");
+  if (ownerStorePackageFeedback) {
+    ownerStorePackageFeedback.textContent = "";
+    ownerStorePackageFeedback.classList.remove("is-error");
+  }
+  ownerStorePackagePhoto.value = "";
+
+  if (pkg) {
+    ownerStoreEditingPackageId = pkg.id;
+    ownerStorePackageId.value = pkg.id;
+    ownerStorePackageName.value = pkg.name;
+    ownerStorePackageDesc.value = pkg.description || "";
+    ownerStorePackagePrice.value = pkg.price;
+    ownerStorePackageForm.dataset.imageUrl = pkg.image_url || "";
+    ownerStorePackagePhotoPreview.src = resolveOwnerStoreImageUrl(pkg.image_url);
+    ownerStorePackagePhotoPreview.classList.remove("hidden");
+    renderOwnerStorePackageChecklists(pkg.service_ids || [], pkg.product_ids || []);
+  } else {
+    ownerStoreEditingPackageId = null;
+    ownerStorePackageForm.reset();
+    ownerStorePackageId.value = "";
+    ownerStorePackageForm.dataset.imageUrl = "";
+    ownerStorePackagePhotoPreview.classList.add("hidden");
+    renderOwnerStorePackageChecklists([], []);
+  }
+}
+
+function closeOwnerStorePackageForm() {
+  if (!ownerStorePackageForm) {
+    return;
+  }
+
+  ownerStorePackageForm.classList.add("hidden");
+  ownerStorePackageForm.reset();
+  ownerStoreEditingPackageId = null;
+}
+
+if (ownerStoreAddPackageToggle) {
+  ownerStoreAddPackageToggle.addEventListener("click", function () {
+    openOwnerStorePackageForm(null);
+  });
+}
+
+if (ownerStorePackageCancel) {
+  ownerStorePackageCancel.addEventListener("click", closeOwnerStorePackageForm);
+}
+
+if (ownerStorePackagePhoto) {
+  ownerStorePackagePhoto.addEventListener("change", function () {
+    const file = ownerStorePackagePhoto.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      ownerStorePackagePhotoPreview.src = reader.result;
+      ownerStorePackagePhotoPreview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderOwnerStorePackages(packages) {
+  if (!ownerStorePackagesList) {
+    return;
+  }
+
+  ownerStorePackagesList.innerHTML = "";
+
+  if (!packages.length) {
+    ownerStorePackagesList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى باقة فالستور.</p>';
+    return;
+  }
+
+  packages.forEach(function (pkg) {
+    const card = document.createElement("div");
+    card.className = "owner-store-item-card";
+
+    const img = document.createElement("img");
+    img.className = "owner-store-item-photo";
+    img.src = resolveOwnerStoreImageUrl(pkg.image_url);
+    img.alt = pkg.name;
+    img.loading = "lazy";
+
+    const body = document.createElement("div");
+    body.className = "owner-store-item-body";
+
+    const name = document.createElement("strong");
+    name.textContent = pkg.name;
+
+    const price = document.createElement("span");
+    price.textContent = formatOwnerAmount(Number(pkg.price));
+
+    const contents = document.createElement("span");
+    const parts = [];
+    if ((pkg.service_names || []).length) {
+      parts.push((pkg.service_names || []).join("، "));
+    }
+    if ((pkg.product_names || []).length) {
+      parts.push((pkg.product_names || []).join("، "));
+    }
+    contents.textContent = parts.join(" + ") || "بلا محتوى";
+
+    const actions = document.createElement("div");
+    actions.className = "owner-store-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "manager-btn manager-btn-muted";
+    editButton.textContent = "تعديل";
+    editButton.addEventListener("click", function () {
+      openOwnerStorePackageForm(pkg);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "manager-btn manager-btn-muted";
+    deleteButton.textContent = "مسح";
+    deleteButton.addEventListener("click", function () {
+      deleteOwnerStorePackage(pkg.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+
+    body.appendChild(name);
+    body.appendChild(price);
+    body.appendChild(contents);
+    body.appendChild(actions);
+
+    card.appendChild(img);
+    card.appendChild(body);
+    ownerStorePackagesList.appendChild(card);
+  });
+}
+
+function loadOwnerStorePackages() {
+  if (!ownerStorePackagesList) {
+    return;
+  }
+
+  fetch(getOwnerApiBase() + "/api/packages/")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(function (packages) {
+      ownerStorePackagesCache = packages;
+      renderOwnerStorePackages(packages);
+    })
+    .catch(function () {
+      ownerStorePackagesList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل الباقات.</p>';
+    });
+}
+
+function deleteOwnerStorePackage(packageId) {
+  if (!window.confirm("واش متأكد بغيتي تمسح هاد الباقة؟")) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/packages/" + packageId, { method: "DELETE" })
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(function () { deleteOwnerStorePackage(packageId); });
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("delete-failed");
+      }
+      loadOwnerStorePackages();
+    })
+    .catch(function () {
+      alert("تعذر مسح الباقة.");
+    });
+}
+
+if (ownerStorePackageForm) {
+  ownerStorePackageForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (ownerStorePackageFeedback) {
+      ownerStorePackageFeedback.textContent = "كنسجل...";
+      ownerStorePackageFeedback.classList.remove("is-error");
+    }
+
+    const file = ownerStorePackagePhoto.files[0];
+    const uploadPromise = file
+      ? uploadOwnerStoreImage(file)
+      : Promise.resolve(ownerStorePackageForm.dataset.imageUrl || "/images/placeholders/package.jpg");
+
+    uploadPromise
+      .then(function (imageUrl) {
+        const payload = {
+          name: ownerStorePackageName.value.trim(),
+          description: ownerStorePackageDesc.value.trim(),
+          image_url: imageUrl,
+          price: Number(ownerStorePackagePrice.value),
+          service_ids: getOwnerStoreCheckedValues(ownerStorePackageServicesChecks),
+          product_ids: getOwnerStoreCheckedValues(ownerStorePackageProductsChecks)
+        };
+
+        const isEdit = Boolean(ownerStoreEditingPackageId);
+        return ownerAuthorizedFetch(
+          isEdit ? "/admin/packages/" + ownerStoreEditingPackageId : "/admin/packages",
+          {
+            method: isEdit ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }
+        );
+      })
+      .then(function (response) {
+        if (response.status === 401) {
+          setOwnerBackendToken("");
+          openOwnerBackendAuthModal(function () { ownerStorePackageForm.requestSubmit(); });
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error("save-failed");
+        }
+        return response.json();
+      })
+      .then(function (result) {
+        if (result === null) {
+          return;
+        }
+        closeOwnerStorePackageForm();
+        loadOwnerStorePackages();
+      })
+      .catch(function () {
+        if (ownerStorePackageFeedback) {
+          ownerStorePackageFeedback.textContent = "تعذر التسجيل. عاود حاول.";
+          ownerStorePackageFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
 function openOwnerStoreModal() {
   if (!ownerStoreModal) {
     return;
@@ -4924,6 +5251,7 @@ function openOwnerStoreModal() {
   ownerStoreModal.classList.remove("hidden");
   loadOwnerStoreProducts();
   loadOwnerStoreServices();
+  loadOwnerStorePackages();
 }
 
 function openOwnerStoreProductFormPrefilled(name, sellingPrice) {

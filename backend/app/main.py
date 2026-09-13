@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.database import SessionLocal, engine
 from app.models import Base
-from app.routers import admin, availability, bookings, branches, products, services, state, webhooks
+from app.routers import admin, availability, bookings, branches, packages, products, services, state, webhooks
 from app.services.seeder import seed_initial_data
 
 app = FastAPI(title="GLOSSIA GROUP API", version="0.1.0")
@@ -46,6 +46,7 @@ def health() -> dict[str, str]:
 app.include_router(branches.router, prefix="/api/branches", tags=["branches"])
 app.include_router(services.router, prefix="/api/services", tags=["services"])
 app.include_router(products.router, prefix="/api/products", tags=["products"])
+app.include_router(packages.router, prefix="/api/packages", tags=["packages"])
 app.include_router(availability.router, prefix="/api/availability", tags=["availability"])
 app.include_router(bookings.router, prefix="/api/bookings", tags=["bookings"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])

@@ -44,6 +44,15 @@ class ServiceWriteIn(BaseModel):
     image_url: str = "/images/placeholders/service.jpg"
 
 
+class PackageWriteIn(BaseModel):
+    name: str
+    description: str = ""
+    image_url: str = "/images/placeholders/package.jpg"
+    price: Decimal
+    service_ids: list[UUID] = []
+    product_ids: list[UUID] = []
+
+
 class BookingServiceOut(BaseModel):
     service_id: UUID
     name: str
