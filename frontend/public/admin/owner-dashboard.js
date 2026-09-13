@@ -74,6 +74,17 @@ const ownerLastSavedLabel = document.getElementById("owner-last-saved");
 const ownerExportDataButton = document.getElementById("owner-export-data");
 const ownerImportDataButton = document.getElementById("owner-import-data");
 const ownerImportFileInput = document.getElementById("owner-import-file");
+const ownerNetOverviewChart = document.getElementById("owner-net-overview-chart");
+const ownerNetCaTotal = document.getElementById("owner-net-ca-total");
+const ownerNetCaServices = document.getElementById("owner-net-ca-services");
+const ownerNetCaProducts = document.getElementById("owner-net-ca-products");
+const ownerNetChargesFixed = document.getElementById("owner-net-charges-fixed");
+const ownerNetChargesVariable = document.getElementById("owner-net-charges-variable");
+const ownerNetCreditInput = document.getElementById("owner-net-credit-input");
+const ownerNetBenefitServices = document.getElementById("owner-net-benefit-services");
+const ownerNetBenefitProducts = document.getElementById("owner-net-benefit-products");
+const ownerNetBenefitTotal = document.getElementById("owner-net-benefit-total");
+const ownerNetBenefitGlossia = document.getElementById("owner-net-benefit-glossia");
 const ownerTopPeriodButtons = document.querySelectorAll(".owner-top-period-btn");
 const ownerTopKpiRevenue = document.getElementById("owner-top-kpi-revenue");
 const ownerTopKpiExpenses = document.getElementById("owner-top-kpi-expenses");
@@ -1364,6 +1375,163 @@ function getOwnerGlobalNetProfitForPeriod(period) {
   const glossiaProductNet = getOwnerGlossiaProductNetForPeriod(period);
 
   return serviceBenefit + glossiaProductNet;
+}
+
+function getOwnerServiceSalesTotalForPeriod(period) {
+  return ownerEmployees.reduce(function (total, employee) {
+    const state = getOwnerEmployeeState(employee.id);
+    const serviceSales = (state.salesHistory || []).filter(function (sale) {
+      return sale?.dateISO && isOwnerDateInPeriod(new Date(sale.dateISO), period);
+    });
+
+    return total + sumOwnerSales(serviceSales);
+  }, 0);
+}
+
+function getOwnerProductSalesTotalForPeriod(period) {
+  return (ownerSharedData.productSales || []).reduce(function (total, sale) {
+    if (!sale?.dateISO || !isOwnerDateInPeriod(new Date(sale.dateISO), period)) {
+      return total;
+    }
+
+    return total + Number(sale.amount || 0);
+  }, 0);
+}
+
+function getOwnerNetOverviewPeriodFactor(period) {
+  const now = new Date();
+  const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+  if (period === "day") {
+    return 1 / daysInCurrentMonth;
+  }
+
+  if (period === "week") {
+    return 7 / daysInCurrentMonth;
+  }
+
+  if (period === "quarter") {
+    return 3;
+  }
+
+  if (period === "year") {
+    return 12;
+  }
+
+  return 1;
+}
+
+function getOwnerFixedCostsTotalForPeriod(period) {
+  const factor = getOwnerNetOverviewPeriodFactor(period);
+  return (ownerSharedData.fixedCosts || []).reduce(function (total, cost) {
+    return total + Number(cost.monthlyAmount || 0);
+  }, 0) * factor;
+}
+
+function getOwnerVariableCostsTotalForPeriod(period) {
+  const factor = getOwnerNetOverviewPeriodFactor(period);
+  return (ownerSharedData.variableCosts || []).reduce(function (total, cost) {
+    return total + Number(cost.monthlyAmount || 0);
+  }, 0) * factor;
+}
+
+function getOwnerCreditAmount() {
+  const value = Number(ownerSharedData.ownerCredit || 0);
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function setOwnerCreditAmount(value) {
+  const safeValue = Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0;
+  ownerSharedData.ownerCredit = safeValue;
+  saveOwnerProductsData();
+}
+
+function getOwnerActiveAccountingPeriod() {
+  const activeButton = document.querySelector(".owner-accounting-period-btn.active");
+  return activeButton?.dataset.period || "day";
+}
+
+function renderOwnerNetOverviewChart(caTotal, chargesTotal, benefitGlossia) {
+  if (!ownerNetOverviewChart) {
+    return;
+  }
+
+  const maxValue = Math.max(caTotal, chargesTotal, Math.abs(benefitGlossia), 1);
+
+  function buildBarRow(label, value, className) {
+    const row = document.createElement("div");
+    row.className = "owner-net-bar-row";
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "owner-net-bar-label";
+    labelEl.textContent = label;
+
+    const track = document.createElement("div");
+    track.className = "owner-net-bar-track";
+
+    const fill = document.createElement("span");
+    fill.className = "owner-net-bar-fill" + (className ? " " + className : "");
+    const percentage = maxValue > 0 ? Math.min(100, (Math.abs(value) / maxValue) * 100) : 0;
+    fill.style.width = percentage + "%";
+    track.appendChild(fill);
+
+    const amount = document.createElement("strong");
+    amount.className = "owner-net-bar-amount";
+    amount.textContent = formatOwnerAmount(value);
+
+    row.appendChild(labelEl);
+    row.appendChild(track);
+    row.appendChild(amount);
+    return row;
+  }
+
+  ownerNetOverviewChart.innerHTML = "";
+  ownerNetOverviewChart.appendChild(buildBarRow("رقم المعاملات", caTotal, ""));
+  ownerNetOverviewChart.appendChild(buildBarRow("المصاريف", chargesTotal, "charges"));
+  ownerNetOverviewChart.appendChild(buildBarRow("البنفيس الصافي", benefitGlossia, "benefit" + (benefitGlossia < 0 ? " negative" : "")));
+}
+
+function renderOwnerNetOverview() {
+  if (!ownerNetCaTotal) {
+    return;
+  }
+
+  const period = getOwnerActiveAccountingPeriod();
+
+  const caServices = getOwnerServiceSalesTotalForPeriod(period);
+  const caProducts = getOwnerProductSalesTotalForPeriod(period);
+  const caTotal = caServices + caProducts;
+
+  const chargesFixed = getOwnerFixedCostsTotalForPeriod(period);
+  const chargesVariable = getOwnerVariableCostsTotalForPeriod(period);
+  const credit = getOwnerCreditAmount();
+
+  const benefitServices = getOwnerServiceBenefitForPeriod(period);
+  const benefitProducts = getOwnerGlossiaProductNetForPeriod(period);
+  const benefitTotal = benefitServices + benefitProducts;
+
+  const benefitGlossia = benefitTotal - chargesFixed - chargesVariable - credit;
+
+  ownerNetCaTotal.textContent = formatOwnerAmount(caTotal);
+  ownerNetCaServices.textContent = formatOwnerAmount(caServices);
+  ownerNetCaProducts.textContent = formatOwnerAmount(caProducts);
+
+  ownerNetChargesFixed.textContent = formatOwnerAmount(chargesFixed);
+  ownerNetChargesVariable.textContent = formatOwnerAmount(chargesVariable);
+
+  if (ownerNetCreditInput && document.activeElement !== ownerNetCreditInput) {
+    ownerNetCreditInput.value = credit > 0 ? credit : "";
+  }
+
+  ownerNetBenefitServices.textContent = formatOwnerAmount(benefitServices);
+  ownerNetBenefitProducts.textContent = formatOwnerAmount(benefitProducts);
+  ownerNetBenefitTotal.textContent = formatOwnerAmount(benefitTotal);
+
+  ownerNetBenefitGlossia.textContent = formatOwnerAmount(benefitGlossia);
+  ownerNetBenefitGlossia.classList.toggle("profit-positive", benefitGlossia >= 0);
+  ownerNetBenefitGlossia.classList.toggle("profit-negative", benefitGlossia < 0);
+
+  renderOwnerNetOverviewChart(caTotal, chargesFixed + chargesVariable + credit, benefitGlossia);
 }
 
 function getOwnerFinanceTrendBuckets(period) {
@@ -3013,6 +3181,7 @@ function renderOwnerDashboard(period) {
   renderOwnerAccessManager();
   syncOwnerAccountingPeriod(period);
   renderOwnerTopFinanceStrip();
+  renderOwnerNetOverview();
   updateOwnerFocusPanel(ownerActiveCompactView);
 }
 
@@ -3623,6 +3792,19 @@ if (ownerTaxProductAddButton) {
     addOwnerTaxBracket("product", ownerTaxProductThreshold, ownerTaxProductAmount);
   });
 }
+
+if (ownerNetCreditInput) {
+  ownerNetCreditInput.addEventListener("change", function () {
+    setOwnerCreditAmount(ownerNetCreditInput.value);
+    renderOwnerNetOverview();
+  });
+}
+
+document.querySelectorAll(".owner-accounting-period-btn").forEach(function (button) {
+  button.addEventListener("click", function () {
+    renderOwnerNetOverview();
+  });
+});
 
 renderOwnerDashboard("day");
 mountOwnerSectionsInPopup();

@@ -594,6 +594,117 @@ manager-insight-grid,
 .owner-accounting-note { color: var(--textmuted); font-size: 0.8rem; }
 .owner-backup-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* ===== Owner net financial overview (9-box grid + chart) ===== */
+.owner-net-overview {
+  background: var(--surface);
+  border: 1px solid var(--borderline);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: var(--gap-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.owner-net-overview-heading h3 { margin: 2px 0 0; }
+
+.owner-net-overview-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 4px;
+}
+.owner-net-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.owner-net-bar-label {
+  flex: 0 0 140px;
+  font-size: 0.8rem;
+  color: var(--textmuted);
+  font-weight: 600;
+}
+.owner-net-bar-track {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  border: 1px solid var(--borderline);
+  overflow: hidden;
+}
+.owner-net-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brass-dark), var(--brass-soft));
+}
+.owner-net-bar-fill.charges { background: linear-gradient(90deg, #b91c1c, var(--danger)); }
+.owner-net-bar-fill.benefit { background: linear-gradient(90deg, #16a34a, var(--success)); }
+.owner-net-bar-fill.benefit.negative { background: linear-gradient(90deg, #b91c1c, var(--danger)); }
+.owner-net-bar-amount {
+  flex: 0 0 auto;
+  font-weight: 800;
+  font-family: "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+  min-width: 90px;
+  text-align: left;
+}
+
+.owner-net-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-sm);
+}
+.owner-net-box {
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.owner-net-box span { color: var(--textmuted); font-size: 0.78rem; font-weight: 600; }
+.owner-net-box strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.owner-net-box-ca strong { color: var(--brass); }
+.owner-net-box-charge strong { color: var(--danger); }
+.owner-net-box-credit input { margin: 0; }
+.owner-net-box-benefit strong { color: var(--success); }
+.owner-net-box-total { border-color: var(--borderline-strong); box-shadow: var(--glow-brass); }
+
+.owner-net-glossia-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  flex-wrap: wrap;
+}
+.owner-net-glossia-strip span { color: var(--textmuted); font-size: 0.85rem; font-weight: 600; }
+.owner-net-glossia-strip strong {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.owner-net-glossia-strip strong.profit-positive { color: var(--success); }
+.owner-net-glossia-strip strong.profit-negative { color: var(--danger); }
+
+@media (max-width: 720px) {
+  .owner-net-grid { grid-template-columns: 1fr; }
+  .owner-net-bar-label { flex-basis: 100px; }
+}
+
 /* ===== Tables ===== */
 .employee-table-wrap,
 [id$="-table"] {

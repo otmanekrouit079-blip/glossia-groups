@@ -293,6 +293,61 @@
         <button type="button" class="period-tab owner-accounting-period-btn" data-period="year">العام</button>
       </div>
 
+      <div class="owner-net-overview">
+        <div class="owner-net-overview-heading">
+          <p class="eyebrow">نظرة مالية شاملة</p>
+          <h3>رقم المعاملات، البنفيس والمصاريف</h3>
+        </div>
+
+        <div id="owner-net-overview-chart" class="owner-net-overview-chart"></div>
+
+        <div class="owner-net-grid">
+          <article class="owner-net-box owner-net-box-ca">
+            <span>رقم المعاملات الشامل</span>
+            <strong id="owner-net-ca-total">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box">
+            <span>رقم معاملات الخدمات</span>
+            <strong id="owner-net-ca-services">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box">
+            <span>رقم معاملات المنتوجات</span>
+            <strong id="owner-net-ca-products">0,00 DH</strong>
+          </article>
+
+          <article class="owner-net-box owner-net-box-charge">
+            <span>المصاريف الثابتة</span>
+            <strong id="owner-net-charges-fixed">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box owner-net-box-charge">
+            <span>المصاريف المتغيرة</span>
+            <strong id="owner-net-charges-variable">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box owner-net-box-credit">
+            <span>الكريدي/الدين (يتنقص)</span>
+            <input id="owner-net-credit-input" type="number" min="0" step="0.01" class="owner-target-input" placeholder="0.00" />
+          </article>
+
+          <article class="owner-net-box owner-net-box-benefit">
+            <span>بنفيس الخدمات</span>
+            <strong id="owner-net-benefit-services">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box owner-net-box-benefit">
+            <span>بنفيس المنتوجات</span>
+            <strong id="owner-net-benefit-products">0,00 DH</strong>
+          </article>
+          <article class="owner-net-box owner-net-box-benefit owner-net-box-total">
+            <span>البنفيس الشامل</span>
+            <strong id="owner-net-benefit-total">0,00 DH</strong>
+          </article>
+        </div>
+
+        <div class="owner-net-glossia-strip">
+          <span>البنفيس الصافي ديال Glossia (البنفيس الشامل - المصاريف الثابتة - المصاريف المتغيرة - الكريدي)</span>
+          <strong id="owner-net-benefit-glossia">0,00 DH</strong>
+        </div>
+      </div>
+
       <div class="owner-accounting-grid">
         <article class="owner-accounting-card">
           <h3>المصاريف الثابتة</h3>
