@@ -716,6 +716,8 @@
         <button type="button" class="modal-tab-btn active" data-store-tab="packages">الباقات</button>
         <button type="button" class="modal-tab-btn" data-store-tab="products">المنتوجات</button>
         <button type="button" class="modal-tab-btn" data-store-tab="services">الخدمات</button>
+        <button type="button" class="modal-tab-btn" data-store-tab="staff">الموظفين للحجز</button>
+        <button type="button" class="modal-tab-btn" data-store-tab="coupons">كوبونات الخصم</button>
       </div>
 
       <section id="owner-store-tab-packages" class="modal-tab-panel">
@@ -835,6 +837,75 @@
         </form>
 
         <div id="owner-store-services-list" class="owner-store-items-grid"></div>
+      </section>
+
+      <section id="owner-store-tab-staff" class="modal-tab-panel hidden">
+        <p class="modal-subtitle">هاد الموظفين غادي يبانو للزبون فخطوة "اختار شكون بغيتيه يخدمك" فصفحة الحجز.</p>
+        <button id="owner-store-add-staff-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد موظف للحجز</button>
+
+        <form id="owner-store-staff-form" class="owner-store-form hidden" novalidate>
+          <input id="owner-store-staff-id" type="hidden" />
+          <label class="owner-target-label" for="owner-store-staff-name">سمية الموظف</label>
+          <input id="owner-store-staff-name" class="owner-target-input" type="text" required />
+
+          <label class="owner-target-label" for="owner-store-staff-photo">تصويرة الموظف</label>
+          <input id="owner-store-staff-photo" type="file" accept="image/*" />
+          <img id="owner-store-staff-photo-preview" class="owner-store-photo-preview hidden" alt="" />
+
+          <label class="owner-target-label owner-store-checkbox-label">
+            <input id="owner-store-staff-active" type="checkbox" checked />
+            <span>ظاهر للزبناء</span>
+          </label>
+
+          <p id="owner-store-staff-feedback" class="modal-feedback" aria-live="polite"></p>
+          <div class="modal-actions">
+            <button type="submit" class="manager-btn">سجل الموظف</button>
+            <button id="owner-store-staff-cancel" type="button" class="manager-btn manager-btn-muted">إلغاء</button>
+          </div>
+        </form>
+
+        <div id="owner-store-staff-list" class="owner-store-items-grid"></div>
+      </section>
+
+      <section id="owner-store-tab-coupons" class="modal-tab-panel hidden">
+        <p class="modal-subtitle">الزبون كيدخل هاد الكود فخطوة التأكيد باش يستافد من التخفيض.</p>
+        <button id="owner-store-add-coupon-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد كوبون جديد</button>
+
+        <form id="owner-store-coupon-form" class="owner-store-form hidden" novalidate>
+          <input id="owner-store-coupon-id" type="hidden" />
+          <label class="owner-target-label" for="owner-store-coupon-code">الكود</label>
+          <input id="owner-store-coupon-code" class="owner-target-input" type="text" placeholder="مثلا: GLOSSIA10" required />
+
+          <div class="owner-store-price-row">
+            <div>
+              <label class="owner-target-label" for="owner-store-coupon-type">نوع التخفيض</label>
+              <select id="owner-store-coupon-type" class="owner-target-input">
+                <option value="percent">بالمية (%)</option>
+                <option value="fixed">مبلغ ثابت (DH)</option>
+              </select>
+            </div>
+            <div>
+              <label class="owner-target-label" for="owner-store-coupon-value">القيمة</label>
+              <input id="owner-store-coupon-value" class="owner-target-input" type="number" min="0" step="0.01" required />
+            </div>
+          </div>
+
+          <label class="owner-target-label" for="owner-store-coupon-max-uses">أقصى عدد استعمال (0 = بلا حدود)</label>
+          <input id="owner-store-coupon-max-uses" class="owner-target-input" type="number" min="0" step="1" value="0" />
+
+          <label class="owner-target-label owner-store-checkbox-label">
+            <input id="owner-store-coupon-active" type="checkbox" checked />
+            <span>فعال</span>
+          </label>
+
+          <p id="owner-store-coupon-feedback" class="modal-feedback" aria-live="polite"></p>
+          <div class="modal-actions">
+            <button type="submit" class="manager-btn">سجل الكوبون</button>
+            <button id="owner-store-coupon-cancel" type="button" class="manager-btn manager-btn-muted">إلغاء</button>
+          </div>
+        </form>
+
+        <div id="owner-store-coupons-list" class="owner-cost-list"></div>
       </section>
 
       <div class="modal-actions">

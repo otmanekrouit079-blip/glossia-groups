@@ -22,6 +22,8 @@ class BookingCreateIn(BaseModel):
     client_name: str
     client_phone: str
     note: str = ""
+    staff_id: UUID | None = None
+    coupon_code: str = ""
 
 
 class BookingOut(ORMBaseModel):
@@ -34,6 +36,21 @@ class BookingOut(ORMBaseModel):
     status: BookingStatus
     total_amount: Decimal
     created_at: datetime
+
+
+class BookingCreateOut(BookingOut):
+    discount_amount: Decimal = Decimal("0.00")
+    confirmation_code: str = ""
+    is_confirmed: bool = False
+
+
+class BookingConfirmIn(BaseModel):
+    code: str
+
+
+class BookingConfirmOut(BaseModel):
+    confirmed: bool
+    message: str = ""
 
 
 class BookingUpdateIn(BaseModel):

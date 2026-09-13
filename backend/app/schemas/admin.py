@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from app.models.booking import BookingStatus
+from app.models.coupon import CouponDiscountType
 from app.schemas.common import ORMBaseModel
 
 
@@ -53,6 +54,20 @@ class PackageWriteIn(BaseModel):
     product_ids: list[UUID] = []
 
 
+class StaffWriteIn(BaseModel):
+    name: str
+    photo_url: str = "/images/placeholders/staff.jpg"
+    active: bool = True
+
+
+class CouponWriteIn(BaseModel):
+    code: str
+    discount_type: CouponDiscountType = CouponDiscountType.percent
+    discount_value: Decimal
+    active: bool = True
+    max_uses: int = 0
+
+
 class BookingServiceOut(BaseModel):
     service_id: UUID
     name: str
@@ -79,3 +94,7 @@ class BookingDetailOut(ORMBaseModel):
     created_at: datetime
     services: list[BookingServiceOut] = []
     products: list[BookingProductDetailOut] = []
+    staff_name: str = ""
+    coupon_code: str = ""
+    discount_amount: Decimal = Decimal("0.00")
+    is_confirmed: bool = False

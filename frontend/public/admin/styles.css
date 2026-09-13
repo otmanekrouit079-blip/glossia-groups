@@ -472,6 +472,16 @@ button.danger,
 .owner-store-checklist input { margin: 0; }
 .owner-store-checklist .empty { color: var(--textmuted); font-size: 0.8rem; }
 
+.owner-store-checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+.owner-store-checkbox-label input { margin: 0; }
+
 .owner-store-items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

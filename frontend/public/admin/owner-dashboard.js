@@ -111,6 +111,29 @@ const ownerStoreCloseIconButton = document.getElementById("owner-store-close-ico
 const ownerStoreCloseButton = document.getElementById("owner-store-close");
 const ownerStoreTabButtons = document.querySelectorAll(".modal-tab-btn[data-store-tab]");
 
+const ownerStoreAddStaffToggle = document.getElementById("owner-store-add-staff-toggle");
+const ownerStoreStaffForm = document.getElementById("owner-store-staff-form");
+const ownerStoreStaffId = document.getElementById("owner-store-staff-id");
+const ownerStoreStaffName = document.getElementById("owner-store-staff-name");
+const ownerStoreStaffPhoto = document.getElementById("owner-store-staff-photo");
+const ownerStoreStaffPhotoPreview = document.getElementById("owner-store-staff-photo-preview");
+const ownerStoreStaffActive = document.getElementById("owner-store-staff-active");
+const ownerStoreStaffFeedback = document.getElementById("owner-store-staff-feedback");
+const ownerStoreStaffCancel = document.getElementById("owner-store-staff-cancel");
+const ownerStoreStaffList = document.getElementById("owner-store-staff-list");
+
+const ownerStoreAddCouponToggle = document.getElementById("owner-store-add-coupon-toggle");
+const ownerStoreCouponForm = document.getElementById("owner-store-coupon-form");
+const ownerStoreCouponId = document.getElementById("owner-store-coupon-id");
+const ownerStoreCouponCode = document.getElementById("owner-store-coupon-code");
+const ownerStoreCouponType = document.getElementById("owner-store-coupon-type");
+const ownerStoreCouponValue = document.getElementById("owner-store-coupon-value");
+const ownerStoreCouponMaxUses = document.getElementById("owner-store-coupon-max-uses");
+const ownerStoreCouponActive = document.getElementById("owner-store-coupon-active");
+const ownerStoreCouponFeedback = document.getElementById("owner-store-coupon-feedback");
+const ownerStoreCouponCancel = document.getElementById("owner-store-coupon-cancel");
+const ownerStoreCouponsList = document.getElementById("owner-store-coupons-list");
+
 const ownerStoreAddPackageToggle = document.getElementById("owner-store-add-package-toggle");
 const ownerStorePackageForm = document.getElementById("owner-store-package-form");
 const ownerStorePackageId = document.getElementById("owner-store-package-id");
@@ -3928,6 +3951,8 @@ let ownerBackendAuthPendingAction = null;
 let ownerStoreEditingProductId = null;
 let ownerStoreEditingServiceId = null;
 let ownerStoreEditingPackageId = null;
+let ownerStoreEditingStaffId = null;
+let ownerStoreEditingCouponId = null;
 
 function getOwnerApiBase() {
   return window.SalonStorage ? window.SalonStorage.getApiBaseUrl() : "";
@@ -4440,23 +4465,20 @@ function setOwnerStoreTab(tabName) {
     button.classList.toggle("active", button.dataset.storeTab === tabName);
   });
 
-  const packagesPanel = document.getElementById("owner-store-tab-packages");
-  const productsPanel = document.getElementById("owner-store-tab-products");
-  const servicesPanel = document.getElementById("owner-store-tab-services");
-  if (packagesPanel) {
-    packagesPanel.classList.toggle("hidden", tabName !== "packages");
-  }
-  if (productsPanel) {
-    productsPanel.classList.toggle("hidden", tabName !== "products");
-  }
-  if (servicesPanel) {
-    servicesPanel.classList.toggle("hidden", tabName !== "services");
-  }
+  ["packages", "products", "services", "staff", "coupons"].forEach(function (name) {
+    const panel = document.getElementById("owner-store-tab-" + name);
+    if (panel) {
+      panel.classList.toggle("hidden", tabName !== name);
+    }
+  });
 }
 
 ownerStoreTabButtons.forEach(function (button) {
   button.addEventListener("click", function () {
     setOwnerStoreTab(button.dataset.storeTab);
+    if (button.dataset.storeTab === "coupons") {
+      loadOwnerStoreCoupons();
+    }
   });
 });
 
@@ -5243,6 +5265,445 @@ if (ownerStorePackageForm) {
   });
 }
 
+function openOwnerStoreStaffForm(staffMember) {
+  if (!ownerStoreStaffForm) {
+    return;
+  }
+
+  ownerStoreStaffForm.classList.remove("hidden");
+  if (ownerStoreStaffFeedback) {
+    ownerStoreStaffFeedback.textContent = "";
+    ownerStoreStaffFeedback.classList.remove("is-error");
+  }
+  ownerStoreStaffPhoto.value = "";
+
+  if (staffMember) {
+    ownerStoreEditingStaffId = staffMember.id;
+    ownerStoreStaffId.value = staffMember.id;
+    ownerStoreStaffName.value = staffMember.name;
+    ownerStoreStaffActive.checked = Boolean(staffMember.active);
+    ownerStoreStaffForm.dataset.imageUrl = staffMember.photo_url || "";
+    ownerStoreStaffPhotoPreview.src = resolveOwnerStoreImageUrl(staffMember.photo_url);
+    ownerStoreStaffPhotoPreview.classList.remove("hidden");
+  } else {
+    ownerStoreEditingStaffId = null;
+    ownerStoreStaffForm.reset();
+    ownerStoreStaffId.value = "";
+    ownerStoreStaffActive.checked = true;
+    ownerStoreStaffForm.dataset.imageUrl = "";
+    ownerStoreStaffPhotoPreview.classList.add("hidden");
+  }
+}
+
+function closeOwnerStoreStaffForm() {
+  if (!ownerStoreStaffForm) {
+    return;
+  }
+
+  ownerStoreStaffForm.classList.add("hidden");
+  ownerStoreStaffForm.reset();
+  ownerStoreEditingStaffId = null;
+}
+
+if (ownerStoreAddStaffToggle) {
+  ownerStoreAddStaffToggle.addEventListener("click", function () {
+    openOwnerStoreStaffForm(null);
+  });
+}
+
+if (ownerStoreStaffCancel) {
+  ownerStoreStaffCancel.addEventListener("click", closeOwnerStoreStaffForm);
+}
+
+if (ownerStoreStaffPhoto) {
+  ownerStoreStaffPhoto.addEventListener("change", function () {
+    const file = ownerStoreStaffPhoto.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      ownerStoreStaffPhotoPreview.src = reader.result;
+      ownerStoreStaffPhotoPreview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderOwnerStoreStaff(staffMembers) {
+  if (!ownerStoreStaffList) {
+    return;
+  }
+
+  ownerStoreStaffList.innerHTML = "";
+
+  if (!staffMembers.length) {
+    ownerStoreStaffList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى موظف للحجز بعد.</p>';
+    return;
+  }
+
+  staffMembers.forEach(function (staffMember) {
+    const card = document.createElement("div");
+    card.className = "owner-store-item-card";
+
+    const img = document.createElement("img");
+    img.className = "owner-store-item-photo";
+    img.src = resolveOwnerStoreImageUrl(staffMember.photo_url);
+    img.alt = staffMember.name;
+    img.loading = "lazy";
+
+    const body = document.createElement("div");
+    body.className = "owner-store-item-body";
+
+    const name = document.createElement("strong");
+    name.textContent = staffMember.name;
+
+    const status = document.createElement("span");
+    status.textContent = staffMember.active ? "ظاهر للزبناء" : "مخبي";
+
+    const actions = document.createElement("div");
+    actions.className = "owner-store-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "manager-btn manager-btn-muted";
+    editButton.textContent = "تعديل";
+    editButton.addEventListener("click", function () {
+      openOwnerStoreStaffForm(staffMember);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "manager-btn manager-btn-muted";
+    deleteButton.textContent = "مسح";
+    deleteButton.addEventListener("click", function () {
+      deleteOwnerStoreStaff(staffMember.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+
+    body.appendChild(name);
+    body.appendChild(status);
+    body.appendChild(actions);
+
+    card.appendChild(img);
+    card.appendChild(body);
+    ownerStoreStaffList.appendChild(card);
+  });
+}
+
+function loadOwnerStoreStaff() {
+  if (!ownerStoreStaffList) {
+    return;
+  }
+
+  fetch(getOwnerApiBase() + "/api/staff/")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(renderOwnerStoreStaff)
+    .catch(function () {
+      ownerStoreStaffList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل الموظفين.</p>';
+    });
+}
+
+function deleteOwnerStoreStaff(staffId) {
+  if (!window.confirm("واش متأكد بغيتي تمسح هاد الموظف؟")) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/staff/" + staffId, { method: "DELETE" })
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(function () { deleteOwnerStoreStaff(staffId); });
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("delete-failed");
+      }
+      loadOwnerStoreStaff();
+    })
+    .catch(function () {
+      alert("تعذر مسح الموظف.");
+    });
+}
+
+if (ownerStoreStaffForm) {
+  ownerStoreStaffForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (ownerStoreStaffFeedback) {
+      ownerStoreStaffFeedback.textContent = "كنسجل...";
+      ownerStoreStaffFeedback.classList.remove("is-error");
+    }
+
+    const file = ownerStoreStaffPhoto.files[0];
+    const uploadPromise = file
+      ? uploadOwnerStoreImage(file)
+      : Promise.resolve(ownerStoreStaffForm.dataset.imageUrl || "/images/placeholders/staff.jpg");
+
+    uploadPromise
+      .then(function (photoUrl) {
+        const payload = {
+          name: ownerStoreStaffName.value.trim(),
+          photo_url: photoUrl,
+          active: Boolean(ownerStoreStaffActive.checked)
+        };
+
+        const isEdit = Boolean(ownerStoreEditingStaffId);
+        return ownerAuthorizedFetch(
+          isEdit ? "/admin/staff/" + ownerStoreEditingStaffId : "/admin/staff",
+          {
+            method: isEdit ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }
+        );
+      })
+      .then(function (response) {
+        if (response.status === 401) {
+          setOwnerBackendToken("");
+          openOwnerBackendAuthModal(function () { ownerStoreStaffForm.requestSubmit(); });
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error("save-failed");
+        }
+        return response.json();
+      })
+      .then(function (result) {
+        if (result === null) {
+          return;
+        }
+        closeOwnerStoreStaffForm();
+        loadOwnerStoreStaff();
+      })
+      .catch(function () {
+        if (ownerStoreStaffFeedback) {
+          ownerStoreStaffFeedback.textContent = "تعذر التسجيل. عاود حاول.";
+          ownerStoreStaffFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
+function openOwnerStoreCouponForm(coupon) {
+  if (!ownerStoreCouponForm) {
+    return;
+  }
+
+  ownerStoreCouponForm.classList.remove("hidden");
+  if (ownerStoreCouponFeedback) {
+    ownerStoreCouponFeedback.textContent = "";
+    ownerStoreCouponFeedback.classList.remove("is-error");
+  }
+
+  if (coupon) {
+    ownerStoreEditingCouponId = coupon.id;
+    ownerStoreCouponId.value = coupon.id;
+    ownerStoreCouponCode.value = coupon.code;
+    ownerStoreCouponType.value = coupon.discount_type;
+    ownerStoreCouponValue.value = coupon.discount_value;
+    ownerStoreCouponMaxUses.value = coupon.max_uses;
+    ownerStoreCouponActive.checked = Boolean(coupon.active);
+  } else {
+    ownerStoreEditingCouponId = null;
+    ownerStoreCouponForm.reset();
+    ownerStoreCouponId.value = "";
+    ownerStoreCouponMaxUses.value = "0";
+    ownerStoreCouponActive.checked = true;
+  }
+}
+
+function closeOwnerStoreCouponForm() {
+  if (!ownerStoreCouponForm) {
+    return;
+  }
+
+  ownerStoreCouponForm.classList.add("hidden");
+  ownerStoreCouponForm.reset();
+  ownerStoreEditingCouponId = null;
+}
+
+if (ownerStoreAddCouponToggle) {
+  ownerStoreAddCouponToggle.addEventListener("click", function () {
+    openOwnerStoreCouponForm(null);
+  });
+}
+
+if (ownerStoreCouponCancel) {
+  ownerStoreCouponCancel.addEventListener("click", closeOwnerStoreCouponForm);
+}
+
+function formatOwnerCouponDiscount(coupon) {
+  return coupon.discount_type === "percent"
+    ? Number(coupon.discount_value) + "%"
+    : formatOwnerAmount(Number(coupon.discount_value));
+}
+
+function renderOwnerStoreCoupons(coupons) {
+  if (!ownerStoreCouponsList) {
+    return;
+  }
+
+  ownerStoreCouponsList.innerHTML = "";
+
+  if (!coupons.length) {
+    ownerStoreCouponsList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى كوبون بعد.</p>';
+    return;
+  }
+
+  coupons.forEach(function (coupon) {
+    const row = document.createElement("div");
+    row.className = "owner-cost-row";
+
+    const label = document.createElement("span");
+    const usesText = coupon.max_uses > 0 ? (coupon.used_count + "/" + coupon.max_uses) : (coupon.used_count + "/∞");
+    label.textContent =
+      coupon.code + " — " + formatOwnerCouponDiscount(coupon) +
+      " — " + (coupon.active ? "فعال" : "موقف") + " — " + usesText;
+
+    const actions = document.createElement("div");
+    actions.className = "owner-store-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "manager-btn manager-btn-muted";
+    editButton.textContent = "تعديل";
+    editButton.addEventListener("click", function () {
+      openOwnerStoreCouponForm(coupon);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "manager-btn manager-btn-muted";
+    deleteButton.textContent = "مسح";
+    deleteButton.addEventListener("click", function () {
+      deleteOwnerStoreCoupon(coupon.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+
+    row.appendChild(label);
+    row.appendChild(actions);
+    ownerStoreCouponsList.appendChild(row);
+  });
+}
+
+function loadOwnerStoreCoupons() {
+  if (!ownerStoreCouponsList) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/coupons")
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(loadOwnerStoreCoupons);
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(function (coupons) {
+      if (coupons === null) {
+        return;
+      }
+      renderOwnerStoreCoupons(coupons);
+    })
+    .catch(function () {
+      ownerStoreCouponsList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل الكوبونات.</p>';
+    });
+}
+
+function deleteOwnerStoreCoupon(couponId) {
+  if (!window.confirm("واش متأكد بغيتي تمسح هاد الكوبون؟")) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/coupons/" + couponId, { method: "DELETE" })
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(function () { deleteOwnerStoreCoupon(couponId); });
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("delete-failed");
+      }
+      loadOwnerStoreCoupons();
+    })
+    .catch(function () {
+      alert("تعذر مسح الكوبون.");
+    });
+}
+
+if (ownerStoreCouponForm) {
+  ownerStoreCouponForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (ownerStoreCouponFeedback) {
+      ownerStoreCouponFeedback.textContent = "كنسجل...";
+      ownerStoreCouponFeedback.classList.remove("is-error");
+    }
+
+    const payload = {
+      code: ownerStoreCouponCode.value.trim(),
+      discount_type: ownerStoreCouponType.value,
+      discount_value: Number(ownerStoreCouponValue.value),
+      active: Boolean(ownerStoreCouponActive.checked),
+      max_uses: Number(ownerStoreCouponMaxUses.value || 0)
+    };
+
+    const isEdit = Boolean(ownerStoreEditingCouponId);
+    ownerAuthorizedFetch(
+      isEdit ? "/admin/coupons/" + ownerStoreEditingCouponId : "/admin/coupons",
+      {
+        method: isEdit ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    )
+      .then(function (response) {
+        if (response.status === 401) {
+          setOwnerBackendToken("");
+          openOwnerBackendAuthModal(function () { ownerStoreCouponForm.requestSubmit(); });
+          return null;
+        }
+        if (!response.ok) {
+          return response.json().then(function (errorBody) {
+            throw new Error(errorBody?.detail || "save-failed");
+          });
+        }
+        return response.json();
+      })
+      .then(function (result) {
+        if (result === null) {
+          return;
+        }
+        closeOwnerStoreCouponForm();
+        loadOwnerStoreCoupons();
+      })
+      .catch(function (error) {
+        if (ownerStoreCouponFeedback) {
+          ownerStoreCouponFeedback.textContent = error?.message && error.message !== "save-failed"
+            ? error.message
+            : "تعذر التسجيل. عاود حاول.";
+          ownerStoreCouponFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
 function openOwnerStoreModal() {
   if (!ownerStoreModal) {
     return;
@@ -5252,6 +5713,7 @@ function openOwnerStoreModal() {
   loadOwnerStoreProducts();
   loadOwnerStoreServices();
   loadOwnerStorePackages();
+  loadOwnerStoreStaff();
 }
 
 function openOwnerStoreProductFormPrefilled(name, sellingPrice) {

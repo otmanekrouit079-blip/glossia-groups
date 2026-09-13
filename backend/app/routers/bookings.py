@@ -1,3 +1,4 @@
+import random
 from decimal import Decimal
 from uuid import UUID
 
@@ -5,19 +6,47 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.models.booking import Booking, BookingProduct, BookingService
+from app.models.booking import Booking, BookingProduct, BookingService, BookingStatus
+from app.models.booking_extra import BookingExtra
 from app.models.branch import Branch
+from app.models.coupon import Coupon, CouponDiscountType
 from app.models.product import Product
 from app.models.service import Service
-from app.schemas.booking import BookingCreateIn, BookingOut
+from app.models.staff import Staff
+from app.schemas.booking import BookingConfirmIn, BookingConfirmOut, BookingCreateIn, BookingCreateOut, BookingOut
 from app.services.validators import validate_morocco_phone
 from app.services.webhooks import booking_to_sheet_payload, send_booking_to_sheet
 
 router = APIRouter()
 
 
-@router.post("/", response_model=BookingOut, status_code=status.HTTP_201_CREATED)
-def create_booking(payload: BookingCreateIn, background_tasks: BackgroundTasks, db: Session = Depends(get_db)) -> Booking:
+def _generate_confirmation_code() -> str:
+    return f"{random.randint(0, 999999):06d}"
+
+
+def _apply_coupon(db: Session, code: str, total: Decimal) -> tuple[Decimal, str]:
+    normalized = code.strip().upper()
+    if not normalized:
+        return Decimal("0.00"), ""
+
+    coupon = db.query(Coupon).filter(Coupon.code == normalized).first()
+    if coupon is None or not coupon.active:
+        raise HTTPException(status_code=400, detail="كود التخفيض ماشي صحيح")
+    if coupon.max_uses > 0 and coupon.used_count >= coupon.max_uses:
+        raise HTTPException(status_code=400, detail="كود التخفيض ماعادش صالح")
+
+    if coupon.discount_type == CouponDiscountType.percent:
+        discount = (total * coupon.discount_value / Decimal("100")).quantize(Decimal("0.01"))
+    else:
+        discount = coupon.discount_value
+
+    discount = min(discount, total)
+    coupon.used_count += 1
+    return discount, normalized
+
+
+@router.post("/", response_model=BookingCreateOut, status_code=status.HTTP_201_CREATED)
+def create_booking(payload: BookingCreateIn, background_tasks: BackgroundTasks, db: Session = Depends(get_db)) -> BookingCreateOut:
     try:
         phone = validate_morocco_phone(payload.client_phone)
     except ValueError as exc:
@@ -26,6 +55,11 @@ def create_booking(payload: BookingCreateIn, background_tasks: BackgroundTasks, 
     branch = db.query(Branch).filter(Branch.id == payload.branch_id).first()
     if branch is None:
         raise HTTPException(status_code=404, detail="Branch not found")
+
+    if payload.staff_id is not None:
+        staff = db.query(Staff).filter(Staff.id == payload.staff_id).first()
+        if staff is None:
+            raise HTTPException(status_code=400, detail="Staff not found")
 
     booking = Booking(
         branch_id=payload.branch_id,
@@ -64,8 +98,24 @@ def create_booking(payload: BookingCreateIn, background_tasks: BackgroundTasks, 
         )
         product_rows.append({"name": product.name, "qty": item.quantity, "price": float(unit_price)})
 
+    discount_amount, applied_coupon = _apply_coupon(db, payload.coupon_code, total)
+    total -= discount_amount
+
     booking.total_amount = total
     db.add(booking)
+    db.flush()
+
+    confirmation_code = _generate_confirmation_code()
+    extra = BookingExtra(
+        booking_id=booking.id,
+        staff_id=payload.staff_id,
+        coupon_code=applied_coupon,
+        discount_amount=discount_amount,
+        confirmation_code=confirmation_code,
+        is_confirmed=False,
+        reminder_sent=False,
+    )
+    db.add(extra)
     db.commit()
     db.refresh(booking)
 
@@ -77,7 +127,45 @@ def create_booking(payload: BookingCreateIn, background_tasks: BackgroundTasks, 
     )
     background_tasks.add_task(send_booking_to_sheet, sheet_payload)
 
-    return booking
+    # TODO: once WhatsApp Business API credentials are available, send
+    # confirmation_code to payload.client_phone instead of returning it here.
+    return BookingCreateOut(
+        id=booking.id,
+        branch_id=booking.branch_id,
+        client_name=booking.client_name,
+        client_phone=booking.client_phone,
+        booking_date=booking.booking_date,
+        booking_time=booking.booking_time,
+        status=booking.status,
+        total_amount=booking.total_amount,
+        created_at=booking.created_at,
+        discount_amount=discount_amount,
+        confirmation_code=confirmation_code,
+        is_confirmed=False,
+    )
+
+
+@router.post("/{booking_id}/confirm", response_model=BookingConfirmOut)
+def confirm_booking(booking_id: UUID, payload: BookingConfirmIn, db: Session = Depends(get_db)) -> BookingConfirmOut:
+    extra = db.query(BookingExtra).filter(BookingExtra.booking_id == booking_id).first()
+    if extra is None:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    if extra.is_confirmed:
+        return BookingConfirmOut(confirmed=True, message="الحجز مؤكد من قبل")
+
+    if payload.code.strip() != extra.confirmation_code:
+        raise HTTPException(status_code=400, detail="الكود ماشي صحيح")
+
+    extra.is_confirmed = True
+    booking = db.query(Booking).filter(Booking.id == booking_id).first()
+    if booking is not None:
+        booking.status = BookingStatus.confirmed
+    db.commit()
+
+    # TODO: once WhatsApp Business API credentials are available, send a
+    # confirmation message here, and schedule the 30-minute-before reminder.
+    return BookingConfirmOut(confirmed=True, message="تأكد الحجز ديالك بنجاح")
 
 
 @router.get("/{booking_id}", response_model=BookingOut)

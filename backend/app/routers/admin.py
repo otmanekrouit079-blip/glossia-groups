@@ -12,25 +12,32 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import AdminUser, create_access_token, get_current_admin
 from app.models.booking import Booking, BookingProduct
+from app.models.booking_extra import BookingExtra
+from app.models.coupon import Coupon
 from app.models.package import Package, PackageProduct, PackageService
 from app.models.product import Product
 from app.models.service import Service
+from app.models.staff import Staff
 from app.routers.packages import _package_to_out
 from app.schemas.admin import (
     BookingDetailOut,
     BookingProductDetailOut,
     BookingServiceOut,
+    CouponWriteIn,
     LoginIn,
     LoginOut,
     PackageWriteIn,
     ProductWriteIn,
     ServiceWriteIn,
+    StaffWriteIn,
     UploadOut,
 )
 from app.schemas.booking import BookingUpdateIn
+from app.schemas.coupon import CouponOut
 from app.schemas.package import PackageOut
 from app.schemas.product import ProductOut
 from app.schemas.service import ServiceOut
+from app.schemas.staff import StaffOut
 
 router = APIRouter()
 
@@ -47,7 +54,13 @@ def login(payload: LoginIn) -> LoginOut:
     return LoginOut(access_token=token)
 
 
-def _booking_to_detail(booking: Booking, services_by_id: dict, products_by_id: dict) -> BookingDetailOut:
+def _booking_to_detail(
+    booking: Booking,
+    services_by_id: dict,
+    products_by_id: dict,
+    extras_by_booking_id: dict,
+    staff_by_id: dict,
+) -> BookingDetailOut:
     service_rows = [
         BookingServiceOut(
             service_id=row.service_id,
@@ -66,6 +79,8 @@ def _booking_to_detail(booking: Booking, services_by_id: dict, products_by_id: d
         for row in booking.products
     ]
 
+    extra = extras_by_booking_id.get(booking.id)
+
     return BookingDetailOut(
         id=booking.id,
         branch_id=booking.branch_id,
@@ -79,6 +94,10 @@ def _booking_to_detail(booking: Booking, services_by_id: dict, products_by_id: d
         created_at=booking.created_at,
         services=service_rows,
         products=product_rows,
+        staff_name=staff_by_id.get(extra.staff_id, "") if extra and extra.staff_id else "",
+        coupon_code=extra.coupon_code if extra else "",
+        discount_amount=extra.discount_amount if extra else Decimal("0.00"),
+        is_confirmed=extra.is_confirmed if extra else False,
     )
 
 
@@ -98,8 +117,13 @@ def list_bookings(
 
     services_by_id = {row.id: row.name for row in db.query(Service).all()}
     products_by_id = {row.id: row.name for row in db.query(Product).all()}
+    extras_by_booking_id = {row.booking_id: row for row in db.query(BookingExtra).all()}
+    staff_by_id = {row.id: row.name for row in db.query(Staff).all()}
 
-    return [_booking_to_detail(booking, services_by_id, products_by_id) for booking in bookings]
+    return [
+        _booking_to_detail(booking, services_by_id, products_by_id, extras_by_booking_id, staff_by_id)
+        for booking in bookings
+    ]
 
 
 @router.patch("/bookings/{booking_id}", response_model=BookingDetailOut)
@@ -135,7 +159,9 @@ def update_booking(
 
     services_by_id = {row.id: row.name for row in db.query(Service).all()}
     products_by_id = {row.id: row.name for row in db.query(Product).all()}
-    return _booking_to_detail(booking, services_by_id, products_by_id)
+    extras_by_booking_id = {row.booking_id: row for row in db.query(BookingExtra).all()}
+    staff_by_id = {row.id: row.name for row in db.query(Staff).all()}
+    return _booking_to_detail(booking, services_by_id, products_by_id, extras_by_booking_id, staff_by_id)
 
 
 def _unique_slug(db: Session, model, name: str) -> str:
@@ -312,6 +338,121 @@ def delete_package(
         raise HTTPException(status_code=404, detail="Package not found")
 
     db.delete(package)
+    db.commit()
+    return {"ok": True}
+
+
+@router.post("/staff", response_model=StaffOut)
+def create_staff(
+    payload: StaffWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> Staff:
+    staff = Staff(**payload.model_dump())
+    db.add(staff)
+    db.commit()
+    db.refresh(staff)
+    return staff
+
+
+@router.put("/staff/{staff_id}", response_model=StaffOut)
+def update_staff(
+    staff_id: UUID,
+    payload: StaffWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> Staff:
+    staff = db.query(Staff).filter(Staff.id == staff_id).first()
+    if staff is None:
+        raise HTTPException(status_code=404, detail="Staff not found")
+
+    for field, value in payload.model_dump().items():
+        setattr(staff, field, value)
+
+    db.commit()
+    db.refresh(staff)
+    return staff
+
+
+@router.delete("/staff/{staff_id}")
+def delete_staff(
+    staff_id: UUID,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    staff = db.query(Staff).filter(Staff.id == staff_id).first()
+    if staff is None:
+        raise HTTPException(status_code=404, detail="Staff not found")
+
+    db.delete(staff)
+    db.commit()
+    return {"ok": True}
+
+
+@router.get("/coupons", response_model=list[CouponOut])
+def list_coupons(
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> list[Coupon]:
+    return db.query(Coupon).order_by(Coupon.code.asc()).all()
+
+
+@router.post("/coupons", response_model=CouponOut)
+def create_coupon(
+    payload: CouponWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> Coupon:
+    code = payload.code.strip().upper()
+    if db.query(Coupon).filter(Coupon.code == code).first() is not None:
+        raise HTTPException(status_code=400, detail="هاد الكود مستعمل من قبل")
+
+    coupon = Coupon(
+        code=code,
+        discount_type=payload.discount_type,
+        discount_value=payload.discount_value,
+        active=payload.active,
+        max_uses=payload.max_uses,
+    )
+    db.add(coupon)
+    db.commit()
+    db.refresh(coupon)
+    return coupon
+
+
+@router.put("/coupons/{coupon_id}", response_model=CouponOut)
+def update_coupon(
+    coupon_id: UUID,
+    payload: CouponWriteIn,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> Coupon:
+    coupon = db.query(Coupon).filter(Coupon.id == coupon_id).first()
+    if coupon is None:
+        raise HTTPException(status_code=404, detail="Coupon not found")
+
+    coupon.code = payload.code.strip().upper()
+    coupon.discount_type = payload.discount_type
+    coupon.discount_value = payload.discount_value
+    coupon.active = payload.active
+    coupon.max_uses = payload.max_uses
+
+    db.commit()
+    db.refresh(coupon)
+    return coupon
+
+
+@router.delete("/coupons/{coupon_id}")
+def delete_coupon(
+    coupon_id: UUID,
+    _: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    coupon = db.query(Coupon).filter(Coupon.id == coupon_id).first()
+    if coupon is None:
+        raise HTTPException(status_code=404, detail="Coupon not found")
+
+    db.delete(coupon)
     db.commit()
     return {"ok": True}
 
