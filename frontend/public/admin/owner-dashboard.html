@@ -556,28 +556,31 @@
       <h3 id="owner-target-modal-title">أهداف الموظف والهدف الشامل</h3>
       <p id="owner-target-modal-subtitle" class="modal-subtitle">حدد الهدف الشخصي (يومي) والهدف الشامل ديال Glossia.</p>
 
-      <form id="owner-target-form" class="owner-target-form">
-        <div class="owner-campaign-grid">
-          <label class="owner-target-label" for="owner-target-start-date">تاريخ البداية</label>
-          <input id="owner-target-start-date" class="owner-target-input" type="date" required />
+      <section class="owner-target-block">
+        <h4 class="modal-block-title">الهدف الشخصي والشامل</h4>
+        <form id="owner-target-form" class="owner-target-form">
+          <div class="owner-campaign-grid">
+            <label class="owner-target-label" for="owner-target-start-date">تاريخ البداية</label>
+            <input id="owner-target-start-date" class="owner-target-input" type="date" required />
 
-          <label class="owner-target-label" for="owner-target-end-date">تاريخ النهاية</label>
-          <input id="owner-target-end-date" class="owner-target-input" type="date" required />
+            <label class="owner-target-label" for="owner-target-end-date">تاريخ النهاية</label>
+            <input id="owner-target-end-date" class="owner-target-input" type="date" required />
 
-          <label class="owner-target-label" for="owner-target-daily">الهدف اليومي (DH)</label>
-          <input id="owner-target-daily" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 300" required />
+            <label class="owner-target-label" for="owner-target-daily">الهدف اليومي (DH)</label>
+            <input id="owner-target-daily" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 300" required />
 
-          <label class="owner-target-label" for="owner-target-global">الهدف الشامل ديال Glossia (DH)</label>
-          <input id="owner-target-global" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 120000" required />
-        </div>
-        <p id="owner-target-feedback" class="modal-feedback"></p>
-        <div class="modal-actions">
-          <button id="owner-target-save" class="manager-btn" type="submit">سجل</button>
-          <button id="owner-target-modal-close" class="manager-btn manager-btn-muted" type="button">سد</button>
-        </div>
-      </form>
+            <label class="owner-target-label" for="owner-target-global">الهدف الشامل ديال Glossia (DH)</label>
+            <input id="owner-target-global" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 120000" required />
+          </div>
+          <p id="owner-target-feedback" class="modal-feedback"></p>
+          <div class="modal-actions">
+            <button id="owner-target-save" class="manager-btn" type="submit">سجل</button>
+            <button id="owner-target-modal-close" class="manager-btn manager-btn-muted" type="button">سد</button>
+          </div>
+        </form>
+      </section>
 
-      <div class="owner-tax-config">
+      <section class="owner-tax-config">
         <h4 class="modal-block-title">الضرائب على رقم المعاملات (بالمراحل)</h4>
         <p class="modal-subtitle">كتطبق على جميع الموظفين حسب رقم المعاملات ديال كل واحد. مثلا: من 100 DH، -5 DH؛ من 200 DH، -10 DH.</p>
 
@@ -601,14 +604,14 @@
               <button id="owner-tax-product-add" type="button" class="manager-btn manager-btn-muted">+ زيد</button>
             </div>
           </div>
-        </div>
 
-        <div class="owner-tax-column owner-cleanliness-tax">
-          <h5>ضريبة النظافة (شهرية)</h5>
-          <p class="modal-subtitle">مبلغ ثابت كل شهر، كيتزاد أوتوماتيك مع المصاريف الثابتة.</p>
-          <input id="owner-cleanliness-tax-input" class="owner-target-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          <div class="owner-tax-column owner-cleanliness-tax">
+            <h5>ضريبة النظافة (يومية)</h5>
+            <p class="owner-tax-column-note">مبلغ ثابت لكل نهار، كيتزاد أوتوماتيك مع المصاريف الثابتة.</p>
+            <input id="owner-cleanliness-tax-input" class="owner-target-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 

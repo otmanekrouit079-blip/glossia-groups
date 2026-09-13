@@ -1497,9 +1497,11 @@ function getOwnerFixedCostsTotalForPeriod(period) {
   const factor = getOwnerNetOverviewPeriodFactor(period);
   const manualFixedTotal = (ownerSharedData.fixedCosts || []).reduce(function (total, cost) {
     return total + Number(cost.monthlyAmount || 0);
-  }, 0);
+  }, 0) * factor;
 
-  return (manualFixedTotal + getOwnerCleanlinessTaxAmount()) * factor;
+  const cleanlinessTotal = getOwnerCleanlinessTaxAmount() * getOwnerTargetPeriodDays(period);
+
+  return manualFixedTotal + cleanlinessTotal;
 }
 
 function getOwnerVariableCostsTotalForPeriod(period) {

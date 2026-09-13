@@ -1626,15 +1626,38 @@ input.is-error, select.is-error { border-color: var(--danger); }
 .benefit-type-btn.active { background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark)); border-color: transparent; color: #fff; }
 
 /* Owner tax bracket editor */
+.owner-target-block {
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.owner-target-block .owner-target-form { margin: 0; }
+.owner-target-block .modal-actions { margin-top: 14px; }
+
 .owner-tax-config { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--borderline); }
 .owner-tax-columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--gap-md);
+  align-items: start;
 }
-.owner-tax-column h5 { margin: 0 0 8px; font-size: 0.85rem; font-weight: 800; color: var(--ink); }
+.owner-tax-column {
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+}
+.owner-tax-column h5 { margin: 0; font-size: 0.85rem; font-weight: 800; color: var(--ink); }
+.owner-tax-column-note { color: var(--textmuted); font-size: 0.78rem; margin: 0; }
 .owner-tax-add-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .owner-tax-add-row input { flex: 1; min-width: 90px; }
+.owner-cleanliness-tax { justify-content: space-between; }
 
 /* ===== Responsive ===== */
 @media (max-width: 720px) {
