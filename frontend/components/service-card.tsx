@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { Service } from "@/lib/api";
+import { resolveImageUrl, type Service } from "@/lib/api";
 
 type ServiceCardProps = {
   service: Service;
@@ -9,6 +9,11 @@ type ServiceCardProps = {
 export function ServiceCard({ service }: ServiceCardProps) {
   return (
     <article className="card card-hover min-w-[85%] p-4 md:min-w-[280px]">
+      <img
+        src={resolveImageUrl(service.image_url)}
+        alt={service.name}
+        className="mb-3 h-40 w-full rounded-xl object-cover"
+      />
       <h3 className="font-heading text-lg font-bold text-ink">{service.name}</h3>
       <p className="mt-2 text-sm text-textmuted">{service.description}</p>
       <div className="mt-3 flex items-center justify-between">

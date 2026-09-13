@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getProducts } from "@/lib/api";
+import { getProducts, resolveImageUrl } from "@/lib/api";
 
 type Props = { params: { slug: string } };
 
@@ -17,6 +17,11 @@ export default async function ProductDetailsPage({ params }: Props) {
     <section className="mx-auto max-w-6xl px-4 py-12">
       <div className="grid gap-8 md:grid-cols-2">
         <div className="card p-8">
+          <img
+            src={resolveImageUrl(product.image_url)}
+            alt={product.name}
+            className="mb-4 h-64 w-full rounded-2xl object-cover"
+          />
           <div className="badge-pill">باقي {product.stock} فالمخزون</div>
           <h1 className="mt-4 font-heading text-3xl font-extrabold text-ink">{product.name}</h1>
           <p className="mt-2 text-textmuted">{product.short_description}</p>

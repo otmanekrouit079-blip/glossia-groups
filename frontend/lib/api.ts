@@ -1,5 +1,17 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+export function resolveImageUrl(imageUrl: string): string {
+  if (!imageUrl) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  return `${API_URL}${imageUrl}`;
+}
+
 export type Service = {
   id: string;
   slug: string;

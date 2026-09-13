@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { Package } from "@/lib/api";
+import { resolveImageUrl, type Package } from "@/lib/api";
 
 type PackageCardProps = {
   pkg: Package;
@@ -11,6 +11,11 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
   return (
     <article className="card card-hover min-w-[85%] p-4 md:min-w-[300px]">
+      <img
+        src={resolveImageUrl(pkg.image_url)}
+        alt={pkg.name}
+        className="mb-3 h-40 w-full rounded-xl object-cover"
+      />
       <div className="mb-3 badge-gradient">باقة</div>
       <h3 className="font-heading text-lg font-bold text-ink">{pkg.name}</h3>
       {pkg.description ? <p className="mt-1 text-sm text-textmuted">{pkg.description}</p> : null}
