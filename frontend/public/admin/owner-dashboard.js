@@ -69,7 +69,8 @@ const ownerTargetFeedback = document.getElementById("owner-target-feedback");
 const ownerTargetStartDateInput = document.getElementById("owner-target-start-date");
 const ownerTargetEndDateInput = document.getElementById("owner-target-end-date");
 const ownerTargetDailyInput = document.getElementById("owner-target-daily");
-const ownerTargetGlobalInput = document.getElementById("owner-target-global");
+const ownerTargetGlobalComputed = document.getElementById("owner-target-global-computed");
+const ownerTargetGlobalDetail = document.getElementById("owner-target-global-detail");
 const ownerLastSavedLabel = document.getElementById("owner-last-saved");
 const ownerExportDataButton = document.getElementById("owner-export-data");
 const ownerImportDataButton = document.getElementById("owner-import-data");
@@ -854,11 +855,8 @@ function getOwnerCampaignTargets() {
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 12, 0, 0, 0);
   const daysThisMonth = countOverlapDays(startDate, endDate, monthStart, monthEnd);
   const campaignDays = getDayCountBetweenInclusive(startDateISO, endDateISO);
-  const globalTargetInput = Number(ownerCampaignTarget.globalTarget);
-  const computedCampaignTarget = dailyTarget * campaignDays;
-  const globalTarget = Number.isFinite(globalTargetInput) && globalTargetInput > 0
-    ? globalTargetInput
-    : computedCampaignTarget;
+  const employeeCount = Math.max(1, ownerEmployees.length);
+  const computedCampaignTarget = dailyTarget * campaignDays * employeeCount;
 
   return {
     startDateISO: startDateISO,
@@ -867,9 +865,10 @@ function getOwnerCampaignTargets() {
     weekTarget: dailyTarget * 7,
     monthTarget: dailyTarget * daysThisMonth,
     campaignTarget: computedCampaignTarget,
-    globalTarget: globalTarget,
+    globalTarget: computedCampaignTarget,
     monthDaysInCampaign: daysThisMonth,
-    campaignDays: campaignDays
+    campaignDays: campaignDays,
+    employeeCount: employeeCount
   };
 }
 
@@ -3098,6 +3097,35 @@ function renderOwnerTargetSummary() {
     " (" + formatOwnerPercent(progress.percentage) + ") · الباقي: " + formatOwnerEuro(remaining) + ".";
 }
 
+function updateOwnerTargetComputedPreview() {
+  if (!ownerTargetGlobalComputed) {
+    return;
+  }
+
+  const startDate = ownerTargetStartDateInput.value;
+  const endDate = ownerTargetEndDateInput.value;
+  const dailyTarget = Number(ownerTargetDailyInput.value);
+  const employeeCount = Math.max(1, ownerEmployees.length);
+
+  if (!startDate || !endDate || !Number.isFinite(dailyTarget) || dailyTarget <= 0 ||
+    ownerDateFromISO(endDate) < ownerDateFromISO(startDate)) {
+    ownerTargetGlobalComputed.textContent = "0,00 DH";
+    if (ownerTargetGlobalDetail) {
+      ownerTargetGlobalDetail.textContent = "عمر تاريخ البداية والنهاية والهدف اليومي باش يتحسب.";
+    }
+    return;
+  }
+
+  const campaignDays = getDayCountBetweenInclusive(startDate, endDate);
+  const globalTarget = dailyTarget * campaignDays * employeeCount;
+
+  ownerTargetGlobalComputed.textContent = formatOwnerAmount(globalTarget);
+  if (ownerTargetGlobalDetail) {
+    ownerTargetGlobalDetail.textContent =
+      formatOwnerAmount(dailyTarget) + " × " + employeeCount + " موظف × " + campaignDays + " نهار";
+  }
+}
+
 function renderOwnerTargetForm() {
   syncOwnerCampaignTargetState();
   ownerTargetStartDateInput.value = ownerCampaignTarget?.startDate || "";
@@ -3105,15 +3133,20 @@ function renderOwnerTargetForm() {
   ownerTargetDailyInput.value = ownerCampaignTarget?.dailyTarget
     ? String(ownerCampaignTarget.dailyTarget)
     : "";
-  ownerTargetGlobalInput.value = ownerCampaignTarget?.globalTarget
-    ? String(ownerCampaignTarget.globalTarget)
-    : "";
 
   if (ownerCleanlinessTaxInput) {
     const cleanlinessTax = getOwnerCleanlinessTaxAmount();
     ownerCleanlinessTaxInput.value = cleanlinessTax > 0 ? cleanlinessTax : "";
   }
+
+  updateOwnerTargetComputedPreview();
 }
+
+[ownerTargetStartDateInput, ownerTargetEndDateInput, ownerTargetDailyInput].forEach(function (input) {
+  if (input) {
+    input.addEventListener("input", updateOwnerTargetComputedPreview);
+  }
+});
 
 function openOwnerTargetModal() {
   ownerTargetFeedback.textContent = "";
@@ -3126,7 +3159,7 @@ function openOwnerTargetModal() {
   }
 
   if (ownerTargetModalSubtitle) {
-    ownerTargetModalSubtitle.textContent = "دخل الهدف اليومي ديال الموظفين والهدف الشامل ديال Glossia فهاد المدة.";
+    ownerTargetModalSubtitle.textContent = "دخل الهدف اليومي ديال كل موظف، والهدف الشامل ديال Glossia غادي يتحسب أوتوماتيك.";
   }
 
   ownerTargetModal.classList.remove("hidden");
@@ -3141,7 +3174,6 @@ function saveOwnerTargetsFromForm() {
   const startDate = ownerTargetStartDateInput.value;
   const endDate = ownerTargetEndDateInput.value;
   const dailyTarget = Number(ownerTargetDailyInput.value);
-  const globalTarget = Number(ownerTargetGlobalInput.value);
 
   if (!startDate || !endDate) {
     ownerTargetFeedback.textContent = "خاصك دخل تاريخ البداية وتاريخ النهاية.";
@@ -3155,12 +3187,6 @@ function saveOwnerTargetsFromForm() {
     return false;
   }
 
-  if (!Number.isFinite(globalTarget) || globalTarget <= 0) {
-    ownerTargetFeedback.textContent = "خاصك دخل هدف شامل ديال Glossia صحيح (> 0).";
-    ownerTargetFeedback.classList.add("is-error");
-    return false;
-  }
-
   if (ownerDateFromISO(endDate) < ownerDateFromISO(startDate)) {
     ownerTargetFeedback.textContent = "تاريخ النهاية خاصو يكون بعد ولا نفس تاريخ البداية.";
     ownerTargetFeedback.classList.add("is-error");
@@ -3170,7 +3196,7 @@ function saveOwnerTargetsFromForm() {
   ownerCampaignTarget.startDate = startDate;
   ownerCampaignTarget.endDate = endDate;
   ownerCampaignTarget.dailyTarget = Math.round(dailyTarget * 100) / 100;
-  ownerCampaignTarget.globalTarget = Math.round(globalTarget * 100) / 100;
+  delete ownerCampaignTarget.globalTarget;
 
   saveOwnerTargetSettingsToSession();
   ownerTargetFeedback.textContent = "تسجلات الأهداف.";

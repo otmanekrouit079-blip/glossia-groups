@@ -559,18 +559,21 @@
       <section class="owner-target-block">
         <h4 class="modal-block-title">الهدف الشخصي والشامل</h4>
         <form id="owner-target-form" class="owner-target-form">
-          <div class="owner-campaign-grid">
+          <div class="owner-target-fields">
             <label class="owner-target-label" for="owner-target-start-date">تاريخ البداية</label>
             <input id="owner-target-start-date" class="owner-target-input" type="date" required />
 
             <label class="owner-target-label" for="owner-target-end-date">تاريخ النهاية</label>
             <input id="owner-target-end-date" class="owner-target-input" type="date" required />
 
-            <label class="owner-target-label" for="owner-target-daily">الهدف اليومي (DH)</label>
+            <label class="owner-target-label" for="owner-target-daily">الهدف اليومي ديال كل موظف (DH)</label>
             <input id="owner-target-daily" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 300" required />
 
-            <label class="owner-target-label" for="owner-target-global">الهدف الشامل ديال Glossia (DH)</label>
-            <input id="owner-target-global" class="owner-target-input" type="number" min="0.01" step="0.01" placeholder="مثلا: 120000" required />
+            <div class="owner-target-computed">
+              <span>الهدف الشامل ديال Glossia (محسوب أوتوماتيك)</span>
+              <strong id="owner-target-global-computed">0,00 DH</strong>
+              <small id="owner-target-global-detail"></small>
+            </div>
           </div>
           <p id="owner-target-feedback" class="modal-feedback"></p>
           <div class="modal-actions">

@@ -1636,6 +1636,27 @@ input.is-error, select.is-error { border-color: var(--danger); }
 .owner-target-block .owner-target-form { margin: 0; }
 .owner-target-block .modal-actions { margin-top: 14px; }
 
+.owner-target-fields { display: flex; flex-direction: column; }
+.owner-target-computed {
+  background: var(--surface);
+  border: 1px solid var(--borderline-strong);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+.owner-target-computed span { font-size: 0.8rem; font-weight: 700; color: var(--textmain); }
+.owner-target-computed strong {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--brass);
+  font-family: "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.owner-target-computed small { font-size: 0.75rem; color: var(--textmuted); }
+
 .owner-tax-config { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--borderline); }
 .owner-tax-columns {
   display: grid;
