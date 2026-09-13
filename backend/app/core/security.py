@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
@@ -5,6 +7,14 @@ from jose import JWTError, jwt
 from app.core.config import settings
 
 security_scheme = HTTPBearer(auto_error=False)
+
+ACCESS_TOKEN_EXPIRE_HOURS = 12
+
+
+def create_access_token(username: str, role: str = "admin") -> str:
+    expire = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+    payload = {"sub": username, "role": role, "exp": expire}
+    return jwt.encode(payload, settings.jwt_secret, algorithm="HS256")
 
 
 class AdminUser:

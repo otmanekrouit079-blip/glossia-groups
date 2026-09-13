@@ -90,6 +90,7 @@
       employeeData: {},
       ownerCampaignTarget: {},
       ownerCredit: 0,
+      ownerCleanlinessTax: 0,
       ownerDailyTaxDh: 0,
       serviceCatalog: ["قصة", "تقشير", "حلاقة اللحية"],
       productSales: [],
@@ -162,6 +163,9 @@
         : 0,
       ownerCredit: Number.isFinite(Number(source.ownerCredit)) && Number(source.ownerCredit) >= 0
         ? Number(source.ownerCredit)
+        : 0,
+      ownerCleanlinessTax: Number.isFinite(Number(source.ownerCleanlinessTax)) && Number(source.ownerCleanlinessTax) >= 0
+        ? Number(source.ownerCleanlinessTax)
         : 0,
       serviceCatalog: Array.isArray(source.serviceCatalog)
         ? source.serviceCatalog.filter(function (entry) {

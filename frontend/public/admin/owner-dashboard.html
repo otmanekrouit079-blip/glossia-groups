@@ -96,13 +96,56 @@
       <div id="owner-alert-banner" class="owner-alert-banner" role="status" aria-live="polite"></div>
     </section>
 
-    <section class="owner-compact-nav" aria-label="تنقل سريع للمالك">
-      <button type="button" class="owner-compact-nav-btn active" data-owner-section="overview">نظرة عامة</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="targets">الأهداف</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="accounting">المحاسبة</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="operations">العمليات</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="team">الفريق</button>
-      <button type="button" class="owner-compact-nav-btn" data-owner-section="all">وري كولشي</button>
+    <section class="owner-compact-nav owner-actions-stack" aria-label="أزرار التسيير السريع">
+      <button id="owner-action-bookings" type="button" class="owner-action-btn">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4m-5 4h18"/></svg></span>
+        <span class="owner-action-text">
+          <strong>مواعيد الستور</strong>
+          <small>المواعيد اللي كيدخلو مباشرة من glossia.it.com</small>
+        </span>
+      </button>
+
+      <button id="owner-action-employees" type="button" class="owner-action-btn">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M16 19a4 4 0 0 1 4 4M12 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 0c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Zm6-4a3 3 0 1 0 0-6"/></svg></span>
+        <span class="owner-action-text">
+          <strong>زيادة الموظفين</strong>
+          <small>تدبير الفريق وإضافة موظف جديد</small>
+        </span>
+      </button>
+
+      <button id="owner-action-tasks" type="button" class="owner-action-btn" data-owner-section="team">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+        <span class="owner-action-text">
+          <strong>متابعة وزيادة المهام</strong>
+          <small>تتبع التاش ديال كل موظف وزيادة مهام جداد</small>
+        </span>
+      </button>
+
+      <button id="owner-action-sale-products" type="button" class="owner-action-btn">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 10h.01M18 14h.01"/></svg></span>
+        <span class="owner-action-text">
+          <strong>زيادة منتوج البيع</strong>
+          <small>المنتوجات اللي كتباع فالمحل والبنفيس الشخصي ديالها</small>
+        </span>
+      </button>
+
+      <button id="owner-action-targets" type="button" class="owner-action-btn">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/><path d="m14 10 7-7"/></svg></span>
+        <span class="owner-action-text">
+          <strong>الأهداف والضرائب</strong>
+          <small>الهدف الشامل، ضرائب رقم المعاملات + ضريبة النظافة</small>
+        </span>
+      </button>
+
+      <button id="owner-action-store" type="button" class="owner-action-btn">
+        <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M4 9V4h16v5M4 9l1.5 11h13L20 9M4 9h16"/></svg></span>
+        <span class="owner-action-text">
+          <strong>التحكم فـ Glossia.it.com</strong>
+          <small>زيادة/تبديل المنتوجات والخدمات، الأتمان والتصاور اللي كيبانو فالستور</small>
+        </span>
+      </button>
+
+      <button class="owner-compact-nav-btn owner-action-more" type="button" data-owner-section="all">المزيد من الإعدادات (المحاسبة، العمليات...)</button>
     </section>
 
     <section id="owner-focus-panel" class="owner-focus-panel" aria-live="polite" aria-labelledby="owner-focus-title">
@@ -559,6 +602,12 @@
             </div>
           </div>
         </div>
+
+        <div class="owner-tax-column owner-cleanliness-tax">
+          <h5>ضريبة النظافة (شهرية)</h5>
+          <p class="modal-subtitle">مبلغ ثابت كل شهر، كيتزاد أوتوماتيك مع المصاريف الثابتة.</p>
+          <input id="owner-cleanliness-tax-input" class="owner-target-input" type="number" min="0" step="0.01" placeholder="0.00" />
+        </div>
       </div>
     </div>
   </div>
@@ -589,6 +638,146 @@
 
       <div class="modal-actions">
         <button id="owner-net-breakdown-close" class="manager-btn manager-btn-muted" type="button">سد</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="owner-backend-auth-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-backend-auth-title">
+    <div class="modal-content owner-detail-modal-content">
+      <button id="owner-backend-auth-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-backend-auth-title">تأكيد الهوية</h3>
+      <p class="modal-subtitle">دخل اسم المستخدم وكلمة السر ديال المالك باش توصل لهاد القسم.</p>
+
+      <form id="owner-backend-auth-form" novalidate>
+        <label class="owner-target-label" for="owner-backend-auth-username">اسم المستخدم</label>
+        <input id="owner-backend-auth-username" class="owner-target-input" type="text" autocomplete="username" required />
+
+        <label class="owner-target-label" for="owner-backend-auth-password">كلمة السر</label>
+        <input id="owner-backend-auth-password" class="owner-target-input" type="password" autocomplete="current-password" required />
+
+        <p id="owner-backend-auth-feedback" class="modal-feedback" aria-live="polite"></p>
+        <div class="modal-actions">
+          <button type="submit" class="manager-btn">دخول</button>
+          <button id="owner-backend-auth-close" type="button" class="manager-btn manager-btn-muted">سد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="owner-bookings-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-bookings-title">
+    <div class="modal-content owner-detail-modal-content owner-bookings-modal-content">
+      <button id="owner-bookings-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-bookings-title">مواعيد الستور</h3>
+      <p id="owner-bookings-subtitle" class="modal-subtitle">المواعيد اللي دخلات مباشرة من glossia.it.com.</p>
+
+      <p id="owner-bookings-feedback" class="modal-feedback" aria-live="polite"></p>
+      <div id="owner-bookings-list" class="owner-bookings-list"></div>
+
+      <div class="modal-actions">
+        <button id="owner-bookings-refresh" type="button" class="manager-btn manager-btn-muted">حدث اللائحة</button>
+        <button id="owner-bookings-close" type="button" class="manager-btn manager-btn-muted">سد</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="owner-store-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-store-title">
+    <div class="modal-content owner-detail-modal-content owner-store-modal-content">
+      <button id="owner-store-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-store-title">التحكم فـ Glossia.it.com</h3>
+      <p class="modal-subtitle">زيد وبدل المنتوجات والخدمات، الأتمان والتصاور اللي كيبانو فالستور.</p>
+
+      <div class="modal-tabs" role="tablist">
+        <button type="button" class="modal-tab-btn active" data-store-tab="products">المنتوجات</button>
+        <button type="button" class="modal-tab-btn" data-store-tab="services">الخدمات</button>
+      </div>
+
+      <section id="owner-store-tab-products" class="modal-tab-panel">
+        <button id="owner-store-add-product-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد منتوج جديد</button>
+
+        <form id="owner-store-product-form" class="owner-store-form hidden" novalidate>
+          <input id="owner-store-product-id" type="hidden" />
+          <label class="owner-target-label" for="owner-store-product-name">سمية المنتوج</label>
+          <input id="owner-store-product-name" class="owner-target-input" type="text" required />
+
+          <label class="owner-target-label" for="owner-store-product-short-desc">وصف قصير</label>
+          <input id="owner-store-product-short-desc" class="owner-target-input" type="text" />
+
+          <label class="owner-target-label" for="owner-store-product-long-desc">وصف كامل</label>
+          <textarea id="owner-store-product-long-desc" class="owner-target-input" rows="2"></textarea>
+
+          <label class="owner-target-label" for="owner-store-product-category">الصنف</label>
+          <input id="owner-store-product-category" class="owner-target-input" type="text" placeholder="hair-care" />
+
+          <div class="owner-store-price-row">
+            <div>
+              <label class="owner-target-label" for="owner-store-product-price1">تمن 1</label>
+              <input id="owner-store-product-price1" class="owner-target-input" type="number" min="0" step="0.01" required />
+            </div>
+            <div>
+              <label class="owner-target-label" for="owner-store-product-price2">تمن 2</label>
+              <input id="owner-store-product-price2" class="owner-target-input" type="number" min="0" step="0.01" required />
+            </div>
+            <div>
+              <label class="owner-target-label" for="owner-store-product-price3">تمن 3</label>
+              <input id="owner-store-product-price3" class="owner-target-input" type="number" min="0" step="0.01" required />
+            </div>
+          </div>
+
+          <label class="owner-target-label" for="owner-store-product-stock">الكمية فالمخزون</label>
+          <input id="owner-store-product-stock" class="owner-target-input" type="number" min="0" step="1" />
+
+          <label class="owner-target-label" for="owner-store-product-photo">تصويرة المنتوج</label>
+          <input id="owner-store-product-photo" type="file" accept="image/*" />
+          <img id="owner-store-product-photo-preview" class="owner-store-photo-preview hidden" alt="" />
+
+          <p id="owner-store-product-feedback" class="modal-feedback" aria-live="polite"></p>
+          <div class="modal-actions">
+            <button type="submit" class="manager-btn">سجل المنتوج</button>
+            <button id="owner-store-product-cancel" type="button" class="manager-btn manager-btn-muted">إلغاء</button>
+          </div>
+        </form>
+
+        <div id="owner-store-products-list" class="owner-store-items-grid"></div>
+      </section>
+
+      <section id="owner-store-tab-services" class="modal-tab-panel hidden">
+        <button id="owner-store-add-service-toggle" type="button" class="manager-btn manager-btn-muted">+ زيد خدمة جديدة</button>
+
+        <form id="owner-store-service-form" class="owner-store-form hidden" novalidate>
+          <input id="owner-store-service-id" type="hidden" />
+          <label class="owner-target-label" for="owner-store-service-name">سمية الخدمة</label>
+          <input id="owner-store-service-name" class="owner-target-input" type="text" required />
+
+          <label class="owner-target-label" for="owner-store-service-desc">الوصف</label>
+          <textarea id="owner-store-service-desc" class="owner-target-input" rows="2"></textarea>
+
+          <div class="owner-store-price-row">
+            <div>
+              <label class="owner-target-label" for="owner-store-service-price">التمن (DH)</label>
+              <input id="owner-store-service-price" class="owner-target-input" type="number" min="0" step="0.01" required />
+            </div>
+            <div>
+              <label class="owner-target-label" for="owner-store-service-duration">المدة (دقيقة)</label>
+              <input id="owner-store-service-duration" class="owner-target-input" type="number" min="1" step="1" required />
+            </div>
+          </div>
+
+          <label class="owner-target-label" for="owner-store-service-photo">تصويرة الخدمة</label>
+          <input id="owner-store-service-photo" type="file" accept="image/*" />
+          <img id="owner-store-service-photo-preview" class="owner-store-photo-preview hidden" alt="" />
+
+          <p id="owner-store-service-feedback" class="modal-feedback" aria-live="polite"></p>
+          <div class="modal-actions">
+            <button type="submit" class="manager-btn">سجل الخدمة</button>
+            <button id="owner-store-service-cancel" type="button" class="manager-btn manager-btn-muted">إلغاء</button>
+          </div>
+        </form>
+
+        <div id="owner-store-services-list" class="owner-store-items-grid"></div>
+      </section>
+
+      <div class="modal-actions">
+        <button id="owner-store-close" type="button" class="manager-btn manager-btn-muted">سد</button>
       </div>
     </div>
   </div>

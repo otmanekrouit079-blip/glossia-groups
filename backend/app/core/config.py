@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
     google_sheet_webhook_url: str = ""
 
+    admin_username: str = "osmane Barber"
+    admin_password: str = "otmankrouit199811"
+    upload_dir: str = "uploads"
+
     meta_pixel_id: str = ""
     meta_capi_access_token: str = ""
     tiktok_pixel_id: str = ""

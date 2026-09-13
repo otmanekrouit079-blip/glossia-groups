@@ -82,6 +82,56 @@ const ownerNetBreakdownSubtitle = document.getElementById("owner-net-breakdown-s
 const ownerNetBreakdownList = document.getElementById("owner-net-breakdown-list");
 const ownerNetBreakdownCloseButton = document.getElementById("owner-net-breakdown-close");
 const ownerNetBreakdownCloseIconButton = document.getElementById("owner-net-breakdown-close-icon");
+const ownerBackendAuthModal = document.getElementById("owner-backend-auth-modal");
+const ownerBackendAuthCloseIconButton = document.getElementById("owner-backend-auth-close-icon");
+const ownerBackendAuthCloseButton = document.getElementById("owner-backend-auth-close");
+const ownerBackendAuthForm = document.getElementById("owner-backend-auth-form");
+const ownerBackendAuthUsername = document.getElementById("owner-backend-auth-username");
+const ownerBackendAuthPassword = document.getElementById("owner-backend-auth-password");
+const ownerBackendAuthFeedback = document.getElementById("owner-backend-auth-feedback");
+
+const ownerBookingsModal = document.getElementById("owner-bookings-modal");
+const ownerBookingsCloseIconButton = document.getElementById("owner-bookings-close-icon");
+const ownerBookingsCloseButton = document.getElementById("owner-bookings-close");
+const ownerBookingsRefreshButton = document.getElementById("owner-bookings-refresh");
+const ownerBookingsList = document.getElementById("owner-bookings-list");
+const ownerBookingsFeedback = document.getElementById("owner-bookings-feedback");
+
+const ownerStoreModal = document.getElementById("owner-store-modal");
+const ownerStoreCloseIconButton = document.getElementById("owner-store-close-icon");
+const ownerStoreCloseButton = document.getElementById("owner-store-close");
+const ownerStoreTabButtons = document.querySelectorAll(".modal-tab-btn[data-store-tab]");
+
+const ownerStoreAddProductToggle = document.getElementById("owner-store-add-product-toggle");
+const ownerStoreProductForm = document.getElementById("owner-store-product-form");
+const ownerStoreProductId = document.getElementById("owner-store-product-id");
+const ownerStoreProductName = document.getElementById("owner-store-product-name");
+const ownerStoreProductShortDesc = document.getElementById("owner-store-product-short-desc");
+const ownerStoreProductLongDesc = document.getElementById("owner-store-product-long-desc");
+const ownerStoreProductCategory = document.getElementById("owner-store-product-category");
+const ownerStoreProductPrice1 = document.getElementById("owner-store-product-price1");
+const ownerStoreProductPrice2 = document.getElementById("owner-store-product-price2");
+const ownerStoreProductPrice3 = document.getElementById("owner-store-product-price3");
+const ownerStoreProductStock = document.getElementById("owner-store-product-stock");
+const ownerStoreProductPhoto = document.getElementById("owner-store-product-photo");
+const ownerStoreProductPhotoPreview = document.getElementById("owner-store-product-photo-preview");
+const ownerStoreProductFeedback = document.getElementById("owner-store-product-feedback");
+const ownerStoreProductCancel = document.getElementById("owner-store-product-cancel");
+const ownerStoreProductsList = document.getElementById("owner-store-products-list");
+
+const ownerStoreAddServiceToggle = document.getElementById("owner-store-add-service-toggle");
+const ownerStoreServiceForm = document.getElementById("owner-store-service-form");
+const ownerStoreServiceId = document.getElementById("owner-store-service-id");
+const ownerStoreServiceName = document.getElementById("owner-store-service-name");
+const ownerStoreServiceDesc = document.getElementById("owner-store-service-desc");
+const ownerStoreServicePrice = document.getElementById("owner-store-service-price");
+const ownerStoreServiceDuration = document.getElementById("owner-store-service-duration");
+const ownerStoreServicePhoto = document.getElementById("owner-store-service-photo");
+const ownerStoreServicePhotoPreview = document.getElementById("owner-store-service-photo-preview");
+const ownerStoreServiceFeedback = document.getElementById("owner-store-service-feedback");
+const ownerStoreServiceCancel = document.getElementById("owner-store-service-cancel");
+const ownerStoreServicesList = document.getElementById("owner-store-services-list");
+
 const ownerNetOverviewPeriodButtons = document.querySelectorAll(".owner-net-overview-period-btn");
 const ownerNetOverviewChart = document.getElementById("owner-net-overview-chart");
 const ownerNetCaTotal = document.getElementById("owner-net-ca-total");
@@ -90,6 +140,7 @@ const ownerNetCaProducts = document.getElementById("owner-net-ca-products");
 const ownerNetChargesFixed = document.getElementById("owner-net-charges-fixed");
 const ownerNetChargesVariable = document.getElementById("owner-net-charges-variable");
 const ownerNetCreditInput = document.getElementById("owner-net-credit-input");
+const ownerCleanlinessTaxInput = document.getElementById("owner-cleanliness-tax-input");
 const ownerNetBenefitServices = document.getElementById("owner-net-benefit-services");
 const ownerNetBenefitProducts = document.getElementById("owner-net-benefit-products");
 const ownerNetBenefitTotal = document.getElementById("owner-net-benefit-total");
@@ -1431,11 +1482,24 @@ function getOwnerNetOverviewPeriodFactor(period) {
   return 1;
 }
 
+function getOwnerCleanlinessTaxAmount() {
+  const value = Number(ownerSharedData.ownerCleanlinessTax || 0);
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function setOwnerCleanlinessTaxAmount(value) {
+  const safeValue = Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0;
+  ownerSharedData.ownerCleanlinessTax = safeValue;
+  saveOwnerProductsData();
+}
+
 function getOwnerFixedCostsTotalForPeriod(period) {
   const factor = getOwnerNetOverviewPeriodFactor(period);
-  return (ownerSharedData.fixedCosts || []).reduce(function (total, cost) {
+  const manualFixedTotal = (ownerSharedData.fixedCosts || []).reduce(function (total, cost) {
     return total + Number(cost.monthlyAmount || 0);
-  }, 0) * factor;
+  }, 0);
+
+  return (manualFixedTotal + getOwnerCleanlinessTaxAmount()) * factor;
 }
 
 function getOwnerVariableCostsTotalForPeriod(period) {
@@ -3042,6 +3106,11 @@ function renderOwnerTargetForm() {
   ownerTargetGlobalInput.value = ownerCampaignTarget?.globalTarget
     ? String(ownerCampaignTarget.globalTarget)
     : "";
+
+  if (ownerCleanlinessTaxInput) {
+    const cleanlinessTax = getOwnerCleanlinessTaxAmount();
+    ownerCleanlinessTaxInput.value = cleanlinessTax > 0 ? cleanlinessTax : "";
+  }
 }
 
 function openOwnerTargetModal() {
@@ -3801,6 +3870,877 @@ if (ownerBriefingModal) {
   });
 }
 
+const OWNER_BACKEND_TOKEN_KEY = "ownerBackendToken";
+let ownerBackendAuthPendingAction = null;
+let ownerStoreEditingProductId = null;
+let ownerStoreEditingServiceId = null;
+
+function getOwnerApiBase() {
+  return window.SalonStorage ? window.SalonStorage.getApiBaseUrl() : "";
+}
+
+function getOwnerBackendToken() {
+  return sessionStorage.getItem(OWNER_BACKEND_TOKEN_KEY) || "";
+}
+
+function setOwnerBackendToken(token) {
+  if (token) {
+    sessionStorage.setItem(OWNER_BACKEND_TOKEN_KEY, token);
+  } else {
+    sessionStorage.removeItem(OWNER_BACKEND_TOKEN_KEY);
+  }
+}
+
+function resolveOwnerStoreImageUrl(imageUrl) {
+  if (!imageUrl) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  return getOwnerApiBase() + imageUrl;
+}
+
+async function ownerAuthorizedFetch(path, options) {
+  const finalOptions = options || {};
+  finalOptions.headers = Object.assign({}, finalOptions.headers, {
+    Authorization: "Bearer " + getOwnerBackendToken()
+  });
+
+  return fetch(getOwnerApiBase() + path, finalOptions);
+}
+
+function openOwnerBackendAuthModal(onSuccess) {
+  if (!ownerBackendAuthModal) {
+    return;
+  }
+
+  ownerBackendAuthPendingAction = onSuccess || null;
+
+  if (ownerBackendAuthFeedback) {
+    ownerBackendAuthFeedback.textContent = "";
+    ownerBackendAuthFeedback.classList.remove("is-error");
+  }
+
+  if (ownerBackendAuthForm) {
+    ownerBackendAuthForm.reset();
+  }
+
+  ownerBackendAuthModal.classList.remove("hidden");
+}
+
+function closeOwnerBackendAuthModal() {
+  if (ownerBackendAuthModal) {
+    ownerBackendAuthModal.classList.add("hidden");
+  }
+
+  ownerBackendAuthPendingAction = null;
+}
+
+function ensureOwnerBackendAuth(onReady) {
+  if (getOwnerBackendToken()) {
+    onReady();
+    return;
+  }
+
+  openOwnerBackendAuthModal(onReady);
+}
+
+if (ownerBackendAuthForm) {
+  ownerBackendAuthForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const username = ownerBackendAuthUsername.value.trim();
+    const password = ownerBackendAuthPassword.value;
+
+    if (ownerBackendAuthFeedback) {
+      ownerBackendAuthFeedback.textContent = "";
+      ownerBackendAuthFeedback.classList.remove("is-error");
+    }
+
+    fetch(getOwnerApiBase() + "/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username, password: password })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("bad-credentials");
+        }
+        return response.json();
+      })
+      .then(function (payload) {
+        setOwnerBackendToken(payload.access_token);
+        const action = ownerBackendAuthPendingAction;
+        closeOwnerBackendAuthModal();
+        if (action) {
+          action();
+        }
+      })
+      .catch(function () {
+        if (ownerBackendAuthFeedback) {
+          ownerBackendAuthFeedback.textContent = "المعلومات خاطئة ولا كاين مشكل فالاتصال.";
+          ownerBackendAuthFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
+if (ownerBackendAuthCloseButton) {
+  ownerBackendAuthCloseButton.addEventListener("click", closeOwnerBackendAuthModal);
+}
+
+if (ownerBackendAuthCloseIconButton) {
+  ownerBackendAuthCloseIconButton.addEventListener("click", closeOwnerBackendAuthModal);
+}
+
+if (ownerBackendAuthModal) {
+  ownerBackendAuthModal.addEventListener("click", function (event) {
+    if (event.target === ownerBackendAuthModal) {
+      closeOwnerBackendAuthModal();
+    }
+  });
+}
+
+const OWNER_BOOKING_STATUSES = ["pending", "confirmed", "in_store", "paid_in_store", "cancelled", "no_show"];
+
+function formatOwnerBookingStatus(status) {
+  const map = {
+    pending: "فالانتظار",
+    confirmed: "مؤكد",
+    in_store: "وصل للمحل",
+    paid_in_store: "خلص فالمحل",
+    cancelled: "ملغي",
+    no_show: "ماجاش"
+  };
+
+  return map[status] || status;
+}
+
+function updateOwnerBookingStatus(bookingId, status) {
+  ownerAuthorizedFetch("/admin/bookings/" + bookingId, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: status })
+  }).then(function (response) {
+    if (response.status === 401) {
+      setOwnerBackendToken("");
+      openOwnerBackendAuthModal(function () {
+        updateOwnerBookingStatus(bookingId, status);
+      });
+    }
+  }).catch(function () {});
+}
+
+function renderOwnerBookingCard(booking) {
+  const card = document.createElement("div");
+  card.className = "owner-booking-card";
+
+  const head = document.createElement("div");
+  head.className = "owner-booking-head";
+
+  const nameEl = document.createElement("strong");
+  nameEl.textContent = booking.client_name + " · " + booking.client_phone;
+
+  const dateEl = document.createElement("span");
+  dateEl.textContent = booking.booking_date + " · " + String(booking.booking_time || "").slice(0, 5);
+
+  head.appendChild(nameEl);
+  head.appendChild(dateEl);
+
+  const items = document.createElement("div");
+  items.className = "owner-booking-items";
+
+  const serviceNames = (booking.services || []).map(function (row) { return row.name; });
+  const productNames = (booking.products || []).map(function (row) { return row.name + " ×" + row.quantity; });
+  const parts = [];
+  if (serviceNames.length) {
+    parts.push("الخدمات: " + serviceNames.join("، "));
+  }
+  if (productNames.length) {
+    parts.push("المنتوجات: " + productNames.join("، "));
+  }
+  if (booking.note) {
+    parts.push("ملاحظة: " + booking.note);
+  }
+  items.textContent = parts.join(" — ") || "بلا تفاصيل";
+
+  const foot = document.createElement("div");
+  foot.className = "owner-booking-foot";
+
+  const totalEl = document.createElement("span");
+  totalEl.className = "owner-booking-total";
+  totalEl.textContent = formatOwnerAmount(Number(booking.total_amount || 0));
+
+  const statusSelect = document.createElement("select");
+  statusSelect.className = "owner-booking-status-select";
+  OWNER_BOOKING_STATUSES.forEach(function (status) {
+    const option = document.createElement("option");
+    option.value = status;
+    option.textContent = formatOwnerBookingStatus(status);
+    if (status === booking.status) {
+      option.selected = true;
+    }
+    statusSelect.appendChild(option);
+  });
+  statusSelect.addEventListener("change", function () {
+    updateOwnerBookingStatus(booking.id, statusSelect.value);
+  });
+
+  foot.appendChild(totalEl);
+  foot.appendChild(statusSelect);
+
+  card.appendChild(head);
+  card.appendChild(items);
+  card.appendChild(foot);
+  return card;
+}
+
+function loadOwnerBookings() {
+  if (!ownerBookingsList) {
+    return;
+  }
+
+  if (ownerBookingsFeedback) {
+    ownerBookingsFeedback.textContent = "كنحمل...";
+    ownerBookingsFeedback.classList.remove("is-error");
+  }
+
+  ownerAuthorizedFetch("/admin/bookings")
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(loadOwnerBookings);
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(function (bookings) {
+      if (bookings === null) {
+        return;
+      }
+
+      ownerBookingsList.innerHTML = "";
+      if (!bookings.length) {
+        const empty = document.createElement("p");
+        empty.className = "owner-bi-empty";
+        empty.textContent = "ماكاين حتى موعد دابا.";
+        ownerBookingsList.appendChild(empty);
+      } else {
+        bookings.forEach(function (booking) {
+          ownerBookingsList.appendChild(renderOwnerBookingCard(booking));
+        });
+      }
+
+      if (ownerBookingsFeedback) {
+        ownerBookingsFeedback.textContent = "";
+      }
+    })
+    .catch(function () {
+      if (ownerBookingsFeedback) {
+        ownerBookingsFeedback.textContent = "تعذر تحميل المواعيد. تأكد من الاتصال.";
+        ownerBookingsFeedback.classList.add("is-error");
+      }
+    });
+}
+
+function openOwnerBookingsModal() {
+  if (!ownerBookingsModal) {
+    return;
+  }
+
+  ownerBookingsModal.classList.remove("hidden");
+  loadOwnerBookings();
+}
+
+function closeOwnerBookingsModal() {
+  if (ownerBookingsModal) {
+    ownerBookingsModal.classList.add("hidden");
+  }
+}
+
+if (ownerBookingsCloseButton) {
+  ownerBookingsCloseButton.addEventListener("click", closeOwnerBookingsModal);
+}
+
+if (ownerBookingsCloseIconButton) {
+  ownerBookingsCloseIconButton.addEventListener("click", closeOwnerBookingsModal);
+}
+
+if (ownerBookingsRefreshButton) {
+  ownerBookingsRefreshButton.addEventListener("click", loadOwnerBookings);
+}
+
+if (ownerBookingsModal) {
+  ownerBookingsModal.addEventListener("click", function (event) {
+    if (event.target === ownerBookingsModal) {
+      closeOwnerBookingsModal();
+    }
+  });
+}
+
+function uploadOwnerStoreImage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return ownerAuthorizedFetch("/admin/upload", {
+    method: "POST",
+    body: formData
+  }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("upload-failed");
+    }
+    return response.json();
+  }).then(function (payload) {
+    return payload.url;
+  });
+}
+
+function setOwnerStoreTab(tabName) {
+  ownerStoreTabButtons.forEach(function (button) {
+    button.classList.toggle("active", button.dataset.storeTab === tabName);
+  });
+
+  const productsPanel = document.getElementById("owner-store-tab-products");
+  const servicesPanel = document.getElementById("owner-store-tab-services");
+  if (productsPanel) {
+    productsPanel.classList.toggle("hidden", tabName !== "products");
+  }
+  if (servicesPanel) {
+    servicesPanel.classList.toggle("hidden", tabName !== "services");
+  }
+}
+
+ownerStoreTabButtons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    setOwnerStoreTab(button.dataset.storeTab);
+  });
+});
+
+function openOwnerStoreProductForm(product) {
+  if (!ownerStoreProductForm) {
+    return;
+  }
+
+  ownerStoreProductForm.classList.remove("hidden");
+  if (ownerStoreProductFeedback) {
+    ownerStoreProductFeedback.textContent = "";
+    ownerStoreProductFeedback.classList.remove("is-error");
+  }
+  ownerStoreProductPhoto.value = "";
+
+  if (product) {
+    ownerStoreEditingProductId = product.id;
+    ownerStoreProductId.value = product.id;
+    ownerStoreProductName.value = product.name;
+    ownerStoreProductShortDesc.value = product.short_description || "";
+    ownerStoreProductLongDesc.value = product.long_description || "";
+    ownerStoreProductCategory.value = product.category || "";
+    ownerStoreProductPrice1.value = product.price_1;
+    ownerStoreProductPrice2.value = product.price_2;
+    ownerStoreProductPrice3.value = product.price_3;
+    ownerStoreProductStock.value = product.stock;
+    ownerStoreProductForm.dataset.imageUrl = product.image_url || "";
+    ownerStoreProductPhotoPreview.src = resolveOwnerStoreImageUrl(product.image_url);
+    ownerStoreProductPhotoPreview.classList.remove("hidden");
+  } else {
+    ownerStoreEditingProductId = null;
+    ownerStoreProductForm.reset();
+    ownerStoreProductId.value = "";
+    ownerStoreProductForm.dataset.imageUrl = "";
+    ownerStoreProductPhotoPreview.classList.add("hidden");
+  }
+}
+
+function closeOwnerStoreProductForm() {
+  if (!ownerStoreProductForm) {
+    return;
+  }
+
+  ownerStoreProductForm.classList.add("hidden");
+  ownerStoreProductForm.reset();
+  ownerStoreEditingProductId = null;
+}
+
+if (ownerStoreAddProductToggle) {
+  ownerStoreAddProductToggle.addEventListener("click", function () {
+    openOwnerStoreProductForm(null);
+  });
+}
+
+if (ownerStoreProductCancel) {
+  ownerStoreProductCancel.addEventListener("click", closeOwnerStoreProductForm);
+}
+
+if (ownerStoreProductPhoto) {
+  ownerStoreProductPhoto.addEventListener("change", function () {
+    const file = ownerStoreProductPhoto.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      ownerStoreProductPhotoPreview.src = reader.result;
+      ownerStoreProductPhotoPreview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderOwnerStoreProducts(products) {
+  if (!ownerStoreProductsList) {
+    return;
+  }
+
+  ownerStoreProductsList.innerHTML = "";
+
+  if (!products.length) {
+    ownerStoreProductsList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى منتوج فالستور.</p>';
+    return;
+  }
+
+  products.forEach(function (product) {
+    const card = document.createElement("div");
+    card.className = "owner-store-item-card";
+
+    const img = document.createElement("img");
+    img.className = "owner-store-item-photo";
+    img.src = resolveOwnerStoreImageUrl(product.image_url);
+    img.alt = product.name;
+    img.loading = "lazy";
+
+    const body = document.createElement("div");
+    body.className = "owner-store-item-body";
+
+    const name = document.createElement("strong");
+    name.textContent = product.name;
+
+    const price = document.createElement("span");
+    price.textContent =
+      formatOwnerAmount(Number(product.price_1)) + " / " +
+      formatOwnerAmount(Number(product.price_2)) + " / " +
+      formatOwnerAmount(Number(product.price_3));
+
+    const actions = document.createElement("div");
+    actions.className = "owner-store-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "manager-btn manager-btn-muted";
+    editButton.textContent = "تعديل";
+    editButton.addEventListener("click", function () {
+      openOwnerStoreProductForm(product);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "manager-btn manager-btn-muted";
+    deleteButton.textContent = "مسح";
+    deleteButton.addEventListener("click", function () {
+      deleteOwnerStoreProduct(product.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+
+    body.appendChild(name);
+    body.appendChild(price);
+    body.appendChild(actions);
+
+    card.appendChild(img);
+    card.appendChild(body);
+    ownerStoreProductsList.appendChild(card);
+  });
+}
+
+function loadOwnerStoreProducts() {
+  if (!ownerStoreProductsList) {
+    return;
+  }
+
+  fetch(getOwnerApiBase() + "/api/products/")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(renderOwnerStoreProducts)
+    .catch(function () {
+      ownerStoreProductsList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل المنتوجات.</p>';
+    });
+}
+
+function deleteOwnerStoreProduct(productId) {
+  if (!window.confirm("واش متأكد بغيتي تمسح هاد المنتوج؟")) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/products/" + productId, { method: "DELETE" })
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(function () { deleteOwnerStoreProduct(productId); });
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("delete-failed");
+      }
+      loadOwnerStoreProducts();
+    })
+    .catch(function () {
+      alert("تعذر مسح المنتوج.");
+    });
+}
+
+if (ownerStoreProductForm) {
+  ownerStoreProductForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (ownerStoreProductFeedback) {
+      ownerStoreProductFeedback.textContent = "كنسجل...";
+      ownerStoreProductFeedback.classList.remove("is-error");
+    }
+
+    const file = ownerStoreProductPhoto.files[0];
+    const uploadPromise = file
+      ? uploadOwnerStoreImage(file)
+      : Promise.resolve(ownerStoreProductForm.dataset.imageUrl || "/images/placeholders/product.jpg");
+
+    uploadPromise
+      .then(function (imageUrl) {
+        const payload = {
+          name: ownerStoreProductName.value.trim(),
+          short_description: ownerStoreProductShortDesc.value.trim(),
+          long_description: ownerStoreProductLongDesc.value.trim(),
+          image_url: imageUrl,
+          category: ownerStoreProductCategory.value.trim() || "hair-care",
+          price_1: Number(ownerStoreProductPrice1.value),
+          price_2: Number(ownerStoreProductPrice2.value),
+          price_3: Number(ownerStoreProductPrice3.value),
+          stock: Number(ownerStoreProductStock.value || 0),
+          rating: 4.8,
+          review_count: 0
+        };
+
+        const isEdit = Boolean(ownerStoreEditingProductId);
+        return ownerAuthorizedFetch(
+          isEdit ? "/admin/products/" + ownerStoreEditingProductId : "/admin/products",
+          {
+            method: isEdit ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }
+        );
+      })
+      .then(function (response) {
+        if (response.status === 401) {
+          setOwnerBackendToken("");
+          openOwnerBackendAuthModal(function () { ownerStoreProductForm.requestSubmit(); });
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error("save-failed");
+        }
+        return response.json();
+      })
+      .then(function (result) {
+        if (result === null) {
+          return;
+        }
+        closeOwnerStoreProductForm();
+        loadOwnerStoreProducts();
+      })
+      .catch(function () {
+        if (ownerStoreProductFeedback) {
+          ownerStoreProductFeedback.textContent = "تعذر التسجيل. عاود حاول.";
+          ownerStoreProductFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
+function openOwnerStoreServiceForm(service) {
+  if (!ownerStoreServiceForm) {
+    return;
+  }
+
+  ownerStoreServiceForm.classList.remove("hidden");
+  if (ownerStoreServiceFeedback) {
+    ownerStoreServiceFeedback.textContent = "";
+    ownerStoreServiceFeedback.classList.remove("is-error");
+  }
+  ownerStoreServicePhoto.value = "";
+
+  if (service) {
+    ownerStoreEditingServiceId = service.id;
+    ownerStoreServiceId.value = service.id;
+    ownerStoreServiceName.value = service.name;
+    ownerStoreServiceDesc.value = service.description || "";
+    ownerStoreServicePrice.value = service.price;
+    ownerStoreServiceDuration.value = service.duration_minutes;
+    ownerStoreServiceForm.dataset.imageUrl = service.image_url || "";
+    ownerStoreServicePhotoPreview.src = resolveOwnerStoreImageUrl(service.image_url);
+    ownerStoreServicePhotoPreview.classList.remove("hidden");
+  } else {
+    ownerStoreEditingServiceId = null;
+    ownerStoreServiceForm.reset();
+    ownerStoreServiceId.value = "";
+    ownerStoreServiceForm.dataset.imageUrl = "";
+    ownerStoreServicePhotoPreview.classList.add("hidden");
+  }
+}
+
+function closeOwnerStoreServiceForm() {
+  if (!ownerStoreServiceForm) {
+    return;
+  }
+
+  ownerStoreServiceForm.classList.add("hidden");
+  ownerStoreServiceForm.reset();
+  ownerStoreEditingServiceId = null;
+}
+
+if (ownerStoreAddServiceToggle) {
+  ownerStoreAddServiceToggle.addEventListener("click", function () {
+    openOwnerStoreServiceForm(null);
+  });
+}
+
+if (ownerStoreServiceCancel) {
+  ownerStoreServiceCancel.addEventListener("click", closeOwnerStoreServiceForm);
+}
+
+if (ownerStoreServicePhoto) {
+  ownerStoreServicePhoto.addEventListener("change", function () {
+    const file = ownerStoreServicePhoto.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      ownerStoreServicePhotoPreview.src = reader.result;
+      ownerStoreServicePhotoPreview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderOwnerStoreServices(services) {
+  if (!ownerStoreServicesList) {
+    return;
+  }
+
+  ownerStoreServicesList.innerHTML = "";
+
+  if (!services.length) {
+    ownerStoreServicesList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى خدمة فالستور.</p>';
+    return;
+  }
+
+  services.forEach(function (service) {
+    const card = document.createElement("div");
+    card.className = "owner-store-item-card";
+
+    const img = document.createElement("img");
+    img.className = "owner-store-item-photo";
+    img.src = resolveOwnerStoreImageUrl(service.image_url);
+    img.alt = service.name;
+    img.loading = "lazy";
+
+    const body = document.createElement("div");
+    body.className = "owner-store-item-body";
+
+    const name = document.createElement("strong");
+    name.textContent = service.name;
+
+    const price = document.createElement("span");
+    price.textContent = formatOwnerAmount(Number(service.price)) + " · " + service.duration_minutes + " د";
+
+    const actions = document.createElement("div");
+    actions.className = "owner-store-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "manager-btn manager-btn-muted";
+    editButton.textContent = "تعديل";
+    editButton.addEventListener("click", function () {
+      openOwnerStoreServiceForm(service);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "manager-btn manager-btn-muted";
+    deleteButton.textContent = "مسح";
+    deleteButton.addEventListener("click", function () {
+      deleteOwnerStoreService(service.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+
+    body.appendChild(name);
+    body.appendChild(price);
+    body.appendChild(actions);
+
+    card.appendChild(img);
+    card.appendChild(body);
+    ownerStoreServicesList.appendChild(card);
+  });
+}
+
+function loadOwnerStoreServices() {
+  if (!ownerStoreServicesList) {
+    return;
+  }
+
+  fetch(getOwnerApiBase() + "/api/services/")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("failed");
+      }
+      return response.json();
+    })
+    .then(renderOwnerStoreServices)
+    .catch(function () {
+      ownerStoreServicesList.innerHTML = '<p class="owner-bi-empty">تعذر تحميل الخدمات.</p>';
+    });
+}
+
+function deleteOwnerStoreService(serviceId) {
+  if (!window.confirm("واش متأكد بغيتي تمسح هاد الخدمة؟")) {
+    return;
+  }
+
+  ownerAuthorizedFetch("/admin/services/" + serviceId, { method: "DELETE" })
+    .then(function (response) {
+      if (response.status === 401) {
+        setOwnerBackendToken("");
+        openOwnerBackendAuthModal(function () { deleteOwnerStoreService(serviceId); });
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("delete-failed");
+      }
+      loadOwnerStoreServices();
+    })
+    .catch(function () {
+      alert("تعذر مسح الخدمة.");
+    });
+}
+
+if (ownerStoreServiceForm) {
+  ownerStoreServiceForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (ownerStoreServiceFeedback) {
+      ownerStoreServiceFeedback.textContent = "كنسجل...";
+      ownerStoreServiceFeedback.classList.remove("is-error");
+    }
+
+    const file = ownerStoreServicePhoto.files[0];
+    const uploadPromise = file
+      ? uploadOwnerStoreImage(file)
+      : Promise.resolve(ownerStoreServiceForm.dataset.imageUrl || "/images/placeholders/service.jpg");
+
+    uploadPromise
+      .then(function (imageUrl) {
+        const payload = {
+          name: ownerStoreServiceName.value.trim(),
+          description: ownerStoreServiceDesc.value.trim(),
+          price: Number(ownerStoreServicePrice.value),
+          duration_minutes: Number(ownerStoreServiceDuration.value),
+          image_url: imageUrl
+        };
+
+        const isEdit = Boolean(ownerStoreEditingServiceId);
+        return ownerAuthorizedFetch(
+          isEdit ? "/admin/services/" + ownerStoreEditingServiceId : "/admin/services",
+          {
+            method: isEdit ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }
+        );
+      })
+      .then(function (response) {
+        if (response.status === 401) {
+          setOwnerBackendToken("");
+          openOwnerBackendAuthModal(function () { ownerStoreServiceForm.requestSubmit(); });
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error("save-failed");
+        }
+        return response.json();
+      })
+      .then(function (result) {
+        if (result === null) {
+          return;
+        }
+        closeOwnerStoreServiceForm();
+        loadOwnerStoreServices();
+      })
+      .catch(function () {
+        if (ownerStoreServiceFeedback) {
+          ownerStoreServiceFeedback.textContent = "تعذر التسجيل. عاود حاول.";
+          ownerStoreServiceFeedback.classList.add("is-error");
+        }
+      });
+  });
+}
+
+function openOwnerStoreModal() {
+  if (!ownerStoreModal) {
+    return;
+  }
+
+  ownerStoreModal.classList.remove("hidden");
+  loadOwnerStoreProducts();
+  loadOwnerStoreServices();
+}
+
+function closeOwnerStoreModal() {
+  if (ownerStoreModal) {
+    ownerStoreModal.classList.add("hidden");
+  }
+}
+
+if (ownerStoreCloseButton) {
+  ownerStoreCloseButton.addEventListener("click", closeOwnerStoreModal);
+}
+
+if (ownerStoreCloseIconButton) {
+  ownerStoreCloseIconButton.addEventListener("click", closeOwnerStoreModal);
+}
+
+if (ownerStoreModal) {
+  ownerStoreModal.addEventListener("click", function (event) {
+    if (event.target === ownerStoreModal) {
+      closeOwnerStoreModal();
+    }
+  });
+}
+
+const ownerActionBookingsButton = document.getElementById("owner-action-bookings");
+if (ownerActionBookingsButton) {
+  ownerActionBookingsButton.addEventListener("click", function () {
+    ensureOwnerBackendAuth(openOwnerBookingsModal);
+  });
+}
+
+const ownerActionStoreButton = document.getElementById("owner-action-store");
+if (ownerActionStoreButton) {
+  ownerActionStoreButton.addEventListener("click", openOwnerStoreModal);
+}
+
 function ensureOwnerTaxBrackets() {
   if (!ownerSharedData.taxBrackets || typeof ownerSharedData.taxBrackets !== "object") {
     ownerSharedData.taxBrackets = { service: [], product: [] };
@@ -3900,6 +4840,37 @@ if (ownerNetCreditInput) {
     setOwnerCreditAmount(ownerNetCreditInput.value);
     renderOwnerNetOverview();
   });
+}
+
+if (ownerCleanlinessTaxInput) {
+  ownerCleanlinessTaxInput.addEventListener("change", function () {
+    setOwnerCleanlinessTaxAmount(ownerCleanlinessTaxInput.value);
+    renderOwnerNetOverview();
+  });
+}
+
+const ownerActionEmployeesButton = document.getElementById("owner-action-employees");
+if (ownerActionEmployeesButton) {
+  ownerActionEmployeesButton.addEventListener("click", function () {
+    window.open("manager-dashboard.html", "_blank");
+  });
+}
+
+const ownerActionTasksButton = document.getElementById("owner-action-tasks");
+if (ownerActionTasksButton) {
+  ownerActionTasksButton.addEventListener("click", function () {
+    setOwnerCompactView("team");
+  });
+}
+
+const ownerActionSaleProductsButton = document.getElementById("owner-action-sale-products");
+if (ownerActionSaleProductsButton) {
+  ownerActionSaleProductsButton.addEventListener("click", openOwnerProductsPopupModal);
+}
+
+const ownerActionTargetsButton = document.getElementById("owner-action-targets");
+if (ownerActionTargetsButton) {
+  ownerActionTargetsButton.addEventListener("click", openOwnerTargetModal);
 }
 
 ownerNetOverviewPeriodButtons.forEach(function (button) {
