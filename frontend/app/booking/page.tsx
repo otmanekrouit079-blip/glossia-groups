@@ -15,7 +15,6 @@ import {
 } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const TOTAL_STEPS = 7;
 
 type AvailabilityItem = { time: string; available: boolean };
 
@@ -28,8 +27,6 @@ type CouponState = {
 };
 
 export default function BookingPage() {
-  const [step, setStep] = useState(1);
-
   const [branches, setBranches] = useState<Branch[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -157,6 +154,15 @@ export default function BookingPage() {
     setCouponChecking(false);
   }
 
+  const canSubmit =
+    serviceIds.length > 0 &&
+    (staffPreference === "any" || (staffPreference === "has" && Boolean(staffId))) &&
+    Boolean(date) &&
+    Boolean(time) &&
+    (wantsCoupon === "no" || wantsCoupon === "" || (wantsCoupon === "yes" && Boolean(coupon?.valid))) &&
+    Boolean(clientName.trim()) &&
+    Boolean(clientPhone.trim());
+
   async function submitBooking() {
     setSubmitting(true);
     setSubmitError("");
@@ -218,16 +224,6 @@ export default function BookingPage() {
     setConfirming(false);
   }
 
-  function canGoNext(): boolean {
-    if (step === 1) return serviceIds.length > 0;
-    if (step === 2) return staffPreference === "any" || (staffPreference === "has" && Boolean(staffId));
-    if (step === 3) return Boolean(date);
-    if (step === 4) return Boolean(time);
-    if (step === 5) return true;
-    if (step === 6) return wantsCoupon === "no" || (wantsCoupon === "yes" && Boolean(coupon?.valid));
-    return true;
-  }
-
   if (confirmed) {
     return (
       <section className="mx-auto max-w-lg px-4 py-16 text-center">
@@ -242,106 +238,93 @@ export default function BookingPage() {
 
   return (
     <section className="mx-auto max-w-2xl px-4 py-12">
-      <div className="card relative p-6 md:p-8">
+      <div className="card p-6 md:p-8">
         <h1 className="font-heading text-2xl font-extrabold text-ink">حجز الموعد</h1>
-        <div className="mt-3 flex gap-1">
-          {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
-            <span
-              key={index}
-              className={`h-1.5 flex-1 rounded-full ${index < step ? "bg-brass" : "bg-borderline"}`}
-            />
-          ))}
+        <p className="mt-1 text-sm text-textmuted">عمر المعلومات لي تحت وأكد الحجز فالأخير.</p>
+
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">1. اختار العروض ديالك</h2>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {services.map((service) => (
+              <label
+                key={service.id}
+                className="flex items-center gap-2 rounded-xl border border-borderline bg-surface-alt p-3"
+              >
+                <input type="checkbox" checked={serviceIds.includes(service.id)} onChange={() => toggleService(service.id)} />
+                <span>
+                  {service.name} ({service.price} DH)
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
 
-        {step === 1 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">اختار العروض ديالك</h2>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {services.map((service) => (
-                <label
-                  key={service.id}
-                  className="flex items-center gap-2 rounded-xl border border-borderline bg-surface-alt p-3"
-                >
-                  <input type="checkbox" checked={serviceIds.includes(service.id)} onChange={() => toggleService(service.id)} />
-                  <span>
-                    {service.name} ({service.price} DH)
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {step === 2 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">اختار شكون بغيتيه يخدمك</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setStaffPreference("has")}
-                className={`rounded-xl border p-4 text-center font-semibold ${
-                  staffPreference === "has" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-                }`}
-              >
-                عندي مفضل
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setStaffPreference("any");
-                  setStaffId("");
-                }}
-                className={`rounded-xl border p-4 text-center font-semibold ${
-                  staffPreference === "any" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-                }`}
-              >
-                اللي خاوي، أنا مزروب
-              </button>
-            </div>
-
-            {staffPreference === "has" ? (
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {staffList.map((member) => (
-                  <button
-                    key={member.id}
-                    type="button"
-                    onClick={() => setStaffId(member.id)}
-                    className={`rounded-xl border p-3 text-center ${
-                      staffId === member.id ? "border-brass bg-brass/10" : "border-borderline"
-                    }`}
-                  >
-                    <img
-                      src={resolveImageUrl(member.photo_url)}
-                      alt={member.name}
-                      className="mx-auto mb-2 h-16 w-16 rounded-full object-cover"
-                    />
-                    <span className="text-sm font-semibold text-ink">{member.name}</span>
-                  </button>
-                ))}
-                {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
-        {step === 3 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">اختار اليوم</h2>
-            <input
-              className="w-full rounded-xl border border-borderline p-3"
-              type="date"
-              value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
-                setTime("");
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">2. اختار شكون بغيتيه يخدمك</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setStaffPreference("has")}
+              className={`rounded-xl border p-4 text-center font-semibold ${
+                staffPreference === "has" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
+              }`}
+            >
+              عندي مفضل
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setStaffPreference("any");
+                setStaffId("");
               }}
-            />
+              className={`rounded-xl border p-4 text-center font-semibold ${
+                staffPreference === "any" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
+              }`}
+            >
+              اللي خاوي، أنا مزروب
+            </button>
           </div>
-        ) : null}
 
-        {step === 4 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">اختار الوقت</h2>
+          {staffPreference === "has" ? (
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {staffList.map((member) => (
+                <button
+                  key={member.id}
+                  type="button"
+                  onClick={() => setStaffId(member.id)}
+                  className={`rounded-xl border p-3 text-center ${
+                    staffId === member.id ? "border-brass bg-brass/10" : "border-borderline"
+                  }`}
+                >
+                  <img
+                    src={resolveImageUrl(member.photo_url)}
+                    alt={member.name}
+                    className="mx-auto mb-2 h-16 w-16 rounded-full object-cover"
+                  />
+                  <span className="text-sm font-semibold text-ink">{member.name}</span>
+                </button>
+              ))}
+              {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">3. اختار اليوم</h2>
+          <input
+            className="w-full rounded-xl border border-borderline p-3"
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+              setTime("");
+            }}
+          />
+        </div>
+
+        {date ? (
+          <div className="mt-6 border-t border-borderline pt-6">
+            <h2 className="mb-3 font-bold text-ink">4. اختار الوقت</h2>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {slots.filter((slot) => slot.available).map((slot) => (
                 <button
@@ -362,161 +345,124 @@ export default function BookingPage() {
           </div>
         ) : null}
 
-        {step === 5 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">اختار منتوج (اختياري)</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {products.map((product) => (
-                <div key={product.id} className="rounded-xl border border-borderline bg-surface-alt p-3">
-                  <img src={resolveImageUrl(product.image_url)} alt={product.name} className="mb-2 h-28 w-full rounded-lg object-cover" />
-                  <p className="font-semibold text-ink">{product.name}</p>
-                  <select
-                    className="mt-2 w-full rounded-lg border border-borderline p-2"
-                    onChange={(e) => setProductQuantity(product.id, Number(e.target.value))}
-                    defaultValue="0"
-                  >
-                    <option value="0">ما بغيتش</option>
-                    <option value="1">قطعة وحدة ({product.price_1} DH)</option>
-                    <option value="2">جوج قطع ({product.price_2} DH)</option>
-                    <option value="3">3 قطع ({product.price_3} DH)</option>
-                  </select>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {step === 6 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">تأكيد الطلب</h2>
-            <div className="rounded-xl border border-borderline bg-surface-alt p-4">
-              <p className="text-textmain">المجموع: <span className="font-digits text-lg font-extrabold text-brass">{subtotal.toFixed(2)} DH</span></p>
-            </div>
-
-            <p className="mb-2 mt-4 font-semibold text-ink">واش عندك كود تخفيض؟</p>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setWantsCoupon("yes")}
-                className={`rounded-xl border p-3 text-center font-semibold ${
-                  wantsCoupon === "yes" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-                }`}
-              >
-                عندي كود
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setWantsCoupon("no");
-                  setCoupon(null);
-                  setCouponInput("");
-                }}
-                className={`rounded-xl border p-3 text-center font-semibold ${
-                  wantsCoupon === "no" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
-                }`}
-              >
-                ماعنديش كود
-              </button>
-            </div>
-
-            {wantsCoupon === "yes" ? (
-              <div className="mt-3 flex gap-2">
-                <input
-                  className="flex-1 rounded-xl border border-borderline p-3"
-                  placeholder="دخل الكود"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={checkCoupon}
-                  disabled={couponChecking}
-                  className="btn-gradient rounded-xl px-4 py-2 text-sm"
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">5. اختار منتوج (اختياري)</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {products.map((product) => (
+              <div key={product.id} className="rounded-xl border border-borderline bg-surface-alt p-3">
+                <img src={resolveImageUrl(product.image_url)} alt={product.name} className="mb-2 h-28 w-full rounded-lg object-cover" />
+                <p className="font-semibold text-ink">{product.name}</p>
+                <select
+                  className="mt-2 w-full rounded-lg border border-borderline p-2"
+                  onChange={(e) => setProductQuantity(product.id, Number(e.target.value))}
+                  defaultValue="0"
                 >
-                  {couponChecking ? "..." : "تحقق"}
-                </button>
+                  <option value="0">ما بغيتش</option>
+                  <option value="1">قطعة وحدة ({product.price_1} DH)</option>
+                  <option value="2">جوج قطع ({product.price_2} DH)</option>
+                  <option value="3">3 قطع ({product.price_3} DH)</option>
+                </select>
               </div>
-            ) : null}
-            {coupon ? (
-              <p className={`mt-2 text-sm ${coupon.valid ? "text-deepgreen" : "text-ember"}`}>{coupon.message}</p>
-            ) : null}
-
-            {discountAmount > 0 ? (
-              <p className="mt-3 text-textmain">
-                بعد التخفيض: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
-              </p>
-            ) : null}
+            ))}
           </div>
-        ) : null}
+        </div>
 
-        {step === 7 ? (
-          <div className="mt-6">
-            <h2 className="mb-3 font-bold text-ink">المعلومات الشخصية</h2>
-            <div className="grid gap-3">
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">6. تأكيد الطلب وكود التخفيض</h2>
+          <div className="rounded-xl border border-borderline bg-surface-alt p-4">
+            <p className="text-textmain">
+              المجموع: <span className="font-digits text-lg font-extrabold text-brass">{subtotal.toFixed(2)} DH</span>
+            </p>
+          </div>
+
+          <p className="mb-2 mt-4 font-semibold text-ink">واش عندك كود تخفيض؟</p>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setWantsCoupon("yes")}
+              className={`rounded-xl border p-3 text-center font-semibold ${
+                wantsCoupon === "yes" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
+              }`}
+            >
+              عندي كود
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setWantsCoupon("no");
+                setCoupon(null);
+                setCouponInput("");
+              }}
+              className={`rounded-xl border p-3 text-center font-semibold ${
+                wantsCoupon === "no" ? "border-brass bg-brass/10 text-brass" : "border-borderline text-textmain"
+              }`}
+            >
+              ماعنديش كود
+            </button>
+          </div>
+
+          {wantsCoupon === "yes" ? (
+            <div className="mt-3 flex gap-2">
               <input
-                className="rounded-xl border border-borderline p-3"
-                placeholder="الاسم الكامل"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
+                className="flex-1 rounded-xl border border-borderline p-3"
+                placeholder="دخل الكود"
+                value={couponInput}
+                onChange={(e) => setCouponInput(e.target.value)}
               />
-              <input
-                className="rounded-xl border border-borderline p-3"
-                placeholder="رقم الواتساب (06XXXXXXXX)"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-              />
-              <p className="text-xs text-textmuted">رقم الواتساب ضروري باش نصيفطو ليك كود التأكيد ديال الحجز.</p>
-              <textarea
-                className="rounded-xl border border-borderline p-3"
-                placeholder="ملاحظة (اختياري)"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
+              <button
+                type="button"
+                onClick={checkCoupon}
+                disabled={couponChecking}
+                className="btn-gradient rounded-xl px-4 py-2 text-sm"
+              >
+                {couponChecking ? "..." : "تحقق"}
+              </button>
             </div>
+          ) : null}
+          {coupon ? <p className={`mt-2 text-sm ${coupon.valid ? "text-deepgreen" : "text-ember"}`}>{coupon.message}</p> : null}
 
-            {submitError ? <p className="mt-3 text-sm text-ember">{submitError}</p> : null}
+          {discountAmount > 0 ? (
+            <p className="mt-3 text-textmain">
+              بعد التخفيض: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
+            </p>
+          ) : null}
+        </div>
 
-            <button
-              type="button"
-              disabled={submitting || !clientName.trim() || !clientPhone.trim()}
-              onClick={submitBooking}
-              className="btn-gradient mt-4 w-full rounded-xl px-4 py-3 disabled:opacity-50"
-            >
-              {submitting ? "...كنصيفطو" : `أكد الحجز (${total.toFixed(2)} DH)`}
-            </button>
+        <div className="mt-6 border-t border-borderline pt-6">
+          <h2 className="mb-3 font-bold text-ink">7. المعلومات الشخصية</h2>
+          <div className="grid gap-3">
+            <input
+              className="rounded-xl border border-borderline p-3"
+              placeholder="الاسم الكامل"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+            />
+            <input
+              className="rounded-xl border border-borderline p-3"
+              placeholder="رقم الواتساب (06XXXXXXXX)"
+              value={clientPhone}
+              onChange={(e) => setClientPhone(e.target.value)}
+            />
+            <p className="text-xs text-textmuted">رقم الواتساب ضروري باش نصيفطو ليك كود التأكيد ديال الحجز.</p>
+            <textarea
+              className="rounded-xl border border-borderline p-3"
+              placeholder="ملاحظة (اختياري)"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
-        ) : null}
+        </div>
 
-        {step < TOTAL_STEPS ? (
-          <div className="mt-8 flex justify-between">
-            <button
-              type="button"
-              disabled={step === 1}
-              onClick={() => setStep((s) => Math.max(1, s - 1))}
-              className="rounded-xl border border-borderline px-4 py-2 text-sm font-semibold text-textmain disabled:opacity-40"
-            >
-              السابق
-            </button>
-            <button
-              type="button"
-              disabled={!canGoNext()}
-              onClick={() => setStep((s) => Math.min(TOTAL_STEPS, s + 1))}
-              className="btn-gradient rounded-xl px-5 py-2 text-sm disabled:opacity-50"
-            >
-              التالي
-            </button>
-          </div>
-        ) : (
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => setStep((s) => Math.max(1, s - 1))}
-              className="rounded-xl border border-borderline px-4 py-2 text-sm font-semibold text-textmain"
-            >
-              السابق
-            </button>
-          </div>
-        )}
+        {submitError ? <p className="mt-4 text-sm text-ember">{submitError}</p> : null}
+
+        <button
+          type="button"
+          disabled={submitting || !canSubmit}
+          onClick={submitBooking}
+          className="btn-gradient mt-6 w-full rounded-xl px-4 py-3 disabled:opacity-50"
+        >
+          {submitting ? "...كنصيفطو" : `أكد الحجز (${total.toFixed(2)} DH)`}
+        </button>
       </div>
 
       {showOtpPopup ? (
@@ -526,7 +472,8 @@ export default function BookingPage() {
             <p className="mt-2 text-sm text-textmuted">دخل الكود اللي وصلك فالواتساب باش تأكد الحجز.</p>
             {devConfirmationCode ? (
               <p className="mt-3 rounded-xl bg-surface-alt p-3 text-sm text-textmuted">
-                (مؤقتا، حيت الواتساب مازال كيتهيأ): كود التأكيد ديالك هو <span className="font-digits font-extrabold text-brass">{devConfirmationCode}</span>
+                (مؤقتا، حيت الواتساب مازال كيتهيأ): كود التأكيد ديالك هو{" "}
+                <span className="font-digits font-extrabold text-brass">{devConfirmationCode}</span>
               </p>
             ) : null}
             <input
