@@ -941,7 +941,40 @@ tbody tr:hover { background: var(--surface-alt); }
 
 .owner-detail-modal-content { max-width: 720px; }
 .owner-bookings-modal-content,
-.owner-store-modal-content { max-width: 920px; }
+.owner-store-modal-content,
+.owner-tasks-modal-content { max-width: 920px; }
+
+.owner-tasks-tracking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 10px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+.owner-tasks-employee-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--borderline);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+.owner-tasks-employee-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.owner-tasks-employee-head strong { font-size: 0.95rem; color: var(--ink); }
+.owner-tasks-percentage {
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--borderline);
+}
+.owner-tasks-percentage.complete { background: var(--success-tint); color: var(--success); border-color: rgba(34,197,94,0.35); }
+.owner-tasks-percentage.incomplete { background: var(--danger-tint); color: var(--danger); border-color: rgba(220,38,38,0.35); }
 
 .modal-subtitle { color: var(--textmuted); font-size: 0.85rem; margin: 4px 0 14px; }
 .modal-block-title { margin-top: 18px; margin-bottom: 8px; }

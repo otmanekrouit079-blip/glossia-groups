@@ -91,6 +91,14 @@ const ownerBackendAuthUsername = document.getElementById("owner-backend-auth-use
 const ownerBackendAuthPassword = document.getElementById("owner-backend-auth-password");
 const ownerBackendAuthFeedback = document.getElementById("owner-backend-auth-feedback");
 
+const ownerTasksModal = document.getElementById("owner-tasks-modal");
+const ownerTasksCloseIconButton = document.getElementById("owner-tasks-close-icon");
+const ownerTasksCloseButton = document.getElementById("owner-tasks-close");
+const ownerTasksBroadcastForm = document.getElementById("owner-tasks-broadcast-form");
+const ownerTasksBroadcastInput = document.getElementById("owner-tasks-broadcast-input");
+const ownerTasksBroadcastFeedback = document.getElementById("owner-tasks-broadcast-feedback");
+const ownerTasksTrackingList = document.getElementById("owner-tasks-tracking-list");
+
 const ownerBookingsModal = document.getElementById("owner-bookings-modal");
 const ownerBookingsCloseIconButton = document.getElementById("owner-bookings-close-icon");
 const ownerBookingsCloseButton = document.getElementById("owner-bookings-close");
@@ -4035,6 +4043,186 @@ if (ownerBackendAuthModal) {
   });
 }
 
+function getOwnerTaskCompletionPercent(tasks) {
+  if (!tasks.length) {
+    return null;
+  }
+
+  const completed = tasks.filter(function (task) { return task.done; }).length;
+  return Math.round((completed / tasks.length) * 100);
+}
+
+function renderOwnerTasksTracking() {
+  if (!ownerTasksTrackingList) {
+    return;
+  }
+
+  ownerTasksTrackingList.innerHTML = "";
+
+  if (!ownerEmployees.length) {
+    ownerTasksTrackingList.innerHTML = '<p class="owner-bi-empty">ماكاين حتى موظف مسجل.</p>';
+    return;
+  }
+
+  ownerEmployees.forEach(function (employee) {
+    const state = getOwnerEmployeeState(employee.id);
+    const tasks = state.tasks || [];
+    const percent = getOwnerTaskCompletionPercent(tasks);
+
+    const card = document.createElement("div");
+    card.className = "owner-tasks-employee-card";
+
+    const head = document.createElement("div");
+    head.className = "owner-tasks-employee-head";
+
+    const name = document.createElement("strong");
+    name.textContent = employee.name;
+
+    const badge = document.createElement("span");
+    badge.className = "owner-tasks-percentage" + (percent === null ? "" : percent >= 100 ? " complete" : " incomplete");
+    badge.textContent = percent === null ? "ماكاين حتى تاش" : percent + "%";
+
+    head.appendChild(name);
+    head.appendChild(badge);
+    card.appendChild(head);
+
+    if (!tasks.length) {
+      const empty = document.createElement("p");
+      empty.className = "owner-bi-empty";
+      empty.textContent = "ماكاين حتى تاش مسندة.";
+      card.appendChild(empty);
+      ownerTasksTrackingList.appendChild(card);
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "owner-modal-task-list";
+
+    tasks.forEach(function (task, index) {
+      const item = document.createElement("li");
+      item.className = "task-item" + (task.done ? " is-done" : "");
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = Boolean(task.done);
+      checkbox.addEventListener("change", function () {
+        task.done = checkbox.checked;
+        task.completedAtISO = checkbox.checked ? new Date().toISOString() : null;
+        saveOwnerProductsData();
+        renderOwnerTasksTracking();
+        renderOwnerDashboard(ownerActivePeriod);
+      });
+
+      const text = document.createElement("span");
+      text.textContent = task.text;
+
+      item.appendChild(checkbox);
+      item.appendChild(text);
+
+      if (task.status === "excuse") {
+        const statusBadge = document.createElement("span");
+        statusBadge.className = "task-status-badge task-status-excuse";
+        statusBadge.textContent = "معذور";
+        item.appendChild(statusBadge);
+      }
+
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "owner-task-remove";
+      removeButton.textContent = "✕";
+      removeButton.setAttribute("aria-label", "مسح التاش");
+      removeButton.addEventListener("click", function () {
+        tasks.splice(index, 1);
+        saveOwnerProductsData();
+        renderOwnerTasksTracking();
+        renderOwnerDashboard(ownerActivePeriod);
+      });
+
+      item.appendChild(removeButton);
+      list.appendChild(item);
+
+      if (task.status === "excuse") {
+        const reason = document.createElement("li");
+        reason.className = "task-excuse-reason";
+        reason.textContent = task.excuseReason
+          ? "المبرر: " + task.excuseReason
+          : "فالانتظار ديال المبرر ديال الموظف.";
+        list.appendChild(reason);
+      }
+    });
+
+    card.appendChild(list);
+    ownerTasksTrackingList.appendChild(card);
+  });
+}
+
+function openOwnerTasksModal() {
+  if (!ownerTasksModal) {
+    return;
+  }
+
+  if (ownerTasksBroadcastFeedback) {
+    ownerTasksBroadcastFeedback.textContent = "";
+  }
+
+  renderOwnerTasksTracking();
+  ownerTasksModal.classList.remove("hidden");
+}
+
+function closeOwnerTasksModal() {
+  if (ownerTasksModal) {
+    ownerTasksModal.classList.add("hidden");
+  }
+}
+
+if (ownerTasksBroadcastForm) {
+  ownerTasksBroadcastForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const text = ownerTasksBroadcastInput.value.trim();
+    if (!text) {
+      return;
+    }
+
+    ownerEmployees.forEach(function (employee) {
+      const state = getOwnerEmployeeState(employee.id);
+      state.tasks = state.tasks || [];
+      state.tasks.push({
+        text: text,
+        done: false,
+        completedAtISO: null
+      });
+    });
+
+    saveOwnerProductsData();
+    ownerTasksBroadcastInput.value = "";
+
+    if (ownerTasksBroadcastFeedback) {
+      ownerTasksBroadcastFeedback.textContent = "التاش تزادت لجميع الموظفين (" + ownerEmployees.length + ").";
+      ownerTasksBroadcastFeedback.classList.remove("is-error");
+    }
+
+    renderOwnerTasksTracking();
+    renderOwnerDashboard(ownerActivePeriod);
+  });
+}
+
+if (ownerTasksCloseButton) {
+  ownerTasksCloseButton.addEventListener("click", closeOwnerTasksModal);
+}
+
+if (ownerTasksCloseIconButton) {
+  ownerTasksCloseIconButton.addEventListener("click", closeOwnerTasksModal);
+}
+
+if (ownerTasksModal) {
+  ownerTasksModal.addEventListener("click", function (event) {
+    if (event.target === ownerTasksModal) {
+      closeOwnerTasksModal();
+    }
+  });
+}
+
 const OWNER_BOOKING_STATUSES = ["pending", "confirmed", "in_store", "paid_in_store", "cancelled", "no_show"];
 
 function formatOwnerBookingStatus(status) {
@@ -4905,9 +5093,7 @@ if (ownerActionEmployeesButton) {
 
 const ownerActionTasksButton = document.getElementById("owner-action-tasks");
 if (ownerActionTasksButton) {
-  ownerActionTasksButton.addEventListener("click", function () {
-    setOwnerCompactView("team");
-  });
+  ownerActionTasksButton.addEventListener("click", openOwnerTasksModal);
 }
 
 const ownerActionSaleProductsButton = document.getElementById("owner-action-sale-products");

@@ -113,7 +113,7 @@
         </span>
       </button>
 
-      <button id="owner-action-tasks" type="button" class="owner-action-btn" data-owner-section="team">
+      <button id="owner-action-tasks" type="button" class="owner-action-btn">
         <span class="owner-action-icon" aria-hidden="true"><svg class="app-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
         <span class="owner-action-text">
           <strong>متابعة وزيادة المهام</strong>
@@ -667,6 +667,26 @@
           <button id="owner-backend-auth-close" type="button" class="manager-btn manager-btn-muted">سد</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div id="owner-tasks-modal" class="modal owner-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="owner-tasks-title">
+    <div class="modal-content owner-detail-modal-content owner-tasks-modal-content">
+      <button id="owner-tasks-close-icon" class="owner-modal-close-icon" type="button" aria-label="سد النافذة">✕</button>
+      <h3 id="owner-tasks-title">متابعة المهام</h3>
+      <p class="modal-subtitle">زيد تاش لجميع الموظفين دفعة وحدة، وتابع النسبة ديال كل واحد.</p>
+
+      <form id="owner-tasks-broadcast-form" class="inline-form" novalidate>
+        <input id="owner-tasks-broadcast-input" type="text" placeholder="اكتب التاش هنا..." required />
+        <button class="manager-btn" type="submit">+ زيد للجميع</button>
+      </form>
+      <p id="owner-tasks-broadcast-feedback" class="modal-feedback" aria-live="polite"></p>
+
+      <div id="owner-tasks-tracking-list" class="owner-tasks-tracking-list"></div>
+
+      <div class="modal-actions">
+        <button id="owner-tasks-close" type="button" class="manager-btn manager-btn-muted">سد</button>
+      </div>
     </div>
   </div>
 
