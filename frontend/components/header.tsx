@@ -10,7 +10,7 @@ const links = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-borderline bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-borderline bg-white shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="font-heading text-xl font-extrabold text-ink">
           GLOSSIA <span className="text-brass">GROUP</span>
@@ -22,7 +22,7 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <Link href="/booking" className="cta-pulse rounded-full bg-ember px-4 py-2 text-sm font-bold text-white">
+        <Link href="/booking" className="cta-pulse btn-gradient rounded-full px-4 py-2 text-sm">
           احجز دابا
         </Link>
       </div>

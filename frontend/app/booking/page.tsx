@@ -123,10 +123,10 @@ export default function BookingPage() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="font-heading text-3xl font-extrabold">حجز الموعد</h1>
+      <h1 className="font-heading text-3xl font-extrabold text-ink">حجز الموعد</h1>
       <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-        <div className="rounded-2xl border border-borderline bg-white p-5">
-          <h2 className="mb-3 font-bold">1) اختار الفرع</h2>
+        <div className="card p-5">
+          <h2 className="mb-3 font-bold text-ink">1) اختار الفرع</h2>
           <select className="w-full rounded-xl border border-borderline p-3" value={branchId} onChange={(e) => setBranchId(e.target.value)} required>
             <option value="">اختار فرع</option>
             {branches.map((branch) => (
@@ -135,11 +135,11 @@ export default function BookingPage() {
           </select>
         </div>
 
-        <div className="rounded-2xl border border-borderline bg-white p-5">
-          <h2 className="mb-3 font-bold">2) اختار الخدمة</h2>
+        <div className="card p-5">
+          <h2 className="mb-3 font-bold text-ink">2) اختار الخدمة</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <label key={service.id} className="flex items-center gap-2 rounded-xl border border-borderline p-3">
+              <label key={service.id} className="flex items-center gap-2 rounded-xl border border-borderline bg-surface-alt p-3">
                 <input type="checkbox" checked={serviceIds.includes(service.id)} onChange={() => toggleService(service.id)} />
                 <span>{service.name} ({service.price} DH)</span>
               </label>
@@ -147,8 +147,8 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-borderline bg-white p-5">
-          <h2 className="mb-3 font-bold">3) التاريخ والوقت</h2>
+        <div className="card p-5">
+          <h2 className="mb-3 font-bold text-ink">3) التاريخ والوقت</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <input className="rounded-xl border border-borderline p-3" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
             <select className="rounded-xl border border-borderline p-3" value={time} onChange={(e) => setTime(e.target.value)} required>
@@ -160,12 +160,12 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-borderline bg-white p-5">
-          <h2 className="mb-3 font-bold">4) منتجات إضافية</h2>
+        <div className="card p-5">
+          <h2 className="mb-3 font-bold text-ink">4) منتجات إضافية</h2>
           <div className="grid gap-3 lg:grid-cols-3">
             {products.map((product) => (
-              <div key={product.id} className="rounded-xl border border-borderline p-3">
-                <p className="font-semibold">{product.name}</p>
+              <div key={product.id} className="rounded-xl border border-borderline bg-surface-alt p-3">
+                <p className="font-semibold text-ink">{product.name}</p>
                 <p className="text-sm text-textmuted">1: {product.price_1} DH | 2: {product.price_2} DH | 3: {product.price_3} DH</p>
                 <select className="mt-2 w-full rounded-lg border border-borderline p-2" onChange={(e) => setProductQuantity(product.id, Number(e.target.value))} defaultValue="0">
                   <option value="0">ما بغيتش</option>
@@ -178,8 +178,8 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-borderline bg-white p-5">
-          <h2 className="mb-3 font-bold">5) المعلومات الشخصية</h2>
+        <div className="card p-5">
+          <h2 className="mb-3 font-bold text-ink">5) المعلومات الشخصية</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <input className="rounded-xl border border-borderline p-3" placeholder="الاسم الكامل" value={clientName} onChange={(e) => setClientName(e.target.value)} required />
             <input className="rounded-xl border border-borderline p-3" placeholder="06XXXXXXXX" value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} required />
@@ -187,11 +187,11 @@ export default function BookingPage() {
           <textarea className="mt-3 w-full rounded-xl border border-borderline p-3" placeholder="ملاحظة (اختياري)" value={note} onChange={(e) => setNote(e.target.value)} />
         </div>
 
-        <div className="rounded-2xl border border-borderline bg-ink p-5 text-white">
-          <h2 className="font-bold">6) الملخص</h2>
-          <p className="mt-2">المجموع: <span className="font-digits text-brass">{total.toFixed(2)} DH</span></p>
-          <p className="text-sm text-white/80">الخلاص فالمحل: Cash/Card</p>
-          <button disabled={submitting} className="mt-4 w-full rounded-xl bg-ember px-4 py-3 font-bold text-white disabled:opacity-60">
+        <div className="card border-t-4 border-t-brass p-5">
+          <h2 className="font-bold text-ink">6) الملخص</h2>
+          <p className="mt-2 text-textmain">المجموع: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span></p>
+          <p className="text-sm text-textmuted">الخلاص فالمحل: Cash/Card</p>
+          <button disabled={submitting} className="btn-gradient mt-4 w-full rounded-xl px-4 py-3">
             {submitting ? "...جاري التأكيد" : "أكد الحجز"}
           </button>
         </div>
