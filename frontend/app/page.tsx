@@ -102,7 +102,7 @@ export default async function HomePage() {
             <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-ink md:text-4xl">
               أكثر من حلاقة. <span className="text-brass">تجربة.</span>
             </h2>
-            <div className="mt-5 space-y-4 text-lg leading-relaxed text-textmuted">
+            <div className="mt-5 space-y-4 text-xl leading-relaxed text-textmuted">
               <p>تخيل عندك موعد مهم، مقابلة، ولا مناسبة ما غاديش تتعاود…</p>
               <p>عندك حلاوة اللسان، عندك الشخصية، وعندك الطموح… ولكن المظهر ديالك ما كيبنش هادشي كامل.</p>
               <p>
