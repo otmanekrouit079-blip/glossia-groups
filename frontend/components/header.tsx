@@ -35,7 +35,7 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="flex items-center gap-2 font-heading text-xl font-extrabold text-ink">
-          <img src="/images/logo-mark.png" alt="" className="h-9 w-9" />
+          <img src="/images/logo-mark.png" alt="" className="h-14 w-14" />
           GLOSSIA <span className="text-brass">GROUPS</span>
         </Link>
 
