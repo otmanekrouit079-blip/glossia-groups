@@ -6,7 +6,7 @@ export default function ContactPage() {
       <div className="card mt-8 grid gap-6 p-8 sm:grid-cols-3">
         <div>
           <p className="text-xs font-bold uppercase tracking-wide text-brass">العنوان</p>
-          <p className="mt-2 text-textmuted">Bd Mohammed V, Casablanca</p>
+          <p className="mt-2 text-textmuted">Agadir, Ben Sergaou, Wifaq Lkbir</p>
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-wide text-brass">WhatsApp</p>

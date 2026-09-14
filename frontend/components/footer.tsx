@@ -21,7 +21,7 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-bold uppercase tracking-wide text-ink">تواصل</h4>
           <p className="mt-3 text-sm text-textmuted">WhatsApp: 212600000000+</p>
-          <p className="text-sm text-textmuted">Casablanca, Morocco</p>
+          <p className="text-sm text-textmuted">Agadir, Ben Sergaou, Wifaq Lkbir</p>
         </div>
       </div>
       <div className="border-t border-borderline px-4 py-5 text-center text-xs text-textmuted">

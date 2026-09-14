@@ -12,7 +12,7 @@ export default async function HomePage() {
     <div>
       <section className="relative overflow-hidden">
         <img
-          src="/images/hero-barber.jpg"
+          src="/images/hero-salon-interior.jpg"
           alt=""
           className="absolute inset-0 h-full w-full bg-warm object-cover"
         />
@@ -24,13 +24,10 @@ export default async function HomePage() {
           }}
         />
         <div className="relative mx-auto flex min-h-[560px] max-w-6xl flex-col justify-center px-4 py-24 md:min-h-[640px]">
-          <span className="badge-pill w-fit">✂️ صالون حلاقة رجالية</span>
-          <h1 className="mt-6 max-w-2xl font-heading text-5xl font-extrabold leading-[1.1] text-ink md:text-6xl">
-            لوك رجالي متكامل، <span className="text-brass">بلا تعقيد</span>
+          <h1 className="max-w-2xl font-heading text-5xl font-extrabold leading-[1.1] text-ink md:text-6xl">
+            الناس كتشوفك <span className="text-brass">قبل ما تسمعك</span>
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-textmuted">
-            احجز الموعد ديالك وزيد منتجات العناية لطلبك، والخلاص كلو كيدوز فالمحل بأمان.
-          </p>
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-textmuted">خليهم يحسو بالثقة قبل ما تهضر.</p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link href="/booking" className="btn-gradient rounded-xl px-6 py-3.5 text-base">
               احجز موعدك الآن
@@ -38,12 +35,6 @@ export default async function HomePage() {
             <Link href="/services" className="btn-outline rounded-xl px-6 py-3.5 text-base">
               اكتشف خدماتنا
             </Link>
-          </div>
-
-          <div className="card mt-10 w-fit p-4">
-            <p className="text-xs text-textmuted">الخلاص فالمحل</p>
-            <p className="mt-1 font-digits text-xl font-extrabold text-brass">Cash / Card</p>
-            <p className="mt-1 text-xs leading-relaxed text-textmuted">بلا دفع مسبق، غير أكد الحجز وجي فالوقت.</p>
           </div>
         </div>
       </section>
@@ -54,22 +45,22 @@ export default async function HomePage() {
             <div className="flex items-center gap-3">
               <span className="text-2xl text-brass">💳</span>
               <div>
-                <p className="font-bold text-ink">Cash / Card</p>
-                <p className="text-xs text-textmuted">الخلاص فالمحل، بلا دفع مسبق</p>
+                <p className="font-bold text-ink">Cash</p>
+                <p className="text-xs text-textmuted">الخلاص فالمحل</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-2xl text-brass">⚡</span>
               <div>
                 <p className="font-bold text-ink">حجز أونلاين</p>
-                <p className="text-xs text-textmuted">أكد الموعد ديالك فدقيقتين</p>
+                <p className="text-xs text-textmuted">شد نوبتك فين ما كنتي</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-2xl text-brass">📍</span>
               <div>
-                <p className="font-bold text-ink">Casablanca</p>
-                <p className="text-xs text-textmuted">Bd Mohammed V</p>
+                <p className="font-bold text-ink">Agadir</p>
+                <p className="text-xs text-textmuted">Ben Sergaou, Wifaq Lkbir</p>
               </div>
             </div>
           </div>
@@ -98,7 +89,7 @@ export default async function HomePage() {
       <Reveal>
         <section className="relative overflow-hidden py-24">
           <img
-            src="/images/hero-salon-interior.jpg"
+            src="/images/hero-barber.jpg"
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-40"
           />
