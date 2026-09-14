@@ -27,7 +27,7 @@ export default async function HomePage() {
           <h1 className="max-w-2xl font-heading text-5xl font-extrabold leading-[1.1] text-ink md:text-6xl">
             الناس كتشوفك <span className="text-brass">قبل ما تسمعك</span>
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-textmuted">خليهم يحسو بالثقة قبل ما تهضر.</p>
+          <p className="mt-6 max-w-md text-xl leading-relaxed text-textmuted">خليهم يحسو بالثقة قبل ما تهضر.</p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link href="/booking" className="btn-gradient rounded-xl px-6 py-3.5 text-base">
               احجز موعدك الآن
@@ -59,8 +59,8 @@ export default async function HomePage() {
             <div className="flex items-center gap-3">
               <span className="text-2xl text-brass">📍</span>
               <div>
-                <p className="font-bold text-ink">Agadir</p>
-                <p className="text-xs text-textmuted">Ben Sergaou, Wifaq Lkbir</p>
+                <p className="text-lg font-bold text-ink">Agadir</p>
+                <p className="mt-1 text-sm text-textmuted">بن سرگاو، الوفاق الكبير</p>
               </div>
             </div>
           </div>
@@ -102,10 +102,15 @@ export default async function HomePage() {
             <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-ink md:text-4xl">
               أكثر من حلاقة. <span className="text-brass">تجربة.</span>
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-textmuted">
-              كنآمنو أن العناية الرجالية ماشي رفاهية، ولكن أسلوب حياة. جمعنا بين خدمة صالون احترافية ومنتجات أصلية باش
-              كل زبون يخرج بلوك مرتب وثقة أكبر.
-            </p>
+            <div className="mt-5 space-y-4 text-lg leading-relaxed text-textmuted">
+              <p>تخيل عندك موعد مهم، مقابلة، ولا مناسبة ما غاديش تتعاود…</p>
+              <p>عندك حلاوة اللسان، عندك الشخصية، وعندك الطموح… ولكن المظهر ديالك ما كيعكسش هادشي كامل.</p>
+              <p>
+                داكشي علاش ف GLOSSIA GROUP جمعنا حرفية ناضيين، ماشي غير باش يحسنو وينقصو الشعر، ولكن باش نخليوك تبان
+                ناضي وتايق فراسك أكثر. حيت ملي كتكون ضارب حسانة ناضية، كتزيد تحس براسك مهيّب و إيجابي… عكس فاش كتكون
+                الحسانة ناقصة، كتحس براسك ناقص.
+              </p>
+            </div>
             <Link href="/about" className="mt-6 inline-flex text-sm font-bold text-brass transition hover:text-brass-soft">
               اقرا القصة كاملة ←
             </Link>
@@ -117,7 +122,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <p className="badge-pill">أصلية 100%</p>
+              <p className="badge-pill">جرب عاد حكم</p>
               <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
               <p className="mt-2 max-w-md text-sm text-textmuted">كمّل روتين العناية ديالك بمنتجات نقترحوها مع الخدمات.</p>
             </div>
