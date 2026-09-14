@@ -1,33 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Tajawal:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@500;600;700;800;900&family=Tajawal:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --ink: #1a1a1a;
-  --warm: #f5f5f5;
-  --surface-alt: #fafafa;
-  --brass: #ff4747;
-  --brass-soft: #ff7a3d;
-  --brass-dark: #e5342e;
-  --ember: #e5342e;
-  --deepgreen: #16a34a;
-  --textmain: #2b2b2b;
-  --textmuted: #767676;
-  --borderline: #ececec;
-  --borderline-strong: rgba(255, 71, 71, 0.4);
+  --ink: #ffffff;
+  --warm: #071a2b;
+  --surface-alt: #0b2438;
+  --card-bg: #0e2b40;
+  --brass: #ff6b1a;
+  --brass-soft: #ff8a3d;
+  --brass-dark: #e85a12;
+  --ember: #ef4444;
+  --deepgreen: #22c55e;
+  --textmain: #e7eef3;
+  --textmuted: #a9bac7;
+  --borderline: rgba(255, 255, 255, 0.08);
+  --borderline-strong: rgba(255, 107, 26, 0.45);
 }
 
 body {
   background: var(--warm);
   color: var(--textmain);
-  font-family: "Tajawal", sans-serif;
+  font-family: "Manrope", "Tajawal", sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Manrope", "Tajawal", sans-serif;
 }
 
 ::selection {
-  background: rgba(255, 71, 71, 0.22);
-  color: #1a1a1a;
+  background: rgba(255, 107, 26, 0.35);
+  color: #ffffff;
 }
 
 ::-webkit-scrollbar {
@@ -38,11 +43,24 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 71, 71, 0.25);
+  background: rgba(255, 107, 26, 0.3);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 71, 71, 0.45);
+  background: rgba(255, 107, 26, 0.5);
+}
+
+input,
+select,
+textarea {
+  background: var(--surface-alt);
+  color: var(--ink);
+  border-color: var(--borderline);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--textmuted);
 }
 
 input:focus,
@@ -50,7 +68,17 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--brass);
-  box-shadow: 0 0 0 3px rgba(255, 71, 71, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 107, 26, 0.18);
+}
+
+a,
+button {
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
 }
 
 .snap-x-list {
@@ -61,22 +89,30 @@ textarea:focus {
   scroll-snap-align: start;
 }
 
-/* ===== AliExpress-style shared components ===== */
+/* ===== Shared brand components ===== */
 /* @layer components keeps these below Tailwind's utilities in specificity,
    so utility classes like `block` or `w-full` used alongside them still win. */
 @layer components {
   .card {
-    background: #ffffff;
+    background: var(--card-bg);
     border: 1px solid var(--borderline);
     border-radius: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 32px -24px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 45px -18px rgba(0, 0, 0, 0.22);
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.55);
     border-color: var(--borderline-strong);
+  }
+
+  .card-hover:hover img {
+    transform: scale(1.03);
+  }
+
+  .card-hover img {
+    transition: transform 0.35s ease;
   }
 
   .btn-gradient {
@@ -86,15 +122,15 @@ textarea:focus {
     gap: 6px;
     background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark));
     color: #fff;
-    font-weight: 800;
-    box-shadow: 0 8px 18px -6px rgba(255, 71, 71, 0.5);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    font-weight: 700;
+    box-shadow: 0 8px 20px -8px rgba(255, 107, 26, 0.55);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
   }
 
   .btn-gradient:hover {
     filter: brightness(1.06);
     transform: translateY(-1px);
-    box-shadow: 0 0 0 1px rgba(255, 71, 71, 0.15), 0 10px 24px -6px rgba(255, 71, 71, 0.35);
+    box-shadow: 0 0 0 1px rgba(255, 107, 26, 0.2), 0 12px 26px -8px rgba(255, 107, 26, 0.45);
   }
 
   .btn-gradient:active {
@@ -104,7 +140,7 @@ textarea:focus {
   .btn-gradient:disabled {
     filter: none;
     transform: none;
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
   .btn-outline {
@@ -112,26 +148,27 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    border: 1px solid var(--brass);
-    color: var(--brass);
-    font-weight: 800;
-    background: #fff;
-    transition: background 0.15s ease, transform 0.15s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 700;
+    background: transparent;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
   }
 
   .btn-outline:hover {
-    background: rgba(255, 71, 71, 0.06);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.35);
     transform: translateY(-1px);
   }
 
   .badge-pill {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 999px;
-    background: rgba(255, 71, 71, 0.08);
-    color: var(--brass-dark);
-    border: 1px solid var(--borderline-strong);
+    background: rgba(255, 107, 26, 0.12);
+    color: var(--brass-soft);
+    border: 1px solid rgba(255, 107, 26, 0.3);
     font-size: 0.72rem;
     font-weight: 700;
   }
@@ -139,13 +176,13 @@ textarea:focus {
   .badge-gradient {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 999px;
     background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark));
     color: #fff;
     font-size: 0.72rem;
     font-weight: 700;
-    box-shadow: 0 4px 14px -4px rgba(255, 71, 71, 0.5);
+    box-shadow: 0 4px 14px -4px rgba(255, 107, 26, 0.55);
   }
 
   .section-badge {
@@ -154,7 +191,7 @@ textarea:focus {
     justify-content: center;
     background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark));
     color: #fff;
-    box-shadow: 0 8px 18px -6px rgba(255, 71, 71, 0.55);
+    box-shadow: 0 8px 18px -6px rgba(255, 107, 26, 0.55);
   }
 
   .chip-selectable {
@@ -170,21 +207,22 @@ textarea:focus {
     background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark)) !important;
     color: #fff !important;
     border-color: transparent !important;
-    box-shadow: 0 12px 26px -10px rgba(255, 71, 71, 0.6);
+    box-shadow: 0 12px 26px -10px rgba(255, 107, 26, 0.6);
     transform: translateY(-2px);
   }
 
   .hero-glow {
     background:
-      radial-gradient(60% 120% at 15% 0%, rgba(255, 122, 61, 0.35), transparent 60%),
-      radial-gradient(50% 100% at 90% 10%, rgba(255, 71, 71, 0.3), transparent 60%),
-      linear-gradient(180deg, #17110f 0%, #1a1a1a 100%);
+      radial-gradient(55% 110% at 12% 0%, rgba(255, 138, 61, 0.22), transparent 60%),
+      radial-gradient(45% 90% at 92% 15%, rgba(255, 107, 26, 0.16), transparent 60%),
+      var(--warm);
   }
 
   .sticky-bar {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(11, 36, 56, 0.92);
     backdrop-filter: blur(10px);
-    box-shadow: 0 -12px 30px -16px rgba(0, 0, 0, 0.28);
+    border-top: 1px solid var(--borderline);
+    box-shadow: 0 -12px 30px -16px rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -194,12 +232,21 @@ textarea:focus {
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 71, 71, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 107, 26, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(255, 71, 71, 0);
+    box-shadow: 0 0 0 10px rgba(255, 107, 26, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 71, 71, 0);
+    box-shadow: 0 0 0 0 rgba(255, 107, 26, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-pulse {
+    animation: none;
+  }
+  * {
+    scroll-behavior: auto !important;
   }
 }

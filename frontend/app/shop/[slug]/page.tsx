@@ -26,9 +26,9 @@ export default async function ProductDetailsPage({ params }: Props) {
           <h1 className="mt-4 font-heading text-3xl font-extrabold text-ink">{product.name}</h1>
           <p className="mt-2 text-textmuted">{product.short_description}</p>
           <p className="mt-4 text-sm text-textmuted">⭐ {product.rating} ({product.review_count} تقييم)</p>
-          <div className="mt-6 space-y-2 rounded-2xl bg-surface-alt border border-borderline p-4 text-textmain">
+          <div className="mt-6 space-y-2 rounded-2xl border border-borderline bg-surface-alt p-4 text-textmain">
             <p>قطعة وحدة: <span className="font-digits">{product.price_1} DH</span></p>
-            <p>2 قطع: <span className="font-digits text-brass font-bold">{product.price_2} DH</span> (الأكثر طلبا)</p>
+            <p>2 قطع: <span className="font-digits font-bold text-brass">{product.price_2} DH</span> (الأكثر طلبا)</p>
             <p>3 قطع: <span className="font-digits">{product.price_3} DH</span> (أفضل قيمة)</p>
           </div>
           <Link href="/booking" className="btn-gradient mt-6 block rounded-xl px-4 py-3 text-center">زيد للطلب</Link>

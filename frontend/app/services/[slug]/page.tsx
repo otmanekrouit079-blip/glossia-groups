@@ -23,7 +23,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
         />
         <h1 className="font-heading text-3xl font-extrabold text-ink">{service.name}</h1>
         <p className="mt-2 text-textmuted">{service.description}</p>
-        <p className="mt-4 font-digits text-2xl font-extrabold text-deepgreen">{service.price} DH</p>
+        <p className="mt-4 font-digits text-2xl font-extrabold text-brass">{service.price} DH</p>
         <p className="text-sm text-textmuted">المدة: {service.duration_minutes} دقيقة</p>
         <Link href="/booking" className="btn-gradient mt-6 inline-flex rounded-xl px-5 py-3">احجز هاد الخدمة</Link>
       </div>

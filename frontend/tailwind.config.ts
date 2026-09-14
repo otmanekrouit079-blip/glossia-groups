@@ -5,22 +5,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#1a1a1a",
-        warm: "#f5f5f5",
-        "surface-alt": "#fafafa",
-        brass: "#ff4747",
-        "brass-soft": "#ff7a3d",
-        "brass-dark": "#e5342e",
-        ember: "#e5342e",
-        deepgreen: "#16a34a",
-        textmain: "#2b2b2b",
-        textmuted: "#767676",
-        borderline: "#ececec"
+        ink: "#FFFFFF",
+        warm: "#071A2B",
+        "surface-alt": "#0B2438",
+        "card-bg": "#0E2B40",
+        brass: "#FF6B1A",
+        "brass-soft": "#FF8A3D",
+        "brass-dark": "#E85A12",
+        ember: "#EF4444",
+        deepgreen: "#22C55E",
+        textmain: "#E7EEF3",
+        textmuted: "#A9BAC7",
+        borderline: "rgba(255,255,255,0.08)"
       },
       fontFamily: {
-        heading: ["Tajawal", "sans-serif"],
-        body: ["Tajawal", "sans-serif"],
-        digits: ["Inter", "sans-serif"]
+        heading: ["Manrope", "Tajawal", "sans-serif"],
+        body: ["Manrope", "Tajawal", "sans-serif"],
+        digits: ["Manrope", "Inter", "sans-serif"]
       }
     }
   },

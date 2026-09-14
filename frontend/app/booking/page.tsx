@@ -418,9 +418,9 @@ export default function BookingPage() {
           </SectionCard>
 
           <SectionCard number={6} icon="🎟️" title="تأكيد الطلب وكود التخفيض">
-            <div className="rounded-2xl bg-ink p-4 text-white">
-              <p className="text-sm text-white/70">المجموع</p>
-              <p className="font-digits text-2xl font-extrabold">{subtotal.toFixed(2)} DH</p>
+            <div className="rounded-2xl border border-brass/30 bg-surface-alt p-4">
+              <p className="text-sm text-textmuted">المجموع</p>
+              <p className="font-digits text-2xl font-extrabold text-ink">{subtotal.toFixed(2)} DH</p>
             </div>
 
             <p className="mb-2 mt-4 font-extrabold text-ink">واش عندك كود تخفيض؟</p>

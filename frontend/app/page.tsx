@@ -2,36 +2,63 @@ import Link from "next/link";
 
 import { ProductCard } from "@/components/product-card";
 import { ServiceCard } from "@/components/service-card";
-import { getProducts, getServices } from "@/lib/api";
+import { getProducts, getServices, resolveImageUrl } from "@/lib/api";
 
 export default async function HomePage() {
   const [services, products] = await Promise.all([getServices(), getProducts()]);
+  const heroImage = services[0]?.image_url || products[0]?.image_url || "";
 
   return (
     <div>
-      <section className="bg-white px-4 py-16">
-        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="badge-pill">GLOSSIA GROUP</p>
-            <h1 className="mt-3 font-heading text-4xl font-extrabold leading-tight text-ink">لوك رجالي متكامل بلا تعقيد</h1>
-            <p className="mt-4 text-textmuted">احجز الموعد ديالك وزيد منتجات العناية لطلبك، والخلاص كلو كيدوز فالمحل بأمان.</p>
-            <div className="mt-6 flex gap-3">
-              <Link href="/booking" className="btn-gradient rounded-full px-5 py-3">احجز دابا</Link>
-              <Link href="/shop" className="btn-outline rounded-full px-5 py-3">شوف المنتجات</Link>
-            </div>
+      <section className="relative overflow-hidden">
+        {heroImage ? (
+          <img
+            src={resolveImageUrl(heroImage)}
+            alt=""
+            className="absolute inset-0 h-full w-full bg-warm object-cover"
+          />
+        ) : null}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(7,26,43,0.75) 0%, rgba(7,26,43,0.88) 55%, #071a2b 100%), radial-gradient(60% 80% at 15% 20%, rgba(255,138,61,0.18), transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto flex min-h-[560px] max-w-6xl flex-col justify-center px-4 py-24 md:min-h-[640px]">
+          <span className="badge-pill w-fit">✂️ صالون حلاقة رجالية</span>
+          <h1 className="mt-6 max-w-2xl font-heading text-5xl font-extrabold leading-[1.1] text-ink md:text-6xl">
+            لوك رجالي متكامل، <span className="text-brass">بلا تعقيد</span>
+          </h1>
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-textmuted">
+            احجز الموعد ديالك وزيد منتجات العناية لطلبك، والخلاص كلو كيدوز فالمحل بأمان.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link href="/booking" className="btn-gradient rounded-xl px-6 py-3.5 text-base">
+              احجز موعدك الآن
+            </Link>
+            <Link href="/services" className="btn-outline rounded-xl px-6 py-3.5 text-base">
+              اكتشف خدماتنا
+            </Link>
           </div>
-          <div className="card p-6">
-            <p className="text-sm text-textmuted">خلاص فالمحل</p>
-            <p className="mt-2 text-3xl font-extrabold text-brass">Cash / Card</p>
-            <p className="mt-3 text-sm text-textmuted">بلا دفع مسبق، غير أكد الحجز وجي فالوقت.</p>
+
+          <div className="card mt-10 w-fit p-4">
+            <p className="text-xs text-textmuted">الخلاص فالمحل</p>
+            <p className="mt-1 font-digits text-xl font-extrabold text-brass">Cash / Card</p>
+            <p className="mt-1 text-xs leading-relaxed text-textmuted">بلا دفع مسبق، غير أكد الحجز وجي فالوقت.</p>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="font-heading text-2xl font-bold text-ink">الخدمات الأكثر طلبا</h2>
-          <Link href="/services" className="text-sm font-bold text-brass">شوف الكل</Link>
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="badge-pill">الأكثر طلبا</p>
+            <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">الخدمات</h2>
+          </div>
+          <Link href="/services" className="text-sm font-bold text-brass transition hover:text-brass-soft">
+            شوف الكل ←
+          </Link>
         </div>
         <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
           {services.map((service) => (
@@ -40,10 +67,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="font-heading text-2xl font-bold text-ink">منتجات العناية</h2>
-          <Link href="/shop" className="text-sm font-bold text-brass">شوف الكل</Link>
+      <section className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="badge-pill">أصلية 100%</p>
+            <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
+          </div>
+          <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
+            شوف الكل ←
+          </Link>
         </div>
         <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
           {products.map((product) => (
