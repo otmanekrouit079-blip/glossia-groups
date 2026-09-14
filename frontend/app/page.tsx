@@ -71,8 +71,9 @@ export default async function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <p className="badge-pill">الأكثر طلبا</p>
-              <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">الخدمات</h2>
+              <p className="badge-pill px-4 py-1.5 text-sm">الأكثر طلبا</p>
+              <h2 className="mt-4 font-heading text-2xl font-extrabold text-ink md:text-3xl">الخدمات</h2>
+              <p className="mt-2 max-w-md text-base font-semibold text-textmuted">اختار الباك ديالك وخلي الباقي علينا.</p>
             </div>
             <Link href="/services" className="text-sm font-bold text-brass transition hover:text-brass-soft">
               شوف الكل ←
