@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { MobileBookCta } from "@/components/mobile-book-cta";
 import { PixelLoader } from "@/components/pixel-loader";
 
 const siteDescription = "صالون حلاقة رجالية GLOSSIA GROUP فالدار البيضاء — حجز أونلاين، خدمات حلاقة ولحية، ومنتجات عناية أصلية.";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main>{children}</main>
         <Footer />
+        <MobileBookCta />
       </body>
     </html>
   );

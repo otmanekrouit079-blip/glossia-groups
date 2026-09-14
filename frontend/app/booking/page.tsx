@@ -266,6 +266,14 @@ export default function BookingPage() {
           <div className="section-badge mx-auto mb-5 h-16 w-16 rounded-full text-3xl">✓</div>
           <h1 className="font-heading text-2xl font-extrabold text-ink">تأكد الحجز ديالك بنجاح!</h1>
           <p className="mt-3 text-textmuted">غادي نتصلو بيك 30 دقيقة قبل الموعد باش نذكروك.</p>
+          <a
+            href="https://wa.me/212600000000"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline mt-6 inline-flex rounded-xl px-5 py-3 text-sm"
+          >
+            💬 تواصل معانا فWhatsApp
+          </a>
         </div>
       </section>
     );

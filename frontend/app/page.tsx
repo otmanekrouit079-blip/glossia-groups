@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ProductCard } from "@/components/product-card";
+import { Reveal } from "@/components/reveal";
 import { ServiceCard } from "@/components/service-card";
 import { getProducts, getServices } from "@/lib/api";
 
@@ -11,7 +12,7 @@ export default async function HomePage() {
     <div>
       <section className="relative overflow-hidden">
         <img
-          src="/images/hero-salon-interior.jpg"
+          src="/images/hero-barber.jpg"
           alt=""
           className="absolute inset-0 h-full w-full bg-warm object-cover"
         />
@@ -47,76 +48,111 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-borderline bg-surface-alt">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-3">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl text-brass">💳</span>
-            <div>
-              <p className="font-bold text-ink">Cash / Card</p>
-              <p className="text-xs text-textmuted">الخلاص فالمحل، بلا دفع مسبق</p>
+      <Reveal>
+        <section className="border-y border-borderline bg-surface-alt">
+          <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-3">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl text-brass">💳</span>
+              <div>
+                <p className="font-bold text-ink">Cash / Card</p>
+                <p className="text-xs text-textmuted">الخلاص فالمحل، بلا دفع مسبق</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl text-brass">⚡</span>
+              <div>
+                <p className="font-bold text-ink">حجز أونلاين</p>
+                <p className="text-xs text-textmuted">أكد الموعد ديالك فدقيقتين</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl text-brass">📍</span>
+              <div>
+                <p className="font-bold text-ink">Casablanca</p>
+                <p className="text-xs text-textmuted">Bd Mohammed V</p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl text-brass">⚡</span>
-            <div>
-              <p className="font-bold text-ink">حجز أونلاين</p>
-              <p className="text-xs text-textmuted">أكد الموعد ديالك فدقيقتين</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl text-brass">📍</span>
-            <div>
-              <p className="font-bold text-ink">Casablanca</p>
-              <p className="text-xs text-textmuted">Bd Mohammed V</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <p className="badge-pill">الأكثر طلبا</p>
-            <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">الخدمات</h2>
+      <Reveal>
+        <section className="mx-auto max-w-6xl px-4 py-16">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <p className="badge-pill">الأكثر طلبا</p>
+              <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">الخدمات</h2>
+            </div>
+            <Link href="/services" className="text-sm font-bold text-brass transition hover:text-brass-soft">
+              شوف الكل ←
+            </Link>
           </div>
-          <Link href="/services" className="text-sm font-bold text-brass transition hover:text-brass-soft">
-            شوف الكل ←
+          <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
+            {services.map((service) => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="relative overflow-hidden py-24">
+          <img
+            src="/images/hero-salon-interior.jpg"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(180deg, #071a2b 0%, rgba(7,26,43,0.85) 40%, #071a2b 100%)" }}
+          />
+          <div className="relative mx-auto max-w-2xl px-4 text-center">
+            <span className="badge-pill">GLOSSIA GROUP</span>
+            <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-ink md:text-4xl">
+              أكثر من حلاقة. <span className="text-brass">تجربة.</span>
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-textmuted">
+              كنآمنو أن العناية الرجالية ماشي رفاهية، ولكن أسلوب حياة. جمعنا بين خدمة صالون احترافية ومنتجات أصلية باش
+              كل زبون يخرج بلوك مرتب وثقة أكبر.
+            </p>
+            <Link href="/about" className="mt-6 inline-flex text-sm font-bold text-brass transition hover:text-brass-soft">
+              اقرا القصة كاملة ←
+            </Link>
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="mx-auto max-w-6xl px-4 py-16">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <p className="badge-pill">أصلية 100%</p>
+              <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
+              <p className="mt-2 max-w-md text-sm text-textmuted">كمّل روتين العناية ديالك بمنتجات نقترحوها مع الخدمات.</p>
+            </div>
+            <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
+              شوف الكل ←
+            </Link>
+          </div>
+          <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="hero-glow px-4 py-20 text-center">
+          <h2 className="font-heading text-3xl font-extrabold text-ink md:text-4xl">
+            واجد باش تبدل <span className="text-brass">اللوك ديالك؟</span>
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-textmuted">أكد الحجز ديالك دابا وجي فالوقت، الخلاص فالمحل.</p>
+          <Link href="/booking" className="btn-gradient mt-7 inline-flex rounded-xl px-7 py-3.5 text-base">
+            احجز موعدك الآن
           </Link>
-        </div>
-        <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <p className="badge-pill">أصلية 100%</p>
-            <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
-            <p className="mt-2 max-w-md text-sm text-textmuted">كمّل روتين العناية ديالك بمنتجات نقترحوها مع الخدمات.</p>
-          </div>
-          <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
-            شوف الكل ←
-          </Link>
-        </div>
-        <div className="snap-x-list flex gap-4 overflow-x-auto pb-2">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      <section className="hero-glow px-4 py-20 text-center">
-        <h2 className="font-heading text-3xl font-extrabold text-ink md:text-4xl">
-          واجد باش تبدل <span className="text-brass">اللوك ديالك؟</span>
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-textmuted">أكد الحجز ديالك دابا وجي فالوقت، الخلاص فالمحل.</p>
-        <Link href="/booking" className="btn-gradient mt-7 inline-flex rounded-xl px-7 py-3.5 text-base">
-          احجز موعدك الآن
-        </Link>
-      </section>
+        </section>
+      </Reveal>
     </div>
   );
 }
