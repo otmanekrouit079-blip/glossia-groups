@@ -10,7 +10,11 @@ export default async function HomePage() {
   return (
     <div>
       <section className="relative overflow-hidden">
-        <img src="/images/hero-barber.jpg" alt="" className="absolute inset-0 h-full w-full bg-warm object-cover" />
+        <img
+          src="/images/hero-salon-interior.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full bg-warm object-cover"
+        />
         <div
           className="absolute inset-0"
           style={{
