@@ -5,7 +5,8 @@ export function Footer() {
     <footer className="mt-16 border-t border-borderline bg-warm">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
         <div>
-          <h3 className="font-heading text-lg font-extrabold text-ink">
+          <h3 className="flex items-center gap-2 font-heading text-lg font-extrabold text-ink">
+            <img src="/images/logo-mark.png" alt="" className="h-8 w-8" />
             GLOSSIA <span className="text-brass">GROUPS</span>
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-textmuted">صالون حلاقة رجالية + منتجات عناية أصلية.</p>

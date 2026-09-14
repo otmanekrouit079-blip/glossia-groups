@@ -8,7 +8,8 @@ export default async function AboutPage() {
     <section className="mx-auto max-w-6xl px-4 py-16">
       <div className="grid items-center gap-10 md:grid-cols-2">
         <div>
-          <span className="badge-pill">من نحن</span>
+          <img src="/images/logo.png" alt="GLOSSIA GROUPS" className="h-24 w-24" />
+          <span className="badge-pill mt-4 inline-block">من نحن</span>
           <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-ink md:text-4xl">
             قصة <span className="text-brass">GLOSSIA GROUPS</span>
           </h1>
