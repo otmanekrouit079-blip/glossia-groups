@@ -98,17 +98,17 @@ export default async function HomePage() {
             style={{ background: "linear-gradient(180deg, #071a2b 0%, rgba(13,48,71,0.55) 45%, #071a2b 100%)" }}
           />
           <div className="relative mx-auto max-w-2xl px-4 text-center">
-            <span className="badge-pill">GLOSSIA GROUP</span>
+            <span className="badge-gradient px-4 py-1.5 text-sm">GLOSSIA GROUPS</span>
             <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-ink md:text-4xl">
               أكثر من حلاقة. <span className="text-brass">تجربة.</span>
             </h2>
             <div className="mt-5 space-y-4 text-lg leading-relaxed text-textmuted">
               <p>تخيل عندك موعد مهم، مقابلة، ولا مناسبة ما غاديش تتعاود…</p>
-              <p>عندك حلاوة اللسان، عندك الشخصية، وعندك الطموح… ولكن المظهر ديالك ما كيعكسش هادشي كامل.</p>
+              <p>عندك حلاوة اللسان، عندك الشخصية، وعندك الطموح… ولكن المظهر ديالك ما كيبنش هادشي كامل.</p>
               <p>
-                داكشي علاش ف GLOSSIA GROUP جمعنا حرفية ناضيين، ماشي غير باش يحسنو وينقصو الشعر، ولكن باش نخليوك تبان
+                داكشي علاش ف GLOSSIA GROUPS جمعنا حرفية ناضيين، ماشي غير باش يحسنو وينقصو الشعر، ولكن باش نخليوك تبان
                 ناضي وتايق فراسك أكثر. حيت ملي كتكون ضارب حسانة ناضية، كتزيد تحس براسك مهيّب و إيجابي… عكس فاش كتكون
-                الحسانة ناقصة، كتحس براسك ناقص.
+                الحسانة ناقصة، كتحس براسك حتى انت ناقص.
               </p>
             </div>
             <Link href="/about" className="mt-6 inline-flex text-sm font-bold text-brass transition hover:text-brass-soft">
@@ -122,9 +122,9 @@ export default async function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <p className="badge-pill">جرب عاد حكم</p>
+              <p className="badge-gradient px-4 py-1.5 text-sm">جرب عاد حكم</p>
               <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
-              <p className="mt-2 max-w-md text-sm text-textmuted">كمّل روتين العناية ديالك بمنتجات نقترحوها مع الخدمات.</p>
+              <p className="mt-2 max-w-md text-sm text-textmuted">ماشي غير parfum… لمسة صغيرة، وأثر كبير فحضورك.</p>
             </div>
             <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
               شوف الكل ←

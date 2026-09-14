@@ -6,20 +6,20 @@ import { Header } from "@/components/header";
 import { MobileBookCta } from "@/components/mobile-book-cta";
 import { PixelLoader } from "@/components/pixel-loader";
 
-const siteDescription = "صالون حلاقة رجالية GLOSSIA GROUP فالدار البيضاء — حجز أونلاين، خدمات حلاقة ولحية، ومنتجات عناية أصلية.";
+const siteDescription = "صالون حلاقة رجالية GLOSSIA GROUPS بأكادير — حجز أونلاين، خدمات حلاقة ولحية، ومنتجات عناية أصلية.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://glossia.it.com"),
   title: {
-    default: "GLOSSIA GROUP — صالون حلاقة رجالية بالدار البيضاء",
-    template: "%s | GLOSSIA GROUP",
+    default: "GLOSSIA GROUPS — صالون حلاقة رجالية بأكادير",
+    template: "%s | GLOSSIA GROUPS",
   },
   description: siteDescription,
   openGraph: {
-    title: "GLOSSIA GROUP — صالون حلاقة رجالية بالدار البيضاء",
+    title: "GLOSSIA GROUPS — صالون حلاقة رجالية بأكادير",
     description: siteDescription,
     url: "https://glossia.it.com",
-    siteName: "GLOSSIA GROUP",
+    siteName: "GLOSSIA GROUPS",
     locale: "ar_MA",
     type: "website",
   },

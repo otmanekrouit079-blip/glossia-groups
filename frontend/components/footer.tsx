@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
         <div>
           <h3 className="font-heading text-lg font-extrabold text-ink">
-            GLOSSIA <span className="text-brass">GROUP</span>
+            GLOSSIA <span className="text-brass">GROUPS</span>
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-textmuted">صالون حلاقة رجالية + منتجات عناية أصلية.</p>
         </div>
@@ -25,7 +25,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-borderline px-4 py-5 text-center text-xs text-textmuted">
-        © GLOSSIA GROUP
+        © GLOSSIA GROUPS
       </div>
     </footer>
   );

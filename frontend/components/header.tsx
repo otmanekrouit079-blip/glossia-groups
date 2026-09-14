@@ -35,7 +35,7 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="font-heading text-xl font-extrabold text-ink">
-          GLOSSIA <span className="text-brass">GROUP</span>
+          GLOSSIA <span className="text-brass">GROUPS</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm md:flex">
