@@ -27,7 +27,7 @@ export default async function HomePage() {
           <h1 className="max-w-2xl font-heading text-5xl font-extrabold leading-[1.1] text-ink md:text-6xl">
             الناس كتشوفك <span className="text-brass">قبل ما تسمعك</span>
           </h1>
-          <p className="mt-6 max-w-md text-xl leading-relaxed text-textmuted">خليهم يحسو بالثقة قبل ما تهضر.</p>
+          <p className="mt-6 max-w-md text-2xl font-semibold leading-relaxed text-textmuted">خليهم يحسو بالثقة قبل ما تهضر.</p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link href="/booking" className="btn-gradient rounded-xl px-6 py-3.5 text-base">
               احجز موعدك الآن
@@ -124,7 +124,7 @@ export default async function HomePage() {
             <div>
               <p className="badge-gradient px-4 py-1.5 text-sm">جرب عاد حكم</p>
               <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
-              <p className="mt-2 max-w-md text-sm text-textmuted">ماشي غير parfum… لمسة صغيرة، وأثر كبير فحضورك.</p>
+              <p className="mt-2 max-w-md text-base font-semibold text-textmuted">ماشي غير parfum… لمسة صغيرة، وأثر كبير فحضورك.</p>
             </div>
             <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
               شوف الكل ←
