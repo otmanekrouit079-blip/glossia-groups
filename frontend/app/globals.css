@@ -9,6 +9,7 @@
   --warm: #071a2b;
   --surface-alt: #0b2438;
   --card-bg: #0e2b40;
+  --deep-blue: #0d3047;
   --brass: #ff6b1a;
   --brass-soft: #ff8a3d;
   --brass-dark: #e85a12;
@@ -213,9 +214,9 @@ button {
 
   .hero-glow {
     background:
-      radial-gradient(55% 110% at 12% 0%, rgba(255, 138, 61, 0.22), transparent 60%),
-      radial-gradient(45% 90% at 92% 15%, rgba(255, 107, 26, 0.16), transparent 60%),
-      var(--warm);
+      radial-gradient(60% 90% at 88% 100%, rgba(13, 48, 71, 0.8), transparent 65%),
+      radial-gradient(50% 90% at 10% 0%, rgba(255, 138, 61, 0.13), transparent 62%),
+      linear-gradient(160deg, var(--warm) 0%, var(--deep-blue) 55%, var(--warm) 100%);
   }
 
   .sticky-bar {

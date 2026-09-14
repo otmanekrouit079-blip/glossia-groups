@@ -20,7 +20,7 @@ export default async function HomePage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(7,26,43,0.75) 0%, rgba(7,26,43,0.88) 55%, #071a2b 100%), radial-gradient(60% 80% at 15% 20%, rgba(255,138,61,0.18), transparent 60%)",
+              "linear-gradient(180deg, rgba(7,26,43,0.7) 0%, rgba(13,48,71,0.66) 40%, rgba(7,26,43,0.93) 82%, #071a2b 100%), radial-gradient(55% 75% at 14% 12%, rgba(255,138,61,0.13), transparent 62%)",
           }}
         />
         <div className="relative mx-auto flex min-h-[560px] max-w-6xl flex-col justify-center px-4 py-24 md:min-h-[640px]">
@@ -104,7 +104,7 @@ export default async function HomePage() {
           />
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(180deg, #071a2b 0%, rgba(7,26,43,0.85) 40%, #071a2b 100%)" }}
+            style={{ background: "linear-gradient(180deg, #071a2b 0%, rgba(13,48,71,0.55) 45%, #071a2b 100%)" }}
           />
           <div className="relative mx-auto max-w-2xl px-4 text-center">
             <span className="badge-pill">GLOSSIA GROUP</span>

@@ -9,6 +9,7 @@ const config: Config = {
         warm: "#071A2B",
         "surface-alt": "#0B2438",
         "card-bg": "#0E2B40",
+        "deep-blue": "#0D3047",
         brass: "#FF6B1A",
         "brass-soft": "#FF8A3D",
         "brass-dark": "#E85A12",
