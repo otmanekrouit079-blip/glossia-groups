@@ -1,8 +1,9 @@
 "use client";
 
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ImagePlaceholder } from "@/components/image-placeholder";
+import { SelectionModal } from "@/components/selection-modal";
 import {
   getBranches,
   getProducts,
@@ -27,32 +28,48 @@ type CouponState = {
   discountValue?: number;
 };
 
-function SectionCard({
-  number,
-  icon,
-  title,
-  subtitle,
-  children,
+function nextDays(count: number) {
+  const days = [];
+  const today = new Date();
+  for (let i = 0; i < count; i += 1) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const label = new Intl.DateTimeFormat("ar-MA", { weekday: "long", day: "numeric", month: "long" }).format(d);
+    days.push({ iso, label });
+  }
+  return days;
+}
+
+function FieldButton({
+  label,
+  value,
+  placeholder,
+  onClick,
+  disabled,
 }: {
-  number: number;
-  icon: string;
-  title: string;
-  subtitle?: string;
-  children: ReactNode;
+  label: string;
+  value: string | null;
+  placeholder: string;
+  onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
-    <div className="card card-hover p-5 md:p-6">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="section-badge h-10 w-10 shrink-0 rounded-2xl text-lg font-extrabold">{number}</span>
-        <div>
-          <h2 className="flex items-center gap-2 font-heading text-lg font-extrabold text-ink">
-            <span>{icon}</span>
-            {title}
-          </h2>
-          {subtitle ? <p className="text-xs text-textmuted">{subtitle}</p> : null}
-        </div>
-      </div>
-      {children}
+    <div>
+      <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">{label}</p>
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 text-right transition disabled:opacity-40 ${
+          value ? "border-brass/40 bg-surface-alt" : "border-borderline bg-surface-alt"
+        }`}
+      >
+        <span className={`font-bold ${value ? "text-ink" : "text-textmuted"}`}>
+          {value ? `✓ ${value}` : placeholder}
+        </span>
+        <span className="text-textmuted">›</span>
+      </button>
     </div>
   );
 }
@@ -71,16 +88,20 @@ export default function BookingPage() {
   const [time, setTime] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<{ product_id: string; quantity: number }[]>([]);
 
-  const [wantsCoupon, setWantsCoupon] = useState<"" | "yes" | "no">("");
-  const [couponInput, setCouponInput] = useState("");
   const [coupon, setCoupon] = useState<CouponState | null>(null);
+  const [couponInput, setCouponInput] = useState("");
   const [couponChecking, setCouponChecking] = useState(false);
 
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  const [barberModalOpen, setBarberModalOpen] = useState(false);
+  const [dateModalOpen, setDateModalOpen] = useState(false);
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [couponModalOpen, setCouponModalOpen] = useState(false);
 
   const [bookingId, setBookingId] = useState("");
   const [devConfirmationCode, setDevConfirmationCode] = useState("");
@@ -91,6 +112,7 @@ export default function BookingPage() {
   const [confirmed, setConfirmed] = useState(false);
 
   const branchId = branches[0]?.id || "";
+  const days = useMemo(() => nextDays(14), []);
 
   useEffect(() => {
     async function loadInitial() {
@@ -158,11 +180,11 @@ export default function BookingPage() {
     return selectedProducts.find((item) => item.product_id === productId)?.quantity || 0;
   }
 
-  function setProductQuantity(productId: string, quantity: number) {
+  function toggleProduct(productId: string) {
     setSelectedProducts((prev) => {
-      const without = prev.filter((item) => item.product_id !== productId);
-      if (quantity === 0) return without;
-      return [...without, { product_id: productId, quantity }];
+      const exists = prev.some((item) => item.product_id === productId);
+      if (exists) return prev.filter((item) => item.product_id !== productId);
+      return [...prev, { product_id: productId, quantity: 1 }];
     });
   }
 
@@ -176,13 +198,15 @@ export default function BookingPage() {
         body: JSON.stringify({ code: couponInput.trim() }),
       });
       const data = await res.json();
-      setCoupon({
+      const result = {
         code: couponInput.trim(),
         valid: Boolean(data.valid),
         message: data.message || "",
         discountType: data.discount_type,
         discountValue: data.discount_value ? Number(data.discount_value) : undefined,
-      });
+      };
+      setCoupon(result);
+      if (result.valid) setCouponModalOpen(false);
     } catch {
       setCoupon({ code: couponInput.trim(), valid: false, message: "تعذر التحقق من الكود" });
     }
@@ -194,7 +218,6 @@ export default function BookingPage() {
     (staffPreference === "any" || (staffPreference === "has" && Boolean(staffId))) &&
     Boolean(date) &&
     Boolean(time) &&
-    (wantsCoupon === "no" || wantsCoupon === "" || (wantsCoupon === "yes" && Boolean(coupon?.valid))) &&
     Boolean(clientName.trim()) &&
     Boolean(clientPhone.trim());
 
@@ -213,7 +236,7 @@ export default function BookingPage() {
           booking_time: `${time}:00`,
           client_name: clientName,
           client_phone: clientPhone,
-          note,
+          note: "",
           staff_id: staffPreference === "has" && staffId ? staffId : null,
           coupon_code: coupon?.valid ? coupon.code : "",
         }),
@@ -259,6 +282,27 @@ export default function BookingPage() {
     setConfirming(false);
   }
 
+  const serviceLabel =
+    serviceIds.length === 0
+      ? null
+      : serviceIds.length === 1
+        ? `${services.find((s) => s.id === serviceIds[0])?.name} — ${serviceTotal.toFixed(0)} DH`
+        : `${serviceIds.length} خدمات — ${serviceTotal.toFixed(0)} DH`;
+
+  const staffLabel =
+    staffPreference === "any" ? "أي حلاق متاح" : staffPreference === "has" && staffId ? staffList.find((m) => m.id === staffId)?.name || null : null;
+
+  const dateLabel = date ? days.find((d) => d.iso === date)?.label || date : null;
+
+  const productLabel =
+    selectedProducts.length === 0
+      ? null
+      : selectedProducts.length === 1
+        ? products.find((p) => p.id === selectedProducts[0].product_id)?.name || null
+        : `${selectedProducts.length} منتوجات`;
+
+  const couponLabel = coupon?.valid ? coupon.code : null;
+
   if (confirmed) {
     return (
       <section className="hero-glow flex min-h-[70vh] items-center justify-center px-4 py-16">
@@ -281,111 +325,42 @@ export default function BookingPage() {
 
   return (
     <>
-      <section className="hero-glow px-4 pb-16 pt-14 text-center">
+      <section className="hero-glow px-4 pb-12 pt-14 text-center">
         <span className="badge-gradient">📅 حجز أونلاين</span>
-        <h1 className="mt-4 font-heading text-3xl font-extrabold text-white md:text-4xl">احجز وقتك فGLOSSIA</h1>
-        <p className="mx-auto mt-2 max-w-md text-white/70">عمر المعلومات لي تحت وأكد الحجز فالأخير، فدقيقتين.</p>
+        <h1 className="mt-4 font-heading text-3xl font-extrabold text-white md:text-4xl">احجز موعدك</h1>
+        <p className="mx-auto mt-2 max-w-md text-white/70">دقيقة وحدة وتوصل بلاصتك فGLOSSIA.</p>
       </section>
 
-      <section className="mx-auto -mt-10 max-w-2xl px-4 pb-40">
-        <div className="space-y-5">
-          <SectionCard number={1} icon="💈" title="اختار العروض ديالك">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {services.map((service) => {
-                const active = serviceIds.includes(service.id);
-                return (
-                  <button
-                    key={service.id}
-                    type="button"
-                    onClick={() => toggleService(service.id)}
-                    className={`chip-selectable rounded-2xl border-2 p-4 text-right ${
-                      active ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-bold">{service.name}</span>
-                      {active ? <span className="text-lg">✓</span> : null}
-                    </div>
-                    <span className={`font-digits text-sm ${active ? "text-white/85" : "text-textmuted"}`}>
-                      {service.price} DH
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </SectionCard>
-
-          <SectionCard number={2} icon="🧑‍🔧" title="اختار شكون بغيتيه يخدمك">
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setStaffPreference("has")}
-                className={`chip-selectable rounded-2xl border-2 p-4 text-center font-extrabold ${
-                  staffPreference === "has" ? "chip-selected" : "border-borderline text-textmain"
-                }`}
-              >
-                عندي مفضل
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setStaffPreference("any");
-                  setStaffId("");
-                }}
-                className={`chip-selectable rounded-2xl border-2 p-4 text-center font-extrabold ${
-                  staffPreference === "any" ? "chip-selected" : "border-borderline text-textmain"
-                }`}
-              >
-                اللي خاوي، أنا مزروب
-              </button>
-            </div>
-
-            {staffPreference === "has" ? (
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {staffList.map((member) => {
-                  const photoSrc = resolveImageUrl(member.photo_url);
-                  return (
-                    <button
-                      key={member.id}
-                      type="button"
-                      onClick={() => setStaffId(member.id)}
-                      className={`chip-selectable rounded-2xl border-2 p-3 text-center ${
-                        staffId === member.id ? "chip-selected" : "border-borderline"
-                      }`}
-                    >
-                      {photoSrc ? (
-                        <img
-                          src={photoSrc}
-                          alt={member.name}
-                          className="mx-auto mb-2 h-16 w-16 rounded-full border-2 border-white object-cover shadow"
-                        />
-                      ) : (
-                        <ImagePlaceholder className="mx-auto mb-2 h-16 w-16 rounded-full" />
-                      )}
-                      <span className="text-sm font-bold">{member.name}</span>
-                    </button>
-                  );
-                })}
-                {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
-              </div>
-            ) : null}
-          </SectionCard>
-
-          <SectionCard number={3} icon="📅" title="اختار اليوم">
+      <section className="mx-auto -mt-6 max-w-lg px-4 pb-40">
+        <div className="card space-y-4 p-5 md:p-6">
+          <div>
+            <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">الاسم الكامل</p>
             <input
-              className="w-full rounded-2xl border-2 border-borderline p-4 font-digits text-lg font-bold"
-              type="date"
-              value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
-                setTime("");
-              }}
+              className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold"
+              placeholder="سميتك الكاملة"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
             />
-          </SectionCard>
+          </div>
+
+          <div>
+            <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">رقم WhatsApp</p>
+            <input
+              className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold font-digits"
+              placeholder="06XXXXXXXX"
+              value={clientPhone}
+              onChange={(e) => setClientPhone(e.target.value)}
+            />
+          </div>
+
+          <FieldButton label="الخدمة" value={serviceLabel} placeholder="اختار الخدمة" onClick={() => setServiceModalOpen(true)} />
+          <FieldButton label="الحلاق" value={staffLabel} placeholder="اختيار الحلاق" onClick={() => setBarberModalOpen(true)} />
+          <FieldButton label="التاريخ" value={dateLabel} placeholder="اختار التاريخ" onClick={() => setDateModalOpen(true)} />
 
           {date ? (
-            <SectionCard number={4} icon="⏰" title="اختار الوقت">
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+            <div>
+              <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">الوقت</p>
+              <div className="grid grid-cols-4 gap-2">
                 {slots
                   .filter((slot) => slot.available)
                   .map((slot) => (
@@ -394,7 +369,7 @@ export default function BookingPage() {
                       type="button"
                       onClick={() => setTime(slot.time)}
                       className={`chip-selectable rounded-xl border-2 p-2 font-digits text-sm font-extrabold ${
-                        time === slot.time ? "chip-selected" : "border-borderline text-textmain"
+                        time === slot.time ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
                       }`}
                     >
                       {slot.time}
@@ -404,152 +379,220 @@ export default function BookingPage() {
                   <p className="col-span-full text-sm text-textmuted">ماكاين حتى وقت خالي هاد النهار، جرب يوم آخر.</p>
                 ) : null}
               </div>
-            </SectionCard>
+            </div>
           ) : null}
 
-          <SectionCard number={5} icon="🛍️" title="اختار منتوج" subtitle="اختياري">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {products.map((product) => {
-                const selected = getProductQuantity(product.id) > 0;
-                return (
-                  <button
-                    key={product.id}
-                    type="button"
-                    onClick={() => setProductQuantity(product.id, selected ? 0 : 1)}
-                    className={`chip-selectable rounded-2xl border-2 p-4 text-right ${
-                      selected ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-bold">{product.name}</span>
-                      {selected ? <span className="text-lg">✓</span> : null}
-                    </div>
-                    <span className={`font-digits text-sm ${selected ? "text-white/85" : "text-textmuted"}`}>
-                      {product.price_1} DH
-                    </span>
-                  </button>
-                );
-              })}
+          <FieldButton
+            label="المنتج (اختياري)"
+            value={productLabel}
+            placeholder="إضافة منتج — اختياري"
+            onClick={() => setProductModalOpen(true)}
+          />
+          <FieldButton
+            label="كود التخفيض (اختياري)"
+            value={couponLabel}
+            placeholder="عندك كود تخفيض؟"
+            onClick={() => setCouponModalOpen(true)}
+          />
+
+          {submitError ? <p className="rounded-xl bg-ember/10 p-3 text-sm font-bold text-ember">{submitError}</p> : null}
+
+          <div className="border-t border-borderline pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-textmuted">المجموع</span>
+              <span className="font-digits text-2xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
             </div>
-          </SectionCard>
-
-          <SectionCard number={6} icon="🎟️" title="تأكيد الطلب وكود التخفيض">
-            <div className="rounded-2xl border border-brass/30 bg-surface-alt p-4">
-              <p className="text-sm text-textmuted">المجموع</p>
-              <p className="font-digits text-2xl font-extrabold text-ink">{subtotal.toFixed(2)} DH</p>
-            </div>
-
-            <p className="mb-2 mt-4 font-extrabold text-ink">واش عندك كود تخفيض؟</p>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setWantsCoupon("yes")}
-                className={`chip-selectable rounded-2xl border-2 p-3 text-center font-extrabold ${
-                  wantsCoupon === "yes" ? "chip-selected" : "border-borderline text-textmain"
-                }`}
-              >
-                عندي كود
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setWantsCoupon("no");
-                  setCoupon(null);
-                  setCouponInput("");
-                }}
-                className={`chip-selectable rounded-2xl border-2 p-3 text-center font-extrabold ${
-                  wantsCoupon === "no" ? "chip-selected" : "border-borderline text-textmain"
-                }`}
-              >
-                ماعنديش كود
-              </button>
-            </div>
-
-            {wantsCoupon === "yes" ? (
-              <div className="mt-3 flex gap-2">
-                <input
-                  className="flex-1 rounded-2xl border-2 border-borderline p-3 font-bold uppercase"
-                  placeholder="دخل الكود"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={checkCoupon}
-                  disabled={couponChecking}
-                  className="btn-gradient rounded-2xl px-5 text-sm"
-                >
-                  {couponChecking ? "..." : "تحقق"}
-                </button>
-              </div>
-            ) : null}
-            {coupon ? (
-              <p
-                className={`mt-2 rounded-xl p-2 text-sm font-bold ${
-                  coupon.valid ? "bg-deepgreen/10 text-deepgreen" : "bg-ember/10 text-ember"
-                }`}
-              >
-                {coupon.message}
-              </p>
-            ) : null}
-
-            {discountAmount > 0 ? (
-              <p className="mt-3 text-textmain">
-                بعد التخفيض: <span className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
-              </p>
-            ) : null}
-          </SectionCard>
-
-          <SectionCard number={7} icon="📱" title="المعلومات الشخصية">
-            <div className="grid gap-3">
-              <input
-                className="rounded-2xl border-2 border-borderline p-4 font-bold"
-                placeholder="الاسم الكامل"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-              />
-              <input
-                className="rounded-2xl border-2 border-borderline p-4 font-bold font-digits"
-                placeholder="رقم الواتساب (06XXXXXXXX)"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-              />
-              <p className="rounded-xl bg-brass/10 p-2 text-xs font-bold text-brass-dark">
-                رقم الواتساب ضروري باش نصيفطو ليك كود التأكيد ديال الحجز.
-              </p>
-              <textarea
-                className="rounded-2xl border-2 border-borderline p-4"
-                placeholder="ملاحظة (اختياري)"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </div>
-          </SectionCard>
-
-          {submitError ? (
-            <p className="rounded-xl bg-ember/10 p-3 text-sm font-bold text-ember">{submitError}</p>
-          ) : null}
+            <button
+              type="button"
+              disabled={submitting || !canSubmit}
+              onClick={submitBooking}
+              className={`btn-gradient mt-4 w-full rounded-2xl px-4 py-3.5 text-base disabled:animate-none ${
+                canSubmit ? "cta-pulse" : ""
+              }`}
+            >
+              {submitting ? "...كنصيفطو" : "تأكيد الحجز 🚀"}
+            </button>
+          </div>
         </div>
       </section>
 
-      <div className="sticky-bar fixed inset-x-0 bottom-0 z-40 px-4 py-4">
-        <div className="mx-auto flex max-w-2xl items-center gap-4">
-          <div className="shrink-0">
-            <p className="text-xs text-textmuted">المجموع</p>
-            <p className="font-digits text-xl font-extrabold text-brass">{total.toFixed(2)} DH</p>
-          </div>
+      <SelectionModal open={serviceModalOpen} title="اختار الخدمة" onClose={() => setServiceModalOpen(false)}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {services.map((service) => {
+            const active = serviceIds.includes(service.id);
+            return (
+              <button
+                key={service.id}
+                type="button"
+                onClick={() => toggleService(service.id)}
+                className={`chip-selectable rounded-2xl border-2 p-4 text-right ${
+                  active ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold">{service.name}</span>
+                  {active ? <span className="text-lg">✓</span> : null}
+                </div>
+                <span className={`font-digits text-sm ${active ? "text-white/85" : "text-textmuted"}`}>
+                  {service.price} DH · {service.duration_minutes} دقيقة
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {services.length > 0 ? (
           <button
             type="button"
-            disabled={submitting || !canSubmit}
-            onClick={submitBooking}
-            className={`btn-gradient flex-1 rounded-2xl px-4 py-3.5 text-base disabled:animate-none ${
-              canSubmit ? "cta-pulse" : ""
+            disabled={serviceIds.length === 0}
+            onClick={() => setServiceModalOpen(false)}
+            className="btn-gradient mt-4 w-full rounded-2xl px-4 py-3 disabled:opacity-50"
+          >
+            تأكيد الاختيار
+          </button>
+        ) : null}
+      </SelectionModal>
+
+      <SelectionModal open={barberModalOpen} title="اختيار الحلاق" onClose={() => setBarberModalOpen(false)}>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <button
+            type="button"
+            onClick={() => {
+              setStaffPreference("any");
+              setStaffId("");
+              setBarberModalOpen(false);
+            }}
+            className={`chip-selectable col-span-2 rounded-2xl border-2 p-4 text-center font-extrabold sm:col-span-3 ${
+              staffPreference === "any" ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
             }`}
           >
-            {submitting ? "...كنصيفطو" : "أكد الحجز 🚀"}
+            🎲 أي حلاق متاح
+          </button>
+          {staffList.map((member) => {
+            const photoSrc = resolveImageUrl(member.photo_url);
+            const active = staffPreference === "has" && staffId === member.id;
+            return (
+              <button
+                key={member.id}
+                type="button"
+                onClick={() => {
+                  setStaffPreference("has");
+                  setStaffId(member.id);
+                  setBarberModalOpen(false);
+                }}
+                className={`chip-selectable rounded-2xl border-2 p-3 text-center ${
+                  active ? "chip-selected" : "border-borderline bg-surface-alt"
+                }`}
+              >
+                {photoSrc ? (
+                  <img
+                    src={photoSrc}
+                    alt={member.name}
+                    className="mx-auto mb-2 h-16 w-16 rounded-full border-2 border-white object-cover shadow"
+                  />
+                ) : (
+                  <ImagePlaceholder className="mx-auto mb-2 h-16 w-16 rounded-full" />
+                )}
+                <span className="text-sm font-bold">{member.name}</span>
+              </button>
+            );
+          })}
+          {staffList.length === 0 ? <p className="col-span-full text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
+        </div>
+      </SelectionModal>
+
+      <SelectionModal open={dateModalOpen} title="اختار التاريخ" onClose={() => setDateModalOpen(false)}>
+        <div className="grid grid-cols-2 gap-3">
+          {days.map((d) => (
+            <button
+              key={d.iso}
+              type="button"
+              onClick={() => {
+                setDate(d.iso);
+                setTime("");
+                setDateModalOpen(false);
+              }}
+              className={`chip-selectable rounded-2xl border-2 p-3 text-center text-sm font-bold ${
+                date === d.iso ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+      </SelectionModal>
+
+      <SelectionModal open={productModalOpen} title="إضافة منتج" onClose={() => setProductModalOpen(false)}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {products.map((product) => {
+            const selected = getProductQuantity(product.id) > 0;
+            const imageSrc = resolveImageUrl(product.image_url);
+            return (
+              <button
+                key={product.id}
+                type="button"
+                onClick={() => toggleProduct(product.id)}
+                className={`chip-selectable flex items-center gap-3 rounded-2xl border-2 p-3 text-right ${
+                  selected ? "chip-selected" : "border-borderline bg-surface-alt text-textmain"
+                }`}
+              >
+                {imageSrc ? (
+                  <img src={imageSrc} alt={product.name} className="h-14 w-14 shrink-0 rounded-xl object-cover" />
+                ) : (
+                  <ImagePlaceholder className="h-14 w-14 shrink-0 rounded-xl" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate font-bold">{product.name}</span>
+                    {selected ? <span>✓</span> : null}
+                  </div>
+                  <span className={`font-digits text-sm ${selected ? "text-white/85" : "text-textmuted"}`}>
+                    {product.price_1} DH
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        {products.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setProductModalOpen(false)}
+            className="btn-gradient mt-4 w-full rounded-2xl px-4 py-3"
+          >
+            تم
+          </button>
+        ) : null}
+      </SelectionModal>
+
+      <SelectionModal open={couponModalOpen} title="كود التخفيض" onClose={() => setCouponModalOpen(false)}>
+        <div className="flex gap-2">
+          <input
+            className="flex-1 rounded-2xl border-2 border-borderline bg-surface-alt p-3 font-bold uppercase"
+            placeholder="دخل الكود"
+            value={couponInput}
+            onChange={(e) => setCouponInput(e.target.value)}
+          />
+          <button type="button" onClick={checkCoupon} disabled={couponChecking} className="btn-gradient rounded-2xl px-5 text-sm">
+            {couponChecking ? "..." : "تحقق"}
           </button>
         </div>
-      </div>
+        {coupon ? (
+          <p className={`mt-3 rounded-xl p-2 text-sm font-bold ${coupon.valid ? "bg-deepgreen/10 text-deepgreen" : "bg-ember/10 text-ember"}`}>
+            {coupon.message}
+          </p>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => {
+            setCoupon(null);
+            setCouponInput("");
+            setCouponModalOpen(false);
+          }}
+          className="btn-outline mt-4 w-full rounded-2xl px-4 py-3 text-sm"
+        >
+          متابعة بلا كود
+        </button>
+      </SelectionModal>
 
       {showOtpPopup ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
@@ -564,7 +607,7 @@ export default function BookingPage() {
               </p>
             ) : null}
             <input
-              className="mt-4 w-full rounded-2xl border-2 border-borderline p-3 text-center font-digits text-2xl font-extrabold tracking-[0.5em]"
+              className="mt-4 w-full rounded-2xl border-2 border-borderline bg-surface-alt p-3 text-center font-digits text-2xl font-extrabold tracking-[0.5em]"
               placeholder="000000"
               value={otpInput}
               onChange={(e) => setOtpInput(e.target.value)}
