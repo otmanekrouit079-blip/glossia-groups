@@ -12,5 +12,5 @@ class Staff(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    photo_url: Mapped[str] = mapped_column(String(255), default="/images/placeholders/staff.jpg")
+    photo_url: Mapped[str] = mapped_column(String(255), default="")
     active: Mapped[bool] = mapped_column(Boolean, default=True)

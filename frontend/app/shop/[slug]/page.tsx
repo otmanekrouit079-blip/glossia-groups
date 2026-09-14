@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ImagePlaceholder } from "@/components/image-placeholder";
 import { getProducts, resolveImageUrl } from "@/lib/api";
 
 type Props = { params: { slug: string } };
@@ -13,19 +14,23 @@ export default async function ProductDetailsPage({ params }: Props) {
     notFound();
   }
 
+  const imageSrc = resolveImageUrl(product.image_url);
+
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
       <div className="grid gap-8 md:grid-cols-2">
         <div className="card p-8">
-          <img
-            src={resolveImageUrl(product.image_url)}
-            alt={product.name}
-            className="mb-4 h-64 w-full rounded-2xl object-cover"
-          />
+          {imageSrc ? (
+            <img src={imageSrc} alt={product.name} className="mb-4 h-64 w-full rounded-2xl object-cover" />
+          ) : (
+            <ImagePlaceholder className="mb-4 h-64 w-full rounded-2xl" />
+          )}
           <div className="badge-pill">باقي {product.stock} فالمخزون</div>
           <h1 className="mt-4 font-heading text-3xl font-extrabold text-ink">{product.name}</h1>
           <p className="mt-2 text-textmuted">{product.short_description}</p>
-          <p className="mt-4 text-sm text-textmuted">⭐ {product.rating} ({product.review_count} تقييم)</p>
+          {product.review_count > 0 ? (
+            <p className="mt-4 text-sm text-textmuted">⭐ {product.rating} ({product.review_count} تقييم)</p>
+          ) : null}
           <div className="mt-6 space-y-2 rounded-2xl border border-borderline bg-surface-alt p-4 text-textmain">
             <p>قطعة وحدة: <span className="font-digits">{product.price_1} DH</span></p>
             <p>2 قطع: <span className="font-digits font-bold text-brass">{product.price_2} DH</span> (الأكثر طلبا)</p>

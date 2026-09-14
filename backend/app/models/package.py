@@ -15,7 +15,7 @@ class Package(Base):
     slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     description: Mapped[str] = mapped_column(Text, default="")
-    image_url: Mapped[str] = mapped_column(String(255), default="/images/placeholders/package.jpg")
+    image_url: Mapped[str] = mapped_column(String(255), default="")
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
 
     services: Mapped[list["PackageService"]] = relationship(back_populates="package", cascade="all, delete-orphan")

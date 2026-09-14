@@ -17,4 +17,4 @@ class Service(Base):
     description: Mapped[str] = mapped_column(Text, default="")
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     duration_minutes: Mapped[int] = mapped_column(nullable=False)
-    image_url: Mapped[str] = mapped_column(String(255), default="/images/placeholders/service.jpg")
+    image_url: Mapped[str] = mapped_column(String(255), default="")

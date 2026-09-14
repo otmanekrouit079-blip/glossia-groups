@@ -4678,7 +4678,7 @@ if (ownerStoreProductForm) {
     const file = ownerStoreProductPhoto.files[0];
     const uploadPromise = file
       ? uploadOwnerStoreImage(file)
-      : Promise.resolve(ownerStoreProductForm.dataset.imageUrl || "/images/placeholders/product.jpg");
+      : Promise.resolve(ownerStoreProductForm.dataset.imageUrl || "");
 
     uploadPromise
       .then(function (imageUrl) {
@@ -4692,7 +4692,7 @@ if (ownerStoreProductForm) {
           price_2: Number(ownerStoreProductPrice2.value),
           price_3: Number(ownerStoreProductPrice3.value),
           stock: Number(ownerStoreProductStock.value || 0),
-          rating: 4.8,
+          rating: 0,
           review_count: 0
         };
 
@@ -4919,7 +4919,7 @@ if (ownerStoreServiceForm) {
     const file = ownerStoreServicePhoto.files[0];
     const uploadPromise = file
       ? uploadOwnerStoreImage(file)
-      : Promise.resolve(ownerStoreServiceForm.dataset.imageUrl || "/images/placeholders/service.jpg");
+      : Promise.resolve(ownerStoreServiceForm.dataset.imageUrl || "");
 
     uploadPromise
       .then(function (imageUrl) {
@@ -5215,7 +5215,7 @@ if (ownerStorePackageForm) {
     const file = ownerStorePackagePhoto.files[0];
     const uploadPromise = file
       ? uploadOwnerStoreImage(file)
-      : Promise.resolve(ownerStorePackageForm.dataset.imageUrl || "/images/placeholders/package.jpg");
+      : Promise.resolve(ownerStorePackageForm.dataset.imageUrl || "");
 
     uploadPromise
       .then(function (imageUrl) {
@@ -5446,7 +5446,7 @@ if (ownerStoreStaffForm) {
     const file = ownerStoreStaffPhoto.files[0];
     const uploadPromise = file
       ? uploadOwnerStoreImage(file)
-      : Promise.resolve(ownerStoreStaffForm.dataset.imageUrl || "/images/placeholders/staff.jpg");
+      : Promise.resolve(ownerStoreStaffForm.dataset.imageUrl || "");
 
     uploadPromise
       .then(function (photoUrl) {

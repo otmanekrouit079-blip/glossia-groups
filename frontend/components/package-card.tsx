@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ImagePlaceholder } from "@/components/image-placeholder";
 import { resolveImageUrl, type Package } from "@/lib/api";
 
 type PackageCardProps = {
@@ -8,11 +9,16 @@ type PackageCardProps = {
 
 export function PackageCard({ pkg }: PackageCardProps) {
   const contents = [...pkg.service_names, ...pkg.product_names];
+  const imageSrc = resolveImageUrl(pkg.image_url);
 
   return (
     <article className="card card-hover min-w-[85%] overflow-hidden p-4 md:min-w-[300px]">
       <div className="relative overflow-hidden rounded-xl">
-        <img src={resolveImageUrl(pkg.image_url)} alt={pkg.name} className="h-40 w-full object-cover" />
+        {imageSrc ? (
+          <img src={imageSrc} alt={pkg.name} className="h-40 w-full object-cover" />
+        ) : (
+          <ImagePlaceholder className="h-40 w-full" />
+        )}
         <span className="badge-gradient absolute right-2 top-2 shadow">باقة</span>
       </div>
       <h3 className="mt-3 font-heading text-lg font-bold text-ink">{pkg.name}</h3>

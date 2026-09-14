@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useMemo, useState } from "react";
 
+import { ImagePlaceholder } from "@/components/image-placeholder";
 import {
   getBranches,
   getProducts,
@@ -333,23 +334,30 @@ export default function BookingPage() {
 
             {staffPreference === "has" ? (
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {staffList.map((member) => (
-                  <button
-                    key={member.id}
-                    type="button"
-                    onClick={() => setStaffId(member.id)}
-                    className={`chip-selectable rounded-2xl border-2 p-3 text-center ${
-                      staffId === member.id ? "chip-selected" : "border-borderline"
-                    }`}
-                  >
-                    <img
-                      src={resolveImageUrl(member.photo_url)}
-                      alt={member.name}
-                      className="mx-auto mb-2 h-16 w-16 rounded-full border-2 border-white object-cover shadow"
-                    />
-                    <span className="text-sm font-bold">{member.name}</span>
-                  </button>
-                ))}
+                {staffList.map((member) => {
+                  const photoSrc = resolveImageUrl(member.photo_url);
+                  return (
+                    <button
+                      key={member.id}
+                      type="button"
+                      onClick={() => setStaffId(member.id)}
+                      className={`chip-selectable rounded-2xl border-2 p-3 text-center ${
+                        staffId === member.id ? "chip-selected" : "border-borderline"
+                      }`}
+                    >
+                      {photoSrc ? (
+                        <img
+                          src={photoSrc}
+                          alt={member.name}
+                          className="mx-auto mb-2 h-16 w-16 rounded-full border-2 border-white object-cover shadow"
+                        />
+                      ) : (
+                        <ImagePlaceholder className="mx-auto mb-2 h-16 w-16 rounded-full" />
+                      )}
+                      <span className="text-sm font-bold">{member.name}</span>
+                    </button>
+                  );
+                })}
                 {staffList.length === 0 ? <p className="text-sm text-textmuted">ماكاين حتى موظف متوفر دابا.</p> : null}
               </div>
             ) : null}

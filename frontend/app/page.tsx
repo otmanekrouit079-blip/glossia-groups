@@ -50,6 +50,32 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section className="border-y border-borderline bg-surface-alt">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-brass">💳</span>
+            <div>
+              <p className="font-bold text-ink">Cash / Card</p>
+              <p className="text-xs text-textmuted">الخلاص فالمحل، بلا دفع مسبق</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-brass">⚡</span>
+            <div>
+              <p className="font-bold text-ink">حجز أونلاين</p>
+              <p className="text-xs text-textmuted">أكد الموعد ديالك فدقيقتين</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-brass">📍</span>
+            <div>
+              <p className="font-bold text-ink">Casablanca</p>
+              <p className="text-xs text-textmuted">Bd Mohammed V</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="mb-8 flex items-end justify-between">
           <div>
@@ -67,11 +93,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-20">
+      <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <p className="badge-pill">أصلية 100%</p>
             <h2 className="mt-3 font-heading text-2xl font-extrabold text-ink md:text-3xl">منتجات العناية</h2>
+            <p className="mt-2 max-w-md text-sm text-textmuted">كمّل روتين العناية ديالك بمنتجات نقترحوها مع الخدمات.</p>
           </div>
           <Link href="/shop" className="text-sm font-bold text-brass transition hover:text-brass-soft">
             شوف الكل ←
@@ -82,6 +109,16 @@ export default async function HomePage() {
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
+      </section>
+
+      <section className="hero-glow px-4 py-20 text-center">
+        <h2 className="font-heading text-3xl font-extrabold text-ink md:text-4xl">
+          واجد باش تبدل <span className="text-brass">اللوك ديالك؟</span>
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-textmuted">أكد الحجز ديالك دابا وجي فالوقت، الخلاص فالمحل.</p>
+        <Link href="/booking" className="btn-gradient mt-7 inline-flex rounded-xl px-7 py-3.5 text-base">
+          احجز موعدك الآن
+        </Link>
       </section>
     </div>
   );

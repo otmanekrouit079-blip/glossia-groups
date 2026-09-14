@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ImagePlaceholder } from "@/components/image-placeholder";
 import { resolveImageUrl, type Service } from "@/lib/api";
 
 type ServiceCardProps = {
@@ -7,10 +8,16 @@ type ServiceCardProps = {
 };
 
 export function ServiceCard({ service }: ServiceCardProps) {
+  const imageSrc = resolveImageUrl(service.image_url);
+
   return (
     <article className="card card-hover min-w-[85%] overflow-hidden p-4 md:min-w-[280px]">
       <div className="overflow-hidden rounded-xl">
-        <img src={resolveImageUrl(service.image_url)} alt={service.name} className="h-40 w-full object-cover" />
+        {imageSrc ? (
+          <img src={imageSrc} alt={service.name} className="h-40 w-full object-cover" />
+        ) : (
+          <ImagePlaceholder className="h-40 w-full" />
+        )}
       </div>
       <h3 className="mt-3 font-heading text-lg font-bold text-ink">{service.name}</h3>
       <p className="mt-1.5 line-clamp-2 text-sm text-textmuted">{service.description}</p>

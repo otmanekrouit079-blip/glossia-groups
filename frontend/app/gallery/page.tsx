@@ -1,3 +1,4 @@
+import { ImagePlaceholder } from "@/components/image-placeholder";
 import { getProducts, getServices, resolveImageUrl } from "@/lib/api";
 
 export default async function GalleryPage() {
@@ -15,14 +16,21 @@ export default async function GalleryPage() {
 
       {items.length > 0 ? (
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => (
-            <div key={item.id} className="card card-hover overflow-hidden p-2">
-              <div className="overflow-hidden rounded-2xl">
-                <img src={resolveImageUrl(item.image)} alt={item.name} className="h-64 w-full object-cover" />
+          {items.map((item) => {
+            const imageSrc = resolveImageUrl(item.image);
+            return (
+              <div key={item.id} className="card card-hover overflow-hidden p-2">
+                <div className="overflow-hidden rounded-2xl">
+                  {imageSrc ? (
+                    <img src={imageSrc} alt={item.name} className="h-64 w-full object-cover" />
+                  ) : (
+                    <ImagePlaceholder className="h-64 w-full" />
+                  )}
+                </div>
+                <p className="p-3 font-heading font-bold text-ink">{item.name}</p>
               </div>
-              <p className="p-3 font-heading font-bold text-ink">{item.name}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <p className="mt-10 text-textmuted">مازال ماكاينش تصاور مضافة.</p>

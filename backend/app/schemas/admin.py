@@ -27,14 +27,14 @@ class ProductWriteIn(BaseModel):
     name: str
     short_description: str = ""
     long_description: str = ""
-    image_url: str = "/images/placeholders/product.jpg"
+    image_url: str = ""
     category: str = "hair-care"
     price_1: Decimal
     price_2: Decimal
     price_3: Decimal
     stock: int = 30
-    rating: float = 4.8
-    review_count: int = 100
+    rating: float = 0.0
+    review_count: int = 0
 
 
 class ServiceWriteIn(BaseModel):
@@ -42,13 +42,13 @@ class ServiceWriteIn(BaseModel):
     description: str = ""
     price: Decimal
     duration_minutes: int
-    image_url: str = "/images/placeholders/service.jpg"
+    image_url: str = ""
 
 
 class PackageWriteIn(BaseModel):
     name: str
     description: str = ""
-    image_url: str = "/images/placeholders/package.jpg"
+    image_url: str = ""
     price: Decimal
     service_ids: list[UUID] = []
     product_ids: list[UUID] = []
@@ -56,7 +56,7 @@ class PackageWriteIn(BaseModel):
 
 class StaffWriteIn(BaseModel):
     name: str
-    photo_url: str = "/images/placeholders/staff.jpg"
+    photo_url: str = ""
     active: bool = True
 
 
