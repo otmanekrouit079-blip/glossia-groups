@@ -205,10 +205,10 @@ button {
   }
 
   .chip-selected {
-    background: linear-gradient(135deg, var(--brass-soft), var(--brass-dark)) !important;
-    color: #fff !important;
-    border-color: transparent !important;
-    box-shadow: 0 12px 26px -10px rgba(255, 107, 26, 0.6);
+    background: var(--card-bg) !important;
+    color: var(--ink) !important;
+    border-color: var(--brass) !important;
+    box-shadow: 0 0 0 1px rgba(255, 106, 26, 0.25), 0 10px 24px -14px rgba(255, 106, 26, 0.55);
     transform: translateY(-2px);
   }
 

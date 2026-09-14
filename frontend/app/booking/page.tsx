@@ -331,28 +331,8 @@ export default function BookingPage() {
         <p className="mx-auto mt-2 max-w-md text-white/70">دقيقة وحدة وتوصل بلاصتك فGLOSSIA.</p>
       </section>
 
-      <section className="mx-auto -mt-6 max-w-lg px-4 pb-40">
+      <section className="mx-auto -mt-6 max-w-lg px-4 pb-16">
         <div className="card space-y-4 p-5 md:p-6">
-          <div>
-            <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">الاسم الكامل</p>
-            <input
-              className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold"
-              placeholder="سميتك الكاملة"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">رقم WhatsApp</p>
-            <input
-              className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold font-digits"
-              placeholder="06XXXXXXXX"
-              value={clientPhone}
-              onChange={(e) => setClientPhone(e.target.value)}
-            />
-          </div>
-
           <FieldButton label="الخدمة" value={serviceLabel} placeholder="اختار الخدمة" onClick={() => setServiceModalOpen(true)} />
           <FieldButton label="الحلاق" value={staffLabel} placeholder="اختيار الحلاق" onClick={() => setBarberModalOpen(true)} />
           <FieldButton label="التاريخ" value={dateLabel} placeholder="اختار التاريخ" onClick={() => setDateModalOpen(true)} />
@@ -395,24 +375,47 @@ export default function BookingPage() {
             onClick={() => setCouponModalOpen(true)}
           />
 
-          {submitError ? <p className="rounded-xl bg-ember/10 p-3 text-sm font-bold text-ember">{submitError}</p> : null}
+          <div className="flex items-center justify-between border-t border-borderline pt-4">
+            <span className="text-textmuted">المجموع</span>
+            <span className="font-digits text-2xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
+          </div>
 
           <div className="border-t border-borderline pt-4">
-            <div className="flex items-center justify-between">
-              <span className="text-textmuted">المجموع</span>
-              <span className="font-digits text-2xl font-extrabold text-brass">{total.toFixed(2)} DH</span>
+            <p className="mb-3 font-heading font-bold text-ink">معلوماتك</p>
+            <div className="space-y-4">
+              <div>
+                <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">الاسم الكامل</p>
+                <input
+                  className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold"
+                  placeholder="سميتك الكاملة"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                />
+              </div>
+              <div>
+                <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-textmuted">رقم WhatsApp</p>
+                <input
+                  className="w-full rounded-2xl border-2 border-borderline bg-surface-alt p-4 font-bold font-digits"
+                  placeholder="06XXXXXXXX"
+                  value={clientPhone}
+                  onChange={(e) => setClientPhone(e.target.value)}
+                />
+              </div>
             </div>
-            <button
-              type="button"
-              disabled={submitting || !canSubmit}
-              onClick={submitBooking}
-              className={`btn-gradient mt-4 w-full rounded-2xl px-4 py-3.5 text-base disabled:animate-none ${
-                canSubmit ? "cta-pulse" : ""
-              }`}
-            >
-              {submitting ? "...كنصيفطو" : "تأكيد الحجز 🚀"}
-            </button>
           </div>
+
+          {submitError ? <p className="rounded-xl bg-ember/10 p-3 text-sm font-bold text-ember">{submitError}</p> : null}
+
+          <button
+            type="button"
+            disabled={submitting || !canSubmit}
+            onClick={submitBooking}
+            className={`btn-gradient w-full rounded-2xl px-4 py-3.5 text-base disabled:animate-none ${
+              canSubmit ? "cta-pulse" : ""
+            }`}
+          >
+            {submitting ? "...كنصيفطو" : "تأكيد الحجز 🚀"}
+          </button>
         </div>
       </section>
 
