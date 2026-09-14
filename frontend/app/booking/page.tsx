@@ -42,12 +42,14 @@ function nextDays(count: number) {
 }
 
 function FieldButton({
+  icon,
   label,
   value,
   placeholder,
   onClick,
   disabled,
 }: {
+  icon: string;
   label: string;
   value: string | null;
   placeholder: string;
@@ -61,11 +63,14 @@ function FieldButton({
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 text-right transition disabled:opacity-40 ${
-          value ? "border-brass/40 bg-surface-alt" : "border-borderline bg-surface-alt"
+        className={`field-glow flex w-full items-center gap-3 rounded-2xl border-2 p-3.5 text-right disabled:opacity-40 ${
+          value ? "field-glow-filled" : "border-borderline"
         }`}
       >
-        <span className={`font-bold ${value ? "text-ink" : "text-textmuted"}`}>
+        <span className="field-icon-badge flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg">
+          {icon}
+        </span>
+        <span className={`flex-1 font-bold ${value ? "text-ink" : "text-textmuted"}`}>
           {value ? `✓ ${value}` : placeholder}
         </span>
         <span className="text-textmuted">›</span>
@@ -333,9 +338,9 @@ export default function BookingPage() {
 
       <section className="mx-auto -mt-6 max-w-lg px-4 pb-16">
         <div className="card space-y-4 p-5 md:p-6">
-          <FieldButton label="الخدمة" value={serviceLabel} placeholder="اختار الخدمة" onClick={() => setServiceModalOpen(true)} />
-          <FieldButton label="الحلاق" value={staffLabel} placeholder="اختيار الحلاق" onClick={() => setBarberModalOpen(true)} />
-          <FieldButton label="التاريخ" value={dateLabel} placeholder="اختار التاريخ" onClick={() => setDateModalOpen(true)} />
+          <FieldButton icon="✂️" label="الخدمة" value={serviceLabel} placeholder="اختار الخدمة" onClick={() => setServiceModalOpen(true)} />
+          <FieldButton icon="💈" label="الحلاق" value={staffLabel} placeholder="اختيار الحلاق" onClick={() => setBarberModalOpen(true)} />
+          <FieldButton icon="📅" label="التاريخ" value={dateLabel} placeholder="اختار التاريخ" onClick={() => setDateModalOpen(true)} />
 
           {date ? (
             <div>
@@ -363,12 +368,14 @@ export default function BookingPage() {
           ) : null}
 
           <FieldButton
+            icon="🛍️"
             label="المنتج (اختياري)"
             value={productLabel}
             placeholder="إضافة منتج — اختياري"
             onClick={() => setProductModalOpen(true)}
           />
           <FieldButton
+            icon="🎟️"
             label="كود التخفيض (اختياري)"
             value={couponLabel}
             placeholder="عندك كود تخفيض؟"
