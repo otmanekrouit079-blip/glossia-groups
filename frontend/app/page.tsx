@@ -2,22 +2,15 @@ import Link from "next/link";
 
 import { ProductCard } from "@/components/product-card";
 import { ServiceCard } from "@/components/service-card";
-import { getProducts, getServices, resolveImageUrl } from "@/lib/api";
+import { getProducts, getServices } from "@/lib/api";
 
 export default async function HomePage() {
   const [services, products] = await Promise.all([getServices(), getProducts()]);
-  const heroImage = services[0]?.image_url || products[0]?.image_url || "";
 
   return (
     <div>
       <section className="relative overflow-hidden">
-        {heroImage ? (
-          <img
-            src={resolveImageUrl(heroImage)}
-            alt=""
-            className="absolute inset-0 h-full w-full bg-warm object-cover"
-          />
-        ) : null}
+        <img src="/images/hero-barber.jpg" alt="" className="absolute inset-0 h-full w-full bg-warm object-cover" />
         <div
           className="absolute inset-0"
           style={{
